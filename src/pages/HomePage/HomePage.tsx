@@ -5,7 +5,7 @@ import {GetInTouch} from '../../components/GetInTouch/GetInTouch'
 export default function HomePage() {
  
   return (
-       <div className={styles.root}>
+       <div className={styles.contenContainer}>
 
         Paulibaby
        
