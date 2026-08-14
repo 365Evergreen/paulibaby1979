@@ -1,5 +1,6 @@
 import styles from './HomePage.module.css';
 import {GetInTouch} from '../../components/GetInTouch/GetInTouch'
+import LatestPosts from '../../components/LatestPosts/LatestPosts';
 
 
 export default function HomePage() {
@@ -10,9 +11,12 @@ export default function HomePage() {
         Paulibaby
        
                <section className={styles.section}>
+
+                <LatestPosts/>
           <GetInTouch
             leftColumn={<></>}
             rightColumn={<></>}
           />
         </section></div>
   )};
+

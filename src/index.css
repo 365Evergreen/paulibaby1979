@@ -22,9 +22,9 @@ body {
 }
 
 .app {
-  max-width: var(--max-width);
+ width: 100vw;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 2rem 4rem;
 }
 
 .header {
