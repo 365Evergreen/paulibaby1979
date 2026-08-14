@@ -7,7 +7,7 @@ const SiteNav: React.FC = () => {
      <ul className={styles.navLinks}>
        <li><Link to="/">Home</Link></li>
        <li><Link to="/admin">Admin</Link></li>
-       <li><Link to="/bloglist">Blog posts</Link></li>
+       <li><Link to="/blog">Blog posts</Link></li>
      </ul>
    </nav>
  );
