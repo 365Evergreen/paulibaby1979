@@ -13,11 +13,6 @@
 	],
 	"d1_databases": [
 		{
-			"binding": "DB",
-			"database_name": "paulibaby-blog-db",
-			"database_id": "PLACEHOLDER_RUN_pnpm_db_init"
-		},
-		{
 			"binding": "paulibaby_blog_db",
 			"database_name": "paulibaby-blog-db",
 			"database_id": "926d776f-9582-4a10-ac41-4cd5e295edd3",
