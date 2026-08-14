@@ -13,7 +13,7 @@
 	],
 	"d1_databases": [
 		{
-			"binding": "paulibaby_blog_db",
+			"binding": "DB",
 			"database_name": "paulibaby-blog-db",
 			"database_id": "926d776f-9582-4a10-ac41-4cd5e295edd3",
 			"remote": true
