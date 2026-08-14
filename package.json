@@ -12,6 +12,11 @@
     "db:init:local": "wrangler d1 execute paulibaby-blog-db --local --file=migrations/0001_init.sql"
   },
   "dependencies": {
+    "@tiptap/extension-image": "^2.10.0",
+    "@tiptap/extension-link": "^2.10.0",
+    "@tiptap/extension-placeholder": "^2.10.0",
+    "@tiptap/react": "^2.10.0",
+    "@tiptap/starter-kit": "^2.10.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.18.2"
