@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "paulibaby1979",
+  "compatibility_date": "2026-08-14",
+  "assets": {
+    "not_found_handling": "single-page-application"
+  },
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "paulibaby-blog"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "paulibaby-blog-db",
+      "database_id": "PLACEHOLDER_RUN_pnpm_db_init"
+    }
+  ]
+}
