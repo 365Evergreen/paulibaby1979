@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import RichTextEditor from '../components/RichTextEditor'
+import RichTextEditor from '../../components/RichTextEditor'
 
 type Post = {
   id?: number;
@@ -15,7 +15,7 @@ type Post = {
 
 type View = "list" | "edit";
 
-export default function Admin() {
+export default function AdminPage() {
   const [view, setView] = useState<View>("list");
   const [posts, setPosts] = useState<Post[]>([]);
   const [editing, setEditing] = useState<Post | null>(null);

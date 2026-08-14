@@ -9,7 +9,7 @@ type Post = {
   created_at: string;
 };
 
-export default function BlogList() {
+export default function BlogArchivePage () {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 

@@ -32,7 +32,7 @@ function renderMarkdown(md: string): string {
   return html;
 }
 
-export default function BlogPost() {
+export default function SinglePostPage() {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
