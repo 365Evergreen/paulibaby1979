@@ -17,6 +17,7 @@
     "@tiptap/extension-placeholder": "^2.10.0",
     "@tiptap/react": "^2.10.0",
     "@tiptap/starter-kit": "^2.10.0",
+    "adaptivecards": "^3.0.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.18.2"

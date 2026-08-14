@@ -1,0 +1,66 @@
+.twoColumnContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 4rem;
+  gap: 2rem; /* Adds spacing between columns */
+}
+
+.column {
+  flex: 1; /* Splits the width exactly 50/50 */
+  min-width: 0;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.twoColumnContainer .columnLeft {
+  background-color: transparent; /* Darker shade for the left column */
+}
+
+.twoColumnContainer .columnRight {
+  background-color: transparent; /* Lighter shade for the right column */
+}
+
+.content .h2 {
+  color: #313030;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.content .p {
+  color: #2e2e2e;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.twoColumnContainer .column h2 {
+  color: #4f4747;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.twoColumnContainer .column p {
+  color: #4b4747;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.twoColumnContainer .column a {
+  color: #ffffff;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+/* Responsive breakpoint for mobile screens */
+@media (max-width: 768px) {
+  .twoColumnContainer {
+    flex-direction: column; /* Stacks columns vertically */
+    gap: 1.5rem;
+  }
+}

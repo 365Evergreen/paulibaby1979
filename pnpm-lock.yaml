@@ -23,6 +23,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.10.0
         version: 2.27.2
+      adaptivecards:
+        specifier: ^3.0.6
+        version: 3.0.6(swiper@12.2.0)
       react:
         specifier: ^19.1.0
         version: 19.2.8
@@ -1049,6 +1052,11 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
+  adaptivecards@3.0.6:
+    resolution: {integrity: sha512-WDCIb2WXZ7cOHJ9HIHRNdhSt861HySVOdN2xPk2aKHAF3JvD8QGQ8/XcNFrDJxCteOog8MM7EBlXfSAR8JXKAg==}
+    peerDependencies:
+      swiper: ^12.1.2
+
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
@@ -1338,6 +1346,10 @@ packages:
   supports-color@10.2.2:
     resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
     engines: {node: '>=18'}
+
+  swiper@12.2.0:
+    resolution: {integrity: sha512-K8uXsBZU6ME97Ia3xbBge8IRCnR1lOmIILzvY/jGVic7dSTQ530s3uO8RvXbPUtkkXLWIwmZLRPbtDxRWVAFdg==}
+    engines: {node: '>= 4.7.0'}
 
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
@@ -2222,6 +2234,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  adaptivecards@3.0.6(swiper@12.2.0):
+    dependencies:
+      swiper: 12.2.0
+
   argparse@2.0.1: {}
 
   baseline-browser-mapping@2.11.13: {}
@@ -2601,6 +2617,8 @@ snapshots:
   source-map-js@1.2.1: {}
 
   supports-color@10.2.2: {}
+
+  swiper@12.2.0: {}
 
   tinyglobby@0.2.17:
     dependencies:
