@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 
 type Post = {
@@ -88,3 +89,12 @@ export default function App() {
     </div>
   );
 }
+=======
+import AppRouter from './routes/AppRouter'
+
+function App() {
+  return <AppRouter />
+}
+
+export default App
+>>>>>>> 59aabae71b4359f0bf4cefe3869c50fefbbb9dab

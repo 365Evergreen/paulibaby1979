@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import RichTextEditor from '../../components/RichTextEditor'
 
 type Post = {
   id?: number;
@@ -14,7 +15,7 @@ type Post = {
 
 type View = "list" | "edit";
 
-export default function Admin() {
+export default function AdminPage() {
   const [view, setView] = useState<View>("list");
   const [posts, setPosts] = useState<Post[]>([]);
   const [editing, setEditing] = useState<Post | null>(null);
@@ -265,7 +266,10 @@ export default function Admin() {
               </button>
             </div>
           </div>
-
+<RichTextEditor
+    value={editing.body}
+              onChange={(html) => setEditing({ ...editing, body: html })}
+/>
           <div className="form-group">
             <label>Body (Markdown)</label>
             <textarea

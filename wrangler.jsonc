@@ -2,6 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "paulibaby1979",
   "compatibility_date": "2026-08-14",
+  "main": "src/worker.ts",
   "assets": {
     "not_found_handling": "single-page-application"
   },
@@ -15,7 +16,8 @@
     {
       "binding": "DB",
       "database_name": "paulibaby-blog-db",
-      "database_id": "PLACEHOLDER_RUN_pnpm_db_init"
+      "database_id": "926d776f-9582-4a10-ac41-4cd5e295edd3",
+      "remote": true
     }
   ]
 }

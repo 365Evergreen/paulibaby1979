@@ -1,0 +1,47 @@
+/* AdaptiveForm.module.css */
+.cardContainer {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Target the Adaptive Card raw inputs safely */
+.cardContainer :global(.ac-input) {
+  width: 100% !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.cardContainer :global(.ac-input:focus) {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  outline: none !important;
+}
+
+/* Target the Action.Submit button */
+.cardContainer :global(.ac-pushButton) {
+  background-color: #3f4144 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  border: none !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.cardContainer :global(.ac-pushButton:hover) {
+  background-color: #1d4ed8 !important;
+}
+
+/* Target element labels and text blocks */
+.cardContainer :global(.ac-textBlock) {
+  font-family: 'Inter', sans-serif !important;
+}

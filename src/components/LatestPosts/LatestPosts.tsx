@@ -9,7 +9,7 @@ type Post = {
   created_at: string;
 };
 
-export default function BlogList() {
+export default function LatestPosts () {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,19 +33,14 @@ export default function BlogList() {
 
   return (
     <div className="app">
-      <header className="header">
-        <h1>Paulibaby</h1>
-        <p className="tagline">Thoughts, stories, and more.</p>
-      </header>
-
-      <main className="posts">
+            <main className="posts">
         {posts.length === 0 ? (
           <p className="empty">No posts yet. Check back soon!</p>
         ) : (
           posts.map((post) => (
             <article key={post.id} className="post-card">
               {post.cover_image && (
-                <a href={`/post/${post.slug}`}>
+                <a href={`/blog/${post.slug}`}>
                   <img
                     src={post.cover_image}
                     alt={post.title}
@@ -55,7 +50,7 @@ export default function BlogList() {
                 </a>
               )}
               <h2>
-                <a href={`/post/${post.slug}`} className="post-link">{post.title}</a>
+                <a href={`/blog/${post.slug}`} className="post-link">{post.title}</a>
               </h2>
               <time className="post-date">
                 {new Date(post.created_at).toLocaleDateString("en-US", {
@@ -65,16 +60,12 @@ export default function BlogList() {
                 })}
               </time>
               <p>{post.excerpt}</p>
-              <a href={`/post/${post.slug}`} className="read-more">Read more →</a>
+              <a href={`/blog/${post.slug}`} className="read-more">Read more →</a>
             </article>
           ))
         )}
       </main>
 
-      <footer className="footer">
-        <p>© 2026 Paulibaby. Powered by Cloudflare Workers + D1 + R2.</p>
-        <a href="/admin" className="admin-link">Admin</a>
-      </footer>
-    </div>
+   </div>
   );
 }
