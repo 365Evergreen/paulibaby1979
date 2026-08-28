@@ -97,7 +97,7 @@ importers:
         specifier: ^6.3.0
         version: 6.4.3
       wrangler:
-        specifier: ^4.122.0
+        specifier: ^4.127.0
         version: 4.127.0
     optionalDependencies:
       '@cloudflare/workerd-windows-64':

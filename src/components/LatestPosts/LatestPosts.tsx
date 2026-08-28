@@ -34,6 +34,7 @@ export default function LatestPosts () {
   return (
     <div className="app">
             <main className="posts">
+              <div className="pauli">Yo, cunt</div>
         {posts.length === 0 ? (
           <p className="empty">No posts yet. Check back soon!</p>
         ) : (
