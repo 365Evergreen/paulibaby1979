@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from './SiteNavigation.module.css'
+import styles from './SiteNav.module.css'
 const SiteNav: React.FC = () => {
  return (
    <nav className={styles.navContainer}>
