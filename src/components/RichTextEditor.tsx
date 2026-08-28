@@ -7,7 +7,7 @@ import { Dropcursor } from '@tiptap/extensions'
 // Global type augmentations for Tiptap & Prosemirror commands
 import "@tiptap/core";
 import "@tiptap/extension-history";
-
+import ImageResize from "tiptap-extension-resize-image";
 import { Audio } from "./tiptap/AudioExtension";
 import { Video } from "./tiptap/VideoExtension";
 import { YoutubeEmbed } from "./tiptap/YoutubeExtension";
@@ -42,6 +42,11 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           alwaysPreserveAspectRatio: true,
         },
         allowBase64: true
+      }),
+      ImageResize.configure({
+        HTMLAttributes: {
+          class: 'resizable-image'
+        }
       }),
       Link.configure({
         openOnClick: false,
