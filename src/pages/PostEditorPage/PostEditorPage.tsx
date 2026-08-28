@@ -190,15 +190,12 @@ export default function PageEditorPage() {
     }
   }
 
-function updatePost<K extends keyof Post>(
-  field: K,
-  value: Post[K],
-) {
-  setEditing((current) => ({
-    ...current,
-    value,
-  }));
-}
+  function updatePost<K extends keyof Post>(field: K, value: Post[K]) {
+    setEditing((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
 
   async function savePost() {
     if (saving || uploading) {
