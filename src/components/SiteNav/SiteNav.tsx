@@ -6,7 +6,7 @@ const SiteNav: React.FC = () => {
    <nav className={styles.navContainer}>
      <ul className={styles.navLinks}>
        <li><Link to="/">Home</Link></li>
-       <li><Link to="/editor">Editor</Link></li>
+       <li><Link to="/admin">Editor</Link></li>
        <li><Link to="/contact">Contact</Link></li>
      </ul>
    </nav>
