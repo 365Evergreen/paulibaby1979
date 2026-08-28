@@ -1,4 +1,23 @@
 .headerContainer {
+
+    padding: 0 4rem;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    justify-content: space-between;
+    align-items: stretch;
+    background-color: rgb(223, 223, 223);
+}
+
+.siteBrand {
+    width: fit-content;
+}
+
+.siteNav {
+    width: fit-content;
+    display: flex;
+    flex-direction: row-reverse;
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;

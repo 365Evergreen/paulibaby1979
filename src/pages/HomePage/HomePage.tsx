@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
-import FeaturedPost from "../../components/FeaturedPost";
-import PostGrid from "../../components/PostGrid";
-import SectionHeader from "../../components/SectionHeader";
-import NewsletterSignup from "../../components/NewsletterSignup";
+<<<<<<< HEAD
 
-type Post = {
-  id: number;
-  slug: string;
-  title: string;
-  excerpt: string;
-  cover_image: string | null;
-  created_at: string;
-};
+
+const HomePage = () => {
+  return (
+    <div>
+Pauli
+    </div>
+
+  );
+}
+
+export default HomePage;
+=======
+import styles from './HomePage.module.css';
+import {GetInTouch} from '../../components/GetInTouch/GetInTouch'
+import LatestPosts from '../../components/LatestPosts/LatestPosts';
+
 
 export default function BlogList() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -40,45 +44,18 @@ export default function BlogList() {
   const hasMultipleSections = posts.length > 1;
 
   return (
-    <div className="homepage">
-      <header className="homepage__hero">
-        <div className="homepage__hero-content">
-          <h1 className="homepage__hero-title">Paulibaby</h1>
-          <p className="homepage__hero-tagline">
-            Thoughts, stories, and ideas worth sharing.
-          </p>
-        </div>
-      </header>
+       <div className={styles.contenContainer}>
 
-      {featured && (
-        <section className="homepage__section">
-          <SectionHeader
-            title="Featured"
-            subtitle="The latest from the blog"
+        Paulibaby
+       
+               <section className={styles.section}>
+
+                <LatestPosts/>
+          <GetInTouch
+            leftColumn={<></>}
+            rightColumn={<></>}
           />
-          <FeaturedPost post={featured} />
-        </section>
-      )}
+        </section></div>
+  )};
 
-      {hasMultipleSections && (
-        <section className="homepage__section">
-          <SectionHeader
-            title="Recent Posts"
-            subtitle="More articles to explore"
-            action={{ label: "View all", href: "/blog" }}
-          />
-          <PostGrid posts={recent} columns={3} />
-        </section>
-      )}
-
-      <section className="homepage__section">
-        <NewsletterSignup />
-      </section>
-
-      <footer className="homepage__footer">
-        <p>© 2026 Paulibaby. Powered by Cloudflare Workers + D1 + R2.</p>
-        <a href="/admin" className="admin-link">Admin</a>
-      </footer>
-    </div>
-  );
-}
+>>>>>>> 59aabae71b4359f0bf4cefe3869c50fefbbb9dab
