@@ -1,0 +1,9 @@
+.contentContainer{
+  width: 100%;
+}
+
+.section {
+  width: 100%;
+  padding: 0 4rem;
+  background-color: rgb(26, 40, 40);
+}

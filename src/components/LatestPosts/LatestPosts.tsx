@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from './LatestPosts.module.css'
 
 type Post = {
   id: number;
@@ -32,9 +33,9 @@ export default function LatestPosts () {
   }
 
   return (
-    <div className="app">
+    <section className={styles.section}>
             <main className="posts">
-              <div className="pauli">Yo, cunt</div>
+              <div className={styles.contentContainer}>Yo, cunt</div>
         {posts.length === 0 ? (
           <p className="empty">No posts yet. Check back soon!</p>
         ) : (
@@ -67,6 +68,6 @@ export default function LatestPosts () {
         )}
       </main>
 
-   </div>
+   </section>
   );
 }
