@@ -1,0 +1,23 @@
+.contentContainer{
+    width: 100%;
+}
+
+.section{
+    width: 100%;
+}
+
+.adminTable{
+    width: 100%;
+    text-align: left;
+}
+
+.adminTableHeader{
+    background-color: aqua;
+}
+
+.adminTableActions{
+    display: flex;
+flex-direction: row;
+align-content: space-between;
+justify-content: space-between;
+}

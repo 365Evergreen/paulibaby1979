@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from './AdminPage.module.css'
 
 
 type Post = {
@@ -65,9 +66,9 @@ export default function AdminPage() {
       ) : posts.length === 0 ? (
         <div className="empty">No posts yet. Create your first post!</div>
       ) : (
-        <table className="admin-table">
+        <table className={styles.adminTable}>
           <thead>
-            <tr>
+            <tr className={styles.adminTableHeader}>
               <th>Title</th>
               <th>Status</th>
               <th>Date</th>
@@ -88,7 +89,7 @@ export default function AdminPage() {
                     ? new Date(post.created_at).toLocaleDateString()
                     : "—"}
                 </td>
-                <td>
+                <td className={styles.adminTableActions}>
                   <button type="button" onClick={() => navigate(`/post-editor/${post.id}`)} >
                     Edit
                   </button>

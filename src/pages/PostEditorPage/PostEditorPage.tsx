@@ -8,7 +8,8 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import RichTextEditor from "../../components/RichTextEditor";
+import RichTextEditor from "../../components/RichTextEdiitor/RichTextEditor";
+import styles from './PostEditorPage.module.css'
 
 type Post = {
   id?: number;
@@ -383,7 +384,7 @@ export default function PageEditorPage() {
 
   if (id && !hasValidRouteId) {
     return (
-      <main className="editor-page">
+      <main className={styles.contentContainer}>
         <header className="editor-topbar">
           <div className="editor-topbar-left">
             <button
@@ -407,7 +408,7 @@ export default function PageEditorPage() {
   }
 
   return (
-    <main className="editor-page">
+    <main className={styles.contenContainer}>
       <header className="editor-topbar">
         <div className="editor-topbar-left">
           <button
@@ -457,11 +458,11 @@ export default function PageEditorPage() {
         </div>
       </header>
 
-      <section className="editor-content">
+      <section className={styles.section}>
+        <div className={styles.editorHeader}>
         <label
           htmlFor="post-title"
-          className="sr-only"
-        >
+          className={styles.editorTitle}        >
           Post title
         </label>
 
@@ -477,9 +478,9 @@ export default function PageEditorPage() {
           className="editor-title-input"
           autoComplete="off"
           autoFocus
-        />
+        /></div>
 
-        <div className="editor-body">
+        <div className={styles.editorBody}>
           <RichTextEditor
             value={editing.body}
             onChange={(html: string) =>
@@ -492,18 +493,18 @@ export default function PageEditorPage() {
       {drawerOpen && (
         <>
           <div
-            className="drawer-overlay"
+            className={styles.drawerOverlay}
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
 
           <aside
-            className="drawer"
+            className={styles.drawer}
             role="dialog"
             aria-modal="true"
             aria-labelledby="post-settings-title"
           >
-            <div className="drawer-header">
+            <div className={styles.drawerHeader}>
               <h2 id="post-settings-title">
                 Post Settings
               </h2>
@@ -518,7 +519,7 @@ export default function PageEditorPage() {
               </button>
             </div>
 
-            <div className="drawer-body">
+            <div className={styles.drawerBody}>
               <div className="form-group">
                 <label htmlFor="post-slug">
                   Slug
@@ -665,7 +666,7 @@ export default function PageEditorPage() {
               )}
             </div>
 
-            <div className="drawer-footer">
+            <div className={styles.drawerFooter}>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}

@@ -13,9 +13,10 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import ImageResize from "tiptap-extension-resize-image";
 
-import { Audio } from "./tiptap/AudioExtension";
-import { Video } from "./tiptap/VideoExtension";
-import { YoutubeEmbed } from "./tiptap/YoutubeExtension";
+import { Audio } from "../tiptap/AudioExtension";
+import { Video } from "../tiptap/VideoExtension";
+import { YoutubeEmbed } from "../tiptap/YoutubeExtension";
+import styles from './RichTextEditor.module.css'
 
 interface RichTextEditorProps {
   value: string;
@@ -378,13 +379,12 @@ export default function RichTextEditor({
   const controlsDisabled = uploading !== null;
 
   return (
-    <div className="tiptap-wrapper">
+    <section className={styles.contentContainer}>
       <div
-        className="tiptap-toolbar"
+        className={styles.tipTapToolbar}
         role="toolbar"
-        aria-label="Text formatting"
-      >
-        <button
+        aria-label="Toolbarg"
+      ><button
           type="button"
           onClick={() =>
             editor.chain().focus().toggleBold().run()
@@ -632,8 +632,9 @@ export default function RichTextEditor({
           disabled={!editor.can().chain().focus().redo().run()}
         >
           ↪
-        </button>
-      </div>
+        </button> </div>
+        
+   
 
       {uploadError && (
         <div
@@ -642,7 +643,7 @@ export default function RichTextEditor({
         >
           {uploadError}
         </div>
-      )}
+        )}
 
       <input
         ref={imageInputRef}
@@ -667,9 +668,9 @@ export default function RichTextEditor({
         accept="video/*"
         hidden
       />
-
-      <EditorContent editor={editor} />
-    </div>
+      <div className={styles.editorCanvas}>
+      <EditorContent editor={editor} /></div>
+    </section>
   );
 }
 
