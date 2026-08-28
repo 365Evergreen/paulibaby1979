@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SiteHeader.module.css'
-import SiteNav from '../SiteNavigation/SiteNav';
+import SiteNav from '../SiteNav/SiteNav';
 
 
 const SiteHeader: React.FC = () => {
