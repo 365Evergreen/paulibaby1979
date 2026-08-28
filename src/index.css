@@ -1,10 +1,11 @@
 :root {
   --bg: #fafafa;
   --card-bg: #ffffff;
-  --text: #1a1a1a;
+  --text: #333333;
   --text-muted: #666;
-  --accent: #e85d4e;
+  --accent: #981507;
   --border: #e8e8e8;
+  --header-height: 72px;
   --radius: 12px;
   --max-width: 680px;
   --admin-width: 900px;
@@ -13,11 +14,36 @@
   color: var(--text);
   background: var(--bg);
 }
-* { box-sizing: border-box; }
-body { margin: 0; padding: 0; }
-.app { max-width: var(--max-width); margin: 0 auto; padding: 2rem 1.5rem; }
-.header { text-align: center; padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-.header h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 0.25rem; letter-spacing: -0.03em; }
+
+* { 
+  box-sizing: border-box;
+ }
+
+body { 
+  margin: 0; 
+  padding: 0; 
+}
+
+.app {
+  max-width: var(--max-width); 
+  margin: 0 auto; 
+  padding: 2rem 1.5rem;
+ }
+
+.header { 
+  height: var(--header-height);
+  text-align: center; 
+  padding: 3rem 0 2rem; 
+  border-bottom: 1px solid var(--border); 
+  margin-bottom: 2rem; }
+
+.header h1 {
+  font-size: 2.5rem; 
+  font-weight: 800; 
+  margin: 0 0 0.25rem; 
+  letter-spacing: -0.03em;
+ }
+
 .tagline { color: var(--text-muted); font-size: 1.1rem; margin: 0; }
 .posts { display: flex; flex-direction: column; gap: 1.5rem; }
 .post-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; transition: box-shadow 0.2s ease; }

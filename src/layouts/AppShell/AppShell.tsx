@@ -8,7 +8,6 @@ export function AppShell(){
     return (
         <div className="app-shell">
             <SiteHeader />
-            <div id="pauli">Paulibaby loves ya</div>
             <main className={styles.mainContainer}>
              <Outlet/>            
             </main>
