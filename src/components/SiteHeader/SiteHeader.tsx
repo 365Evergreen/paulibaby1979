@@ -24,7 +24,8 @@ const SiteHeader: React.FC = () => {
   return (
     <header className={`${styles.headerContainer} ${isSticky ? styles.scrolled : ''}`}>
       <div className={styles.siteBrand}>
-        <h1><a href="/">Your Heading Text</a></h1>
+
+        <h1><a href="/public/__sitelogo__Evergreen_Logo__50.png">Your Heading Text</a></h1>
       </div>
       {/* Fixed a minor typo in your class name from siteaAv to siteNav if applicable */}
       <div className={styles.siteNav}>
