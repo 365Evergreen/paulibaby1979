@@ -15,8 +15,8 @@ export default function AppRouter() {
           <Route path="/blog" element={<BlogArchivePage />} />
           <Route path="/blog/:slug" element={<SinglePostPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/post-editor" element={<PostEditorPage />} />
-          <Route path="/post-editor/:id" element={<PostEditorPage/>} />
+          <Route path="/post-editor" element={<PostEditorPage />}/>
+          <Route path="/post-editor/:id" element={<PostEditorPage />}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -89,19 +89,21 @@ export default function AdminPage() {
                     : "—"}
                 </td>
                 <td>
-                  <button onClick={() => navigate(`/post-editor/${post.id}`)}>
+                  <button type="button" onClick={() => navigate(`/post-editor/${post.id}`)} >
                     Edit
                   </button>
-                  <button onClick={() => deletePost(post.id!)} className="btn-small btn-danger">Delete</button>
-                </td>
+
+                <button onClick={() => deletePost(post.id!)} className="btn-small btn-danger">Delete</button>
+              </td>
               </tr>
             ))}
-          </tbody>
+        </tbody>
         </table>
-      )}
-    </div>
+  )
+}
+    </div >
   );
 
 
-  return null;
+return null;
 }

@@ -1,11 +1,13 @@
 import {
-  ChangeEvent,
-  FormEvent,
   useEffect,
   useRef,
   useState,
+  type ChangeEvent,
 } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import RichTextEditor from "../../components/RichTextEditor";
 
 type Post = {
@@ -20,15 +22,29 @@ type Post = {
   updated_at?: string;
 };
 
-type PostApiResponse = Omit<Post, "published"> & {
-  published: boolean | number;
+type PostApiResponse = {
+  id?: number;
+  slug?: string;
+  title?: string;
+  excerpt?: string;
+  body?: string;
+  cover_image?: string | null;
+  published?: boolean | number;
+  created_at?: string;
+  updated_at?: string;
+};
+
+type ErrorApiResponse = {
+  error?: string;
+  message?: string;
 };
 
 type UploadApiResponse = {
-  url: string;
+  key?: string;
+  url?: string;
 };
 
-const emptyPost: Post = {
+const EMPTY_POST: Post = {
   slug: "",
   title: "",
   excerpt: "",
@@ -37,84 +53,108 @@ const emptyPost: Post = {
   published: false,
 };
 
-export default function PostEditorPage() {
-  const { id } = useParams<{ id?: string }>();
+const MESSAGE_TIMEOUT = 3000;
+
+export default function PageEditorPage() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id?: string }>();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messageTimerRef = useRef<number | null>(null);
 
-  const [editing, setEditing] = useState<Post>(emptyPost);
+  const [editing, setEditing] = useState<Post>({
+    ...EMPTY_POST,
+  });
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [messageType, setMessageType] = useState<
+    "success" | "error" | "info"
+  >("info");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const postId = id ? Number(id) : undefined;
-  const isEditing = postId !== undefined;
+  const numericId = id ? Number(id) : undefined;
+  const hasValidRouteId =
+    numericId !== undefined &&
+    Number.isInteger(numericId) &&
+    numericId > 0;
+
+  const isEditingExistingPost = editing.id !== undefined;
+
+  useEffect(() => {
+    return () => {
+      if (messageTimerRef.current !== null) {
+        window.clearTimeout(messageTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadPost() {
-      setMessage("");
-      setError("");
-
+    async function initialiseEditor() {
       if (!id) {
-        setEditing(emptyPost);
+        setEditing({ ...EMPTY_POST });
         setLoading(false);
         return;
       }
 
-      if (!Number.isInteger(postId) || postId! <= 0) {
-        setError("The post ID is invalid.");
+      if (!hasValidRouteId) {
         setLoading(false);
+        showMessage("Invalid post ID.", "error", false);
         return;
       }
 
       try {
         setLoading(true);
+        setMessage("");
 
-        const response = await fetch(`/api/admin/posts/${postId}`, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
+        const response = await fetch(
+          `/api/admin/posts/${numericId}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+            signal: controller.signal,
           },
-          signal: controller.signal,
-        });
+        );
 
         if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error("Post not found.");
-          }
-
           throw new Error(
-            await getResponseError(response, "Failed to load the post.")
+            await readApiError(
+              response,
+              response.status === 404
+                ? "Post not found."
+                : "Failed to load the post.",
+            ),
           );
         }
 
-        const post = (await response.json()) as PostApiResponse;
+        const data =
+          (await response.json()) as PostApiResponse;
 
-        setEditing({
-          id: post.id,
-          slug: post.slug ?? "",
-          title: post.title ?? "",
-          excerpt: post.excerpt ?? "",
-          body: post.body ?? "",
-          cover_image: post.cover_image ?? null,
-          published: Boolean(post.published),
-          created_at: post.created_at,
-          updated_at: post.updated_at,
-        });
-      } catch (caughtError) {
+        if (typeof data.id !== "number") {
+          throw new Error(
+            "The API response does not contain a valid post ID.",
+          );
+        }
+
+        setEditing(normalisePost(data));
+      } catch (error) {
         if (
-          caughtError instanceof DOMException &&
-          caughtError.name === "AbortError"
+          error instanceof DOMException &&
+          error.name === "AbortError"
         ) {
           return;
         }
 
-        setError(getErrorMessage(caughtError, "Failed to load the post."));
+        showMessage(
+          getErrorMessage(error, "Failed to load the post."),
+          "error",
+          false,
+        );
       } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
@@ -122,59 +162,77 @@ export default function PostEditorPage() {
       }
     }
 
-    void loadPost();
+    void initialiseEditor();
 
     return () => {
       controller.abort();
     };
-  }, [id, postId]);
+  }, [id, hasValidRouteId, numericId]);
 
-  function updatePost<K extends keyof Post>(field: K, value: Post[K]) {
-    setEditing((current) => ({
-      ...current,
-      value,
-    }));
+  function showMessage(
+    text: string,
+    type: "success" | "error" | "info" = "info",
+    autoClear = true,
+  ) {
+    if (messageTimerRef.current !== null) {
+      window.clearTimeout(messageTimerRef.current);
+      messageTimerRef.current = null;
+    }
+
+    setMessage(text);
+    setMessageType(type);
+
+    if (autoClear) {
+      messageTimerRef.current = window.setTimeout(() => {
+        setMessage("");
+        messageTimerRef.current = null;
+      }, MESSAGE_TIMEOUT);
+    }
   }
 
-  async function savePost(event?: FormEvent<HTMLFormElement>) {
-    event?.preventDefault();
+function updatePost<K extends keyof Post>(
+  field: K,
+  value: Post[K],
+) {
+  setEditing((current) => ({
+    ...current,
+    value,
+  }));
+}
 
-    setMessage("");
-    setError("");
-
-    const title = editing.title.trim();
-    const slug = editing.slug.trim();
-
-    if (!title) {
-      setError("Enter a title before saving.");
+  async function savePost() {
+    if (saving || uploading) {
       return;
     }
 
-    if (isEditing && editing.id === undefined) {
-      setError("The loaded post does not have an ID.");
+    const title = editing.title.trim();
+
+    if (!title) {
+      showMessage("Enter a post title before saving.", "error");
       return;
     }
 
     const payload = {
-      slug,
+      slug: editing.slug.trim(),
       title,
       excerpt: editing.excerpt.trim(),
       body: editing.body,
       cover_image: editing.cover_image?.trim() || null,
-      published: editing.published,
+      published: editing.published ? 1 : 0,
     };
 
-    const targetId = editing.id ?? postId;
-    const url = isEditing
-      ? `/api/admin/posts/${targetId}`
+    const requestUrl = editing.id
+      ? `/api/admin/posts/${editing.id}`
       : "/api/admin/posts";
-    const method = isEditing ? "PUT" : "POST";
+
+    const requestMethod = editing.id ? "PUT" : "POST";
 
     try {
       setSaving(true);
+      setMessage("");
 
-      const response = await fetch(url, {
-        method,
+      const response = await fetch(requestUrl, {
+        method: requestMethod,
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -184,104 +242,118 @@ export default function PostEditorPage() {
 
       if (!response.ok) {
         throw new Error(
-          await getResponseError(response, "Failed to save the post.")
+          await readApiError(response, "Failed to save the post."),
         );
       }
 
-      /*
-       * This expects POST and PUT to return the saved post as JSON.
-       * For example:
-       * {
-       *   "id": 12,
-       *   "title": "...",
-       *   "published": 1
-       * }
-       */
-      const savedPost = (await response.json()) as PostApiResponse;
+      const data =
+        (await response.json()) as PostApiResponse;
 
-      if (savedPost.id === undefined) {
-        throw new Error("The server saved the post but did not return its ID.");
+      if (typeof data.id !== "number") {
+        throw new Error(
+          "The post was saved, but the API did not return a valid post.",
+        );
       }
 
-      setEditing({
-        id: savedPost.id,
-        slug: savedPost.slug ?? payload.slug,
-        title: savedPost.title ?? payload.title,
-        excerpt: savedPost.excerpt ?? payload.excerpt,
-        body: savedPost.body ?? payload.body,
-        cover_image: savedPost.cover_image ?? payload.cover_image,
-        published: Boolean(savedPost.published),
-        created_at: savedPost.created_at,
-        updated_at: savedPost.updated_at,
-      });
+      const savedPost = normalisePost(data);
 
-      setMessage("Post saved successfully.");
+      setEditing(savedPost);
+      showMessage("Saved successfully.", "success");
 
-      if (!isEditing) {
+      if (!editing.id) {
         navigate(`/post-editor/${savedPost.id}`, {
           replace: true,
         });
       }
-    } catch (caughtError) {
-      setError(getErrorMessage(caughtError, "Failed to save the post."));
+    } catch (error) {
+      showMessage(
+        getErrorMessage(error, "Failed to save the post."),
+        "error",
+        false,
+      );
     } finally {
       setSaving(false);
     }
   }
 
+  async function uploadImage(
+    file: File,
+  ): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/admin/upload", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        await readApiError(response, "Failed to upload the image."),
+      );
+    }
+
+    const data =
+      (await response.json()) as UploadApiResponse;
+
+    if (
+      typeof data.url !== "string" ||
+      data.url.trim().length === 0
+    ) {
+      throw new Error(
+        "The upload API did not return an image URL.",
+      );
+    }
+
+    return data.url;
+  }
+
   async function handleCoverUpload(
-    event: ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>,
   ) {
     const input = event.currentTarget;
     const file = input.files?.[0];
 
-    if (!file) {
+    if (!file || uploading) {
       return;
     }
 
-    setMessage("");
-    setError("");
-
     if (!file.type.startsWith("image/")) {
-      setError("Choose a valid image file.");
+      showMessage("Choose a valid image file.", "error");
       input.value = "";
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const maximumFileSize = 5 * 1024 * 1024;
+
+    if (file.size > maximumFileSize) {
+      showMessage(
+        "The selected image exceeds the 5 MB upload limit.",
+        "error",
+      );
+      input.value = "";
+      return;
+    }
 
     try {
       setUploading(true);
+      showMessage("Uploading image...", "info", false);
 
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: formData,
-      });
+      const imageUrl = await uploadImage(file);
 
-      if (!response.ok) {
-        throw new Error(
-          await getResponseError(response, "Failed to upload the image.")
-        );
-      }
-
-      const result = (await response.json()) as UploadApiResponse;
-
-      if (!result.url) {
-        throw new Error("The upload response did not include an image URL.");
-      }
-
-      updatePost("cover_image", result.url);
-      setMessage("Cover image uploaded successfully.");
-    } catch (caughtError) {
-      setError(getErrorMessage(caughtError, "Failed to upload the image."));
+      updatePost("cover_image", imageUrl);
+      showMessage("Image uploaded successfully.", "success");
+    } catch (error) {
+      showMessage(
+        getErrorMessage(error, "Failed to upload the image."),
+        "error",
+        false,
+      );
     } finally {
       setUploading(false);
-
-      // Allows the same file to be selected again if an upload fails.
       input.value = "";
     }
   }
@@ -292,6 +364,8 @@ export default function PostEditorPage() {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+
+    showMessage("Cover image removed.", "info");
   }
 
   function goBack() {
@@ -300,19 +374,21 @@ export default function PostEditorPage() {
 
   if (loading) {
     return (
-      <main className="admin" aria-busy="true">
-        <div className="loading">Loading post…</div>
+      <main
+        className="editor-page"
+        aria-busy="true"
+        aria-label="Loading post"
+      >
+        <div className="editor-loading">Loading post...</div>
       </main>
     );
   }
 
-  if (id && (!Number.isInteger(postId) || postId! <= 0)) {
+  if (id && !hasValidRouteId) {
     return (
-      <main className="admin">
-        <header className="admin-header">
-          <h1>Invalid Post</h1>
-
-          <div className="admin-actions">
+      <main className="editor-page">
+        <header className="editor-topbar">
+          <div className="editor-topbar-left">
             <button
               type="button"
               onClick={goBack}
@@ -323,242 +399,333 @@ export default function PostEditorPage() {
           </div>
         </header>
 
-        <div className="admin-message admin-message-error" role="alert">
-          The post ID is invalid.
+        <div
+          className="editor-error"
+          role="alert"
+        >
+          Invalid post ID.
         </div>
       </main>
     );
   }
 
   return (
-    <main className="admin">
-      <form onSubmit={savePost}>
-        <header className="admin-header">
-          <h1>{isEditing ? "Edit Post" : "New Post"}</h1>
-
-          <div className="admin-actions">
-            <button
-              type="button"
-              onClick={goBack}
-              className="btn-secondary"
-              disabled={saving || uploading}
-            >
-              ← Back
-            </button>
-
-            <button
-              type="submit"
-              disabled={saving || uploading}
-              className="btn-primary"
-            >
-              {saving ? "Saving…" : "Save"}
-            </button>
-          </div>
-        </header>
-
-        {message && (
-          <div
-            className="admin-message admin-message-success"
-            role="status"
-            aria-live="polite"
+    <main className="editor-page">
+      <header className="editor-topbar">
+        <div className="editor-topbar-left">
+          <button
+            type="button"
+            onClick={goBack}
+            className="btn-secondary"
+            disabled={saving || uploading}
           >
-            {message}
-          </div>
-        )}
+            ← Back
+          </button>
 
-        {error && (
-          <div
-            className="admin-message admin-message-error"
-            role="alert"
+          <span className="editor-page-heading">
+            {isEditingExistingPost ? "Edit Post" : "New Post"}
+          </span>
+        </div>
+
+        <div className="editor-topbar-right">
+          {message && (
+            <span
+              className={`editor-message editor-message-${messageType}`}
+              role={messageType === "error" ? "alert" : "status"}
+              aria-live="polite"
+            >
+              {message}
+            </span>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            className="btn-secondary"
+            disabled={saving || uploading}
+            aria-haspopup="dialog"
+            aria-expanded={drawerOpen}
           >
-            {error}
-          </div>
-        )}
+            ⚙ Post Settings
+          </button>
 
-        <div className="admin-form">
-          <div className="form-group">
-            <label htmlFor="post-title">Title</label>
+          <button
+            type="button"
+            onClick={() => void savePost()}
+            disabled={saving || uploading}
+            className="btn-primary"
+          >
+            {saving ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </header>
 
-            <input
-              id="post-title"
-              name="title"
-              type="text"
-              value={editing.title}
-              onChange={(event) =>
-                updatePost("title", event.target.value)
-              }
-              placeholder="Post title"
-              className="form-input"
-              required
-              autoFocus
-            />
-          </div>
+      <section className="editor-content">
+        <label
+          htmlFor="post-title"
+          className="sr-only"
+        >
+          Post title
+        </label>
 
-          <div className="form-group">
-            <label htmlFor="post-slug">Slug</label>
+        <input
+          id="post-title"
+          name="title"
+          type="text"
+          value={editing.title}
+          onChange={(event) =>
+            updatePost("title", event.target.value)
+          }
+          placeholder="Post title..."
+          className="editor-title-input"
+          autoComplete="off"
+          autoFocus
+        />
 
-            <input
-              id="post-slug"
-              name="slug"
-              type="text"
-              value={editing.slug}
-              onChange={(event) =>
-                updatePost("slug", event.target.value)
-              }
-              placeholder="auto-generated-from-title"
-              className="form-input"
-            />
+        <div className="editor-body">
+          <RichTextEditor
+            value={editing.body}
+            onChange={(html: string) =>
+              updatePost("body", html)
+            }
+          />
+        </div>
+      </section>
 
-            <small id="post-slug-help">
-              Leave empty to auto-generate from the title.
-            </small>
-          </div>
+      {drawerOpen && (
+        <>
+          <div
+            className="drawer-overlay"
+            onClick={() => setDrawerOpen(false)}
+            aria-hidden="true"
+          />
 
-          <div className="form-group">
-            <label htmlFor="post-excerpt">Excerpt</label>
+          <aside
+            className="drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="post-settings-title"
+          >
+            <div className="drawer-header">
+              <h2 id="post-settings-title">
+                Post Settings
+              </h2>
 
-            <textarea
-              id="post-excerpt"
-              name="excerpt"
-              value={editing.excerpt}
-              onChange={(event) =>
-                updatePost("excerpt", event.target.value)
-              }
-              placeholder="Short summary shown in the post list"
-              className="form-textarea"
-              rows={3}
-            />
-          </div>
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(false)}
+                className="drawer-close"
+                aria-label="Close post settings"
+              >
+                ✕
+              </button>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="post-cover-image">Cover Image</label>
+            <div className="drawer-body">
+              <div className="form-group">
+                <label htmlFor="post-slug">
+                  Slug
+                </label>
 
-            <div className="cover-upload">
-              {editing.cover_image && (
-                <div className="cover-preview-container">
-                  <img
-                    src={editing.cover_image}
-                    alt="Current post cover preview"
-                    className="cover-preview"
+                <input
+                  id="post-slug"
+                  name="slug"
+                  type="text"
+                  value={editing.slug}
+                  onChange={(event) =>
+                    updatePost("slug", event.target.value)
+                  }
+                  placeholder="auto-generated-from-title"
+                  className="form-input"
+                  autoComplete="off"
+                  aria-describedby="post-slug-help"
+                />
+
+                <small id="post-slug-help">
+                  Leave empty to auto-generate from the title.
+                </small>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="post-excerpt">
+                  Excerpt
+                </label>
+
+                <textarea
+                  id="post-excerpt"
+                  name="excerpt"
+                  value={editing.excerpt}
+                  onChange={(event) =>
+                    updatePost("excerpt", event.target.value)
+                  }
+                  placeholder="Short summary shown in the post list"
+                  className="form-textarea"
+                  rows={4}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="post-cover-url">
+                  Cover Image
+                </label>
+
+                <div className="cover-upload-vertical">
+                  {editing.cover_image && (
+                    <div className="cover-preview-container">
+                      <img
+                        src={editing.cover_image}
+                        alt="Post cover preview"
+                        className="cover-preview-large"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={removeCoverImage}
+                        className="btn-secondary btn-full"
+                        disabled={saving || uploading}
+                      >
+                        Remove Image
+                      </button>
+                    </div>
+                  )}
+
+                  <input
+                    id="post-cover-url"
+                    name="coverImage"
+                    type="url"
+                    value={editing.cover_image ?? ""}
+                    onChange={(event) =>
+                      updatePost(
+                        "cover_image",
+                        event.target.value || null,
+                      )
+                    }
+                    placeholder="https://media.paulibaby.com/image.jpg"
+                    className="form-input"
+                    autoComplete="url"
+                  />
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) =>
+                      void handleCoverUpload(event)
+                    }
+                    hidden
                   />
 
                   <button
                     type="button"
-                    onClick={removeCoverImage}
-                    className="btn-secondary"
+                    onClick={() =>
+                      fileInputRef.current?.click()
+                    }
+                    className="btn-secondary btn-full"
                     disabled={saving || uploading}
                   >
-                    Remove Image
+                    {uploading
+                      ? "Uploading..."
+                      : "Upload Image"}
                   </button>
+                </div>
+              </div>
+
+              <div className="form-group form-checkbox">
+                <label htmlFor="post-published">
+                  <input
+                    id="post-published"
+                    name="published"
+                    type="checkbox"
+                    checked={editing.published}
+                    onChange={(event) =>
+                      updatePost(
+                        "published",
+                        event.target.checked,
+                      )
+                    }
+                  />
+
+                  <span>Published</span>
+                </label>
+              </div>
+
+              {editing.created_at && (
+                <div className="form-group post-metadata">
+                  <span>Created</span>
+                  <time dateTime={editing.created_at}>
+                    {formatDate(editing.created_at)}
+                  </time>
                 </div>
               )}
 
-              <input
-                id="post-cover-image"
-                name="coverImage"
-                type="url"
-                value={editing.cover_image ?? ""}
-                onChange={(event) =>
-                  updatePost(
-                    "cover_image",
-                    event.target.value || null
-                  )
-                }
-                placeholder="https://media.paulibaby.com/image.jpg"
-                className="form-input"
-              />
+              {editing.updated_at && (
+                <div className="form-group post-metadata">
+                  <span>Updated</span>
+                  <time dateTime={editing.updated_at}>
+                    {formatDate(editing.updated_at)}
+                  </time>
+                </div>
+              )}
+            </div>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                onChange={handleCoverUpload}
-                accept="image/*"
-                hidden
-              />
-
+            <div className="drawer-footer">
               <button
                 type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="btn-secondary"
-                disabled={saving || uploading}
+                onClick={() => setDrawerOpen(false)}
+                className="btn-primary btn-full"
               >
-                {uploading ? "Uploading…" : "Upload Image"}
+                Done
               </button>
             </div>
-          </div>
-
-          <div className="form-group">
-            <label id="post-body-label">Body</label>
-
-            <div aria-labelledby="post-body-label">
-              <RichTextEditor
-                value={editing.body}
-                onChange={(html) => updatePost("body", html)}
-              />
-            </div>
-          </div>
-
-          <div className="form-group form-checkbox">
-            <label htmlFor="post-published">
-              <input
-                id="post-published"
-                name="published"
-                type="checkbox"
-                checked={editing.published}
-                onChange={(event) =>
-                  updatePost("published", event.target.checked)
-                }
-              />
-              Published
-            </label>
-          </div>
-
-          <div className="admin-actions admin-form-actions">
-            <button
-              type="button"
-              onClick={goBack}
-              className="btn-secondary"
-              disabled={saving || uploading}
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={saving || uploading}
-              className="btn-primary"
-            >
-              {saving ? "Saving…" : "Save Post"}
-            </button>
-          </div>
-        </div>
-      </form>
+          </aside>
+        </>
+      )}
     </main>
   );
 }
 
-function getErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
-  return fallback;
+function normalisePost(data: PostApiResponse): Post {
+  return {
+    id: data.id,
+    slug:
+      typeof data.slug === "string"
+        ? data.slug
+        : "",
+    title:
+      typeof data.title === "string"
+        ? data.title
+        : "",
+    excerpt:
+      typeof data.excerpt === "string"
+        ? data.excerpt
+        : "",
+    body:
+      typeof data.body === "string"
+        ? data.body
+        : "",
+    cover_image:
+      typeof data.cover_image === "string"
+        ? data.cover_image
+        : null,
+    published: Boolean(data.published),
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+  };
 }
 
-async function getResponseError(
+async function readApiError(
   response: Response,
-  fallback: string
+  fallback: string,
 ): Promise<string> {
-  const contentType = response.headers.get("content-type");
-
   try {
-    if (contentType?.includes("application/json")) {
-      const body = (await response.json()) as {
-        error?: string;
-        message?: string;
-      };
+    const contentType =
+      response.headers.get("content-type") ?? "";
 
-      return body.message || body.error || fallback;
+    if (contentType.includes("application/json")) {
+      const data =
+        (await response.json()) as ErrorApiResponse;
+
+      return data.error || data.message || fallback;
     }
 
     const text = await response.text();
@@ -566,4 +733,23 @@ async function getResponseError(
   } catch {
     return fallback;
   }
+}
+
+function getErrorMessage(
+  error: unknown,
+  fallback: string,
+): string {
+  return error instanceof Error && error.message
+    ? error.message
+    : fallback;
+}
+
+function formatDate(value: string): string {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleString();
 }
