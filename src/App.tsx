@@ -59,7 +59,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Paulibaby</h1>
+        <h1>Paulibaby is a cunt</h1>
         <p className="tagline">Thoughts, stories, and more.</p>
       </header>
 

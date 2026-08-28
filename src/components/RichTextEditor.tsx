@@ -3,10 +3,10 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-
+import { Dropcursor } from '@tiptap/extensions'
 // Global type augmentations for Tiptap & Prosemirror commands
 import "@tiptap/core";
-import "@tiptap/extension-history"; 
+import "@tiptap/extension-history";
 
 import { Audio } from "./tiptap/AudioExtension";
 import { Video } from "./tiptap/VideoExtension";
@@ -28,6 +28,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
 
   const editor = useEditor({
     extensions: [
+      Dropcursor,
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
       }),
@@ -39,7 +40,9 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           minWidth: 50,
           minHeight: 50,
           alwaysPreserveAspectRatio: true,
-        }}),
+        },
+        allowBase64: true
+      }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: { rel: "noopener noreferrer" },
@@ -62,7 +65,12 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
       },
     },
   });
-
+  editor.commands.setImage({ src: 'https://example.com/foobar.png' })
+  editor.commands.setImage({
+    src: 'https://example.com/foobar.png',
+    alt: 'A boring example image',
+    title: 'An example',
+  })
   if (!editor) {
     return <div className="tiptap-loading">Loading editor…</div>;
   }
