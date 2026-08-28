@@ -17,7 +17,6 @@ export default function AppRouter() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/post-editor" element={<PostEditorPage />} />
           <Route path="/post-editor/:id" element={<PostEditorPage/>} />
-
         </Route>
       </Routes>
     </BrowserRouter>
