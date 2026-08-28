@@ -1,0 +1,49 @@
+{
+    "items": [
+        {
+            "id": "01",
+            "label": "Home",
+            "parent": "",
+            "route": "/"
+        },
+        {
+            "id": "02",
+            "label": "Music",
+            "parent": "",
+            "route": "/music"
+        },
+        {
+            "id": "03",
+            "label": "Video",
+            "parent": "",
+            "route": "/video"
+        },
+        {
+            "id": "04",
+            "label": "Podcasts and radio",
+            "parent":"",
+            "route":"/radio-podcasts",
+            "children": [
+                {
+                    "id": "05",
+                    "label": "Comedy",
+                    "parent": "04",
+                    "route": "/radio-podcasts/comedy"
+                },
+                {
+                    "id": "06",
+                    "label": "Documentaries",
+                    "parent":"04",
+                    "route": "/radio-podcasts/documentaries"
+                }
+            ]
+        },
+        {
+            "id": "07",
+            "label": "Admin",
+            "parent":"",
+            "route": "/admin"
+
+        }
+    ]
+}

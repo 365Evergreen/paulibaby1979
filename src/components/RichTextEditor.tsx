@@ -32,9 +32,14 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         heading: { levels: [1, 2, 3] },
       }),
       Image.configure({
-        inline: false,
-        allowBase64: false,
-      }),
+        inline: true,
+        resize: {
+          enabled: true,
+          directions: ['top', 'bottom', 'left', 'right'],
+          minWidth: 50,
+          minHeight: 50,
+          alwaysPreserveAspectRatio: true,
+        }}),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: { rel: "noopener noreferrer" },
