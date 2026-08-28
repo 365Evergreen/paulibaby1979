@@ -48,7 +48,7 @@ padding: 0;
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--text-primary);
+  color:aliceblue;
   text-decoration: none;
   text-align: left;
   font: inherit;
@@ -159,4 +159,5 @@ padding: 0;
 }
 
 a:link{
+  color: #e0d3d3;
 text-decoration: none; }
