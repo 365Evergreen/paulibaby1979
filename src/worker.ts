@@ -1,5 +1,6 @@
 /**
- * paulibaby1979 Worker — Blog API + Admin Panel
+ * paulibaby1979 Worker
+ * Blog API + Admin Panel
  */
 
 export interface Env {
@@ -20,20 +21,55 @@ interface Post {
   updated_at: string;
 }
 
-const CORS: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
-
-function json(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json", ...CORS },
-  });
+interface PostInput {
+  slug?: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  cover_image: string | null;
+  published: boolean;
 }
 
-function slugify(text: string): string {
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods":
+    "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers":
+    "Content-Type",
+};
+
+function json(
+  data: unknown,
+  status = 200
+): Response {
+  return new Response(
+    JSON.stringify(data),
+    {
+      status,
+      headers: {
+        "Content-Type":
+          "application/json",
+        ...CORS,
+      },
+    }
+  );
+}
+
+function error(
+  message: string,
+  status = 400
+): Response {
+  return json(
+    {
+      error: message,
+    },
+    status
+  );
+}
+
+function slugify(
+  text: string
+): string {
   return text
     .toLowerCase()
     .trim()
@@ -42,125 +78,164 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+async function parsePostRequest(
+  request: Request
+): Promise<PostInput> {
+  const body =
+    await request.json();
+
+  if (
+    !body ||
+    typeof body !== "object"
+  ) {
+    throw new Error(
+      "Request body is required"
+    );
+  }
+
+  const data =
+    body as Record<
+      string,
+      unknown
+    >;
+
+  if (
+    typeof data.title !==
+      "string" ||
+    !data.title.trim()
+  ) {
+    throw new Error(
+      "Title is required"
+    );
+  }
+
+  return {
+    title: data.title.trim(),
+    slug:
+      typeof data.slug ===
+      "string"
+        ? data.slug.trim()
+        : undefined,
+    excerpt:
+      typeof data.excerpt ===
+      "string"
+        ? data.excerpt
+        : "",
+    body:
+      typeof data.body ===
+      "string"
+        ? data.body
+        : "",
+    cover_image:
+      typeof data.cover_image ===
+      "string"
+        ? data.cover_image
+        : null,
+    published: Boolean(
+      data.published
+    ),
+  };
+}
+
+async function getPostById(
+  env: Env,
+  id: number
+) {
+  return env.DB.prepare(
+    "SELECT * FROM posts WHERE id = ?"
+  )
+    .bind(id)
+    .first<Post>();
+}
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
-    const path = url.pathname;
-    const method = request.method;
+  async fetch(
+    request: Request,
+    env: Env
+  ): Promise<Response> {
+    try {
+      const url = new URL(
+        request.url
+      );
 
-    if (method === "OPTIONS") {
-      return new Response(null, { headers: CORS });
-    }
+      const path =
+        url.pathname;
 
-    // --- Public API: list published posts ---
-    if (path === "/api/posts" && method === "GET") {
-      const results = await env.DB.prepare(
-        "SELECT id, slug, title, excerpt, cover_image, created_at FROM posts WHERE published = 1 ORDER BY created_at DESC"
-      ).all();
-      return json(results.results);
-    }
+      const method =
+        request.method;
 
-    // --- Public API: get single post by slug ---
-    const postMatch = path.match(/^\/api\/posts\/([^/]+)$/);
-    if (postMatch && method === "GET") {
-      const slug = postMatch[1];
-      const post = await env.DB.prepare(
-        "SELECT * FROM posts WHERE slug = ? AND published = 1"
-      ).bind(slug).first<Post>();
-      if (!post) return json({ error: "Not found" }, 404);
-      return json(post);
-    }
+      if (
+        method === "OPTIONS"
+      ) {
+        return new Response(
+          null,
+          {
+            headers: CORS,
+          }
+        );
+      }
 
-    // --- Admin API: list all posts ---
-    if (path === "/api/admin/posts" && method === "GET") {
-      const results = await env.DB.prepare(
-        "SELECT * FROM posts ORDER BY created_at DESC"
-      ).all();
-      return json(results.results);
-    }
+      // ==================================
+      // PUBLIC POSTS
+      // ==================================
 
-    // --- Admin API: create post ---
-    if (path === "/api/admin/posts" && method === "POST") {
-      const body = await request.json() as Partial<Post>;
-      const slug = body.slug || slugify(body.title || "untitled");
-      const result = await env.DB.prepare(
-        "INSERT INTO posts (slug, title, excerpt, body, cover_image, published) VALUES (?, ?, ?, ?, ?, ?)"
-      ).bind(
-        slug,
-        body.title || "",
-        body.excerpt || "",
-        body.body || "",
-        body.cover_image || null,
-        body.published ? 1 : 0
-      ).run();
-      return json({ id: result.meta.last_row_id, slug }, 201);
-    }
+      if (
+        path === "/api/posts" &&
+        method === "GET"
+      ) {
+        const posts =
+          await env.DB.prepare(
+            `
+            SELECT
+              id,
+              slug,
+              title,
+              excerpt,
+              cover_image,
+              created_at
+            FROM posts
+            WHERE published = 1
+            ORDER BY created_at DESC
+          `
+          ).all();
 
-    // --- Admin API: get / update / delete post by ID ---
-    const adminPostMatch = path.match(/^\/api\/admin\/posts\/(\d+)$/);
-    if (adminPostMatch) {
-      const id = parseInt(adminPostMatch[1]);
+        return json(
+          posts.results
+        );
+      }
 
-      if (method === "GET") {
-        const post = await env.DB.prepare("SELECT * FROM posts WHERE id = ?")
-          .bind(id).first<Post>();
-        if (!post) return json({ error: "Not found" }, 404);
+      const slugMatch =
+        path.match(
+          /^\/api\/posts\/([^/]+)$/
+        );
+
+      if (
+        slugMatch &&
+        method === "GET"
+      ) {
+        const slug =
+          slugMatch[1];
+
+        const post =
+          await env.DB.prepare(
+            `
+            SELECT *
+            FROM posts
+            WHERE slug = ?
+            AND published = 1
+          `
+          )
+            .bind(slug)
+            .first<Post>();
+
+        if (!post) {
+          return error(
+            "Post not found",
+            404
+          );
+        }
+
         return json(post);
       }
 
-      if (method === "PUT") {
-        const body = await request.json() as Partial<Post>;
-        const slug = body.slug || slugify(body.title || "untitled");
-        await env.DB.prepare(
-          "UPDATE posts SET slug = ?, title = ?, excerpt = ?, body = ?, cover_image = ?, published = ?, updated_at = datetime('now') WHERE id = ?"
-        ).bind(
-          slug,
-          body.title || "",
-          body.excerpt || "",
-          body.body || "",
-          body.cover_image || null,
-          body.published ? 1 : 0,
-          id
-        ).run();
-        return json({ success: true });
-      }
-
-      if (method === "DELETE") {
-        await env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id).run();
-        return json({ success: true });
-      }
-    }
-
-    // --- Admin API: upload image to R2 ---
-    if (path === "/api/admin/upload" && method === "POST") {
-      const formData = await request.formData();
-      const file = formData.get("file") as File;
-      if (!file) return json({ error: "No file provided" }, 400);
-
-      const key = `${Date.now()}-${file.name}`;
-      await env.BUCKET.put(key, file.stream(), {
-        httpMetadata: { contentType: file.type },
-      });
-
-      return json({
-        key,
-        url: `https://media.paulibaby.com/${key}`,
-      }, 201);
-    }
-
-    // --- Admin API: list R2 objects ---
-    if (path === "/api/admin/upload" && method === "GET") {
-      const listed = await env.BUCKET.list();
-      const objects = listed.objects.map((obj) => ({
-        key: obj.key,
-        size: obj.size,
-        uploaded: obj.uploaded.toISOString(),
-        url: `https://media.paulibaby.com/${obj.key}`,
-      }));
-      return json(objects);
-    }
-
-    // --- Fallback: serve static assets (SPA) ---
-    return env.ASSETS.fetch(request);
-  },
-};
+      // =========
