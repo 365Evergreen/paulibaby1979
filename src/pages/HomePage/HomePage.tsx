@@ -1,10 +1,12 @@
-
+import LatestPosts from '../../components/LatestPosts/LatestPosts'
+import styles from './HomePage.module.css'
 
 const HomePage = () => {
   return (
-    <div>
-Pauli
-    </div>
+    <section className={styles.section}>
+      <div>Pauli</div>
+      <LatestPosts/>
+    </section>
 
   );
 }
