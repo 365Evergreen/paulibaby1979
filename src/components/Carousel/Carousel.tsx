@@ -6,32 +6,34 @@ interface LatestPostsSliderProps {
   posts: Post[];
   autoSlide?: boolean;
   interval?: number;
+  limit?: number
 }
 
 export default function LatestPostsSlider({
   posts,
   autoSlide = true,
   interval = 5000,
-}: LatestPostsSliderProps) {
+  limit=3,
+}: LatestPostsSliderProps) {  const displayedPosts = posts.slice(0, limit);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const nextSlide = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex === posts.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === displayedPosts.length - 1 ? 0 : prevIndex + 1));
   };
 
   const prevSlide = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? posts.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? displayedPosts.length - 1 : prevIndex - 1));
   };
 
   useEffect(() => {
     if (!autoSlide || posts.length <= 1) return;
     const slideTimer = setInterval(nextSlide, interval);
     return () => clearInterval(slideTimer);
-  }, [currentIndex, autoSlide, interval, posts.length]);
+  }, [currentIndex, autoSlide, interval, displayedPosts.length]);
 
   if (!posts || posts.length === 0) return null;
 
-  const currentPost = posts[currentIndex];
+  const currentPost = displayedPosts[currentIndex];
 
   return (
     <div className={styles.slideshowContainer}>
@@ -43,10 +45,13 @@ export default function LatestPostsSlider({
           <a href={currentPost.url}>Read More</a>
         </div>
       </div>
-      <>
-        <button className={styles.prevBtn} onClick={prevSlide} aria-label="Previous slide"> ❮ </button>
-        <button className={styles.nextBtn} onClick={nextSlide} aria-label="Next slide"> ❯ </button>
-      </>
+      {/* 8. Conditional rendering: hide arrows if there is only 1 slide */}
+      {displayedPosts.length > 1 && (
+        <>
+          <button className={styles.prevBtn} onClick={prevSlide} aria-label="Previous slide"> ❮ </button>
+          <button className={styles.nextBtn} onClick={nextSlide} aria-label="Next slide"> ❯ </button>
+        </>
+      )}
     </div>
   );
 }

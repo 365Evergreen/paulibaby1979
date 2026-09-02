@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import LatestPosts from '../../components/LatestPosts/LatestPosts'
 import GetInTouch from '../../components/GetInTouch/GetInTouch'
-
 import Carousel from '../../components/Carousel/Carousel'
 import styles from './HomePage.module.css'
 
@@ -53,12 +52,12 @@ const HomePage = () => {
             ),
             rightColumn: (
               <div>
-              </div>
+              </div> 
             ),
           }
 
           }
-        /></div>
+        /></div> 
     </section>
   );
 }

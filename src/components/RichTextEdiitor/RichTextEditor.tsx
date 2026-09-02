@@ -16,7 +16,8 @@ import ImageResize from "tiptap-extension-resize-image";
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YoutubeExtension";
-import { ColumnsLayout, Column } from "../tiptap/ColumnsExtension";
+import { ColumnsLayout, Column } from "../tiptap/ColumnExtension";
+import { FileHandler } from "@tiptap/extension-file-handler";
 import styles from './RichTextEditor.module.css'
 
 interface RichTextEditorProps {
@@ -92,7 +93,7 @@ export default function RichTextEditor({
       Video,
       YoutubeEmbed,
       ColumnsLayout,
-      Column
+      Column, FileHandler
     ],
 
     content: value ?? "",
@@ -563,20 +564,44 @@ export default function RichTextEditor({
         >
           🔗
         </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().insertColumns(2).run()}
-          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 2 }))}
-        >
-          2 Columns
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().insertColumns(3).run()}
-          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 3 }))}
-        >
-          3 Columns
-        </button>
+{/* Insertion Controls */}
+<button 
+  type="button"
+  onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 2 }).run()}
+  className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 2 }))}
+>
+  2 Columns
+</button>
+<button 
+  type="button"
+  onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 3 }).run()}
+  className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 3 }))}
+>
+  3 Columns
+</button>
+
+{/* Dynamic Modification Controls (Only display when active inside a layout) */}
+{editor.isActive("columnsLayout") && (
+  <>
+    <button
+      type="button"
+      onClick={() => (editor.chain().focus() as any).addColumn().run()}
+      className={styles.tiptapButton}
+      title="Add new column column to this group"
+    >
+      ➕ Add Column
+    </button>
+    <button
+      type="button"
+      onClick={() => (editor.chain().focus() as any).removeColumn().run()}
+      className={styles.tiptapButton}
+      title="Delete current active column block"
+    >
+      ❌ Delete Column
+    </button>
+  </>
+)}
+
 
 
         <button
@@ -618,7 +643,16 @@ export default function RichTextEditor({
         >
           ▶
         </button>
-
+        
+        <button
+          type="button"
+          onClick={addYoutube}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("youtube"))}
+          title="Embed YouTube video"
+          disabled={controlsDisabled}
+        >
+          ▶
+        </button>
         <span
           className="tiptap-divider"
           aria-hidden="true"

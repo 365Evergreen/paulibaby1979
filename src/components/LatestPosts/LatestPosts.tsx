@@ -35,7 +35,8 @@ export default function LatestPosts() {
   return (
     <section className={styles.section}>
       <main className="posts">
-        <div className={styles.contentContainer}>Yo, cunt</div>
+        <div className={styles.contentContainer}>
+          <div className={styles.sectionHeader}/><h2>Latest from Pauli</h2></div>
         <div className={styles.postGrid}>
           {posts.length === 0 ? (
             <p className="empty">No posts yet. Check back soon!</p>

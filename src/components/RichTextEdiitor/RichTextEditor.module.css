@@ -2,57 +2,66 @@
 .tipTapWrapper :global {
 
   /* Core Layout Grid structural containment box */
-  div[data-type="columns-layout"] {
-    display: grid !important;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-    width: 100%;
-    box-sizing: border-box;
-    /* Keeps inner absolute items inside layout boxes contextually stable */
-    position: relative; 
-  }
 
-  /* 2-Column Forceful Layout Division */
   div[data-type="columns-layout"].cols-2 {
+    display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem;
+    background: #e2e8f0;
   }
 
-  /* 3-Column Forceful Layout Division */
   div[data-type="columns-layout"].cols-3 {
+    display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-
-  /* 4-Column Forceful Layout Division */
-  div[data-type="columns-layout"].cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  }
-
-  /* Individual Columns Baseline Style */
-  div[data-type="column"] {
-    border: 2px dashed #cbd5e1;
-    padding: 1.25rem;
-    border-radius: 0.375rem;
-    min-height: 100px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-    width: 100% !important; /* Forces compliance inside its grid track cell assignment */
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  /* Clear out standard paragraph vertical alignment issues inside layouts */
-  div[data-type="column"] > * {
-    margin-top: 0;
-  }
-  div[data-type="column"] > *:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Active focus highlight state */
-  div[data-type="column"]:focus-within {
-    border-color: var(--accent, #3b82f6);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    gap: 1.5rem;
+    background: white;
   }
 }
+
+/* 2-Column Forceful Layout Division */
+div[data-type="columns-layout"].cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  background: #ccc;
+}
+
+/* 3-Column Forceful Layout Division */
+div[data-type="columns-layout"].cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+/* 4-Column Forceful Layout Division */
+div[data-type="columns-layout"].cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+/* Individual Columns Baseline Style */
+div[data-type="column"] {
+  border: 2px dashed #151d27;
+  padding: 1.25rem;
+  border-radius: 0.375rem;
+  min-height: 100px;
+  background: #ffffff;
+  box-sizing: border-box;
+  width: 100% !important;
+  /* Forces compliance inside its grid track cell assignment */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Clear out standard paragraph vertical alignment issues inside layouts */
+div[data-type="column"]>* {
+  margin-top: 0;
+}
+
+div[data-type="column"]>*:last-child {
+  margin-bottom: 0;
+}
+
+/* Active focus highlight state */
+div[data-type="column"]:focus-within {
+  border-color: var(--accent, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
 
 
 .tipTapWrapper {
@@ -60,26 +69,29 @@
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
+  background-color: #e2e8f0;
 }
 
 .tipTapToolbar {
   display: flex;
   flex-direction: row;
-   flex-wrap: wrap;
+  flex-wrap: wrap;
   gap: 0.25rem;
   padding: 0.5rem;
   border-bottom: 1px solid var(--border);
   background: #f9f9f9;
   position: sticky;
   top: 56px;
-  z-index: 500;  
+  z-index: 500;
   justify-content: flex-start !important;
   align-items: center !important;
 }
 
-.editorCanvas{
+.editorCanvas {
   flex: 1;
-  width: 100%;  background-color: rgb(225, 225, 225);
+  width: 100%;
+  background-color:
+    rgb(225, 225, 225);
   border: 1px lightgray solid;
   margin-top: 10px;
 }
@@ -107,9 +119,11 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .editorButtonSecondary:hover {
   background: #f0f0f0;
 }
+
 .tiptapLoading {
   padding: 2rem;
   text-align: center;
@@ -118,11 +132,15 @@
 
 
 
-.tiptapButton {  position: static !important;      /* Forces standard horizontal engine placement */
-  display: inline-flex !important;  /* Centers inner SVG/Icons perfectly */
+.tiptapButton {
+  position: static !important;
+  /* Forces standard horizontal engine placement */
+  display: inline-flex !important;
+  /* Centers inner SVG/Icons perfectly */
   justify-content: center !important;
   align-items: center !important;
-  float: none !important;           /* Stops items from layout-breaking drifting */
+  float: none !important;
+  /* Stops items from layout-breaking drifting */
   transform: none !important;
   background: white;
   border: 1px solid var(--border);
@@ -327,5 +345,5 @@ div[data-type="column"]:focus-within {
   border-color: #3b82f6;
   background-color: #f8fafc;
 }
-/* Inside your CSS Module file (e.g., Editor.module.css) */
 
+/* Inside your CSS Module file (e.g., Editor.module.css) */

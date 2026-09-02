@@ -1,7 +1,12 @@
 .contentContainer {
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  padding: 0;
 }
+
+.sectionHeader{
+  padding-top: 1rem;
+}
+
 
 .postGrid{
   display: grid;
