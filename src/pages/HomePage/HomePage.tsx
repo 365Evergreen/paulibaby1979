@@ -1,12 +1,17 @@
 import LatestPosts from '../../components/LatestPosts/LatestPosts'
 import GetInTouch from '../../components/GetInTouch/GetInTouch'
+import HomePageHero from '../../components/HomePageHero/HomePageHero'
 import styles from './HomePage.module.css'
 
 const HomePage = () => {
   return (
     <section className={styles.section}>
       <div className={styles.hero}>
-      <LatestPosts/></div>
+        <HomePageHero />
+      </div>
+      <div className={styles.latestPosts}>
+        <LatestPosts />
+      </div>
       <div className={styles.getInTouch}>
       <GetInTouch
       {...{

@@ -1,0 +1,11 @@
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carouselContent {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+}
