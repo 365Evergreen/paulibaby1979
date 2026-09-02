@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './GetInTouch.module.css'
-import { AdaptiveCardForm } from './AdaptiveCardForm';
+import { ContactForm } from './ContactForm';
 
 // Define the TypeScript interface for the component props
 interface GetInTouchProps {
@@ -23,7 +23,7 @@ export const GetInTouch: React.FC<GetInTouchProps> = ({
       </div>
       <div className={`${styles.column} ${styles.columnRight}`}>
         {rightColumn}
-        <AdaptiveCardForm />
+        <ContactForm />
       </div>
     </section>
   );

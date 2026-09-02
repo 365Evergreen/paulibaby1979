@@ -17,7 +17,7 @@ const cardPayload = {
       "columns": [
         {
           "type": "Column",
-          "width": "auto",
+          "width": "stretch", /* Changed from auto to allow columns to spread side-by-side naturally */
           "items": [
             {
               "type": "Input.Text",
@@ -30,7 +30,7 @@ const cardPayload = {
         },
         {
           "type": "Column",
-          "width": "auto",
+          "width": "stretch", /* Changed from auto */
           "items": [
             {
               "type": "Input.Text",
@@ -48,7 +48,7 @@ const cardPayload = {
       "columns": [
         {
           "type": "Column",
-          "width": "auto",
+          "width": "stretch", /* Changed from auto */
           "items": [
             {
               "type": "Input.Text",
@@ -62,7 +62,7 @@ const cardPayload = {
         },
         {
           "type": "Column",
-          "width": "auto",
+          "width": "stretch", /* Changed from auto */
           "items": [
             {
               "type": "Input.Text",
@@ -82,22 +82,10 @@ const cardPayload = {
       "style": "compact",
       "placeholder": "Choose...",
       "choices": [
-        {
-          "title": "Modern workplace",
-          "value": "1"
-        },
-        {
-          "title": "Business applications",
-          "value": "2"
-        },
-        {
-          "title": "Copilot",
-          "value": "3"
-        },
-        {
-          "title": "Help and support",
-          "value": "4"
-        }
+        { "title": "Modern workplace", "value": "1" },
+        { "title": "Business applications", "value": "2" },
+        { "title": "Copilot", "value": "3" },
+        { "title": "Help and support", "value": "4" }
       ],
       "isMultiSelect": false
     },
@@ -108,15 +96,15 @@ const cardPayload = {
       "label": "Message",
       "isMultiline": true,
       "isRequired": true
-    },
+    }
+    /* ⚠️ ActionSet has been safely removed from here */
+  ],
+  
+  /*  Move actions here at the card payload root block level */
+  "actions": [
     {
-      "type": "ActionSet",
-      "actions": [
-        {
-          "type": "Action.Submit",
-          "title": "Submit"
-        }
-      ]
+      "type": "Action.Submit",
+      "title": "Send message"
     }
   ]
 }
@@ -165,15 +153,18 @@ export const AdaptiveCardForm: React.FC = () => {
     }
   }, []);
 
-  return (
-    // Apply the local CSS module class name here
-    <div className={styles.cardContainer}>
-      {/* The Adaptive Card will inject its global classes inside this container */}
-      <div ref={containerRef} />
+return (
+  <div className={styles.cardContainer}>
+    {/* The Adaptive Card injects its complete DOM tree safely inside here */}
+    <div ref={containerRef} />
 
-      {status === 'submitting' && <p style={{ color: '#2563eb' }}>Sending...</p>}
-      {status === 'success' && <p style={{ color: '#16a34a' }}>Submitted!</p>}
-      {status === 'error' && <p style={{ color: '#dc2626' }}>Error occurred.</p>}
-    </div>
-  );
-};
+    {/* Separate container for statuses ensures proper spacing alignment */}
+    {status !== 'idle' && (
+      <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+        {status === 'submitting' && <p style={{ color: '#2563eb', margin: 0 }}>Sending...</p>}
+        {status === 'success' && <p style={{ color: '#16a34a', margin: 0 }}>Submitted!</p>}
+        {status === 'error' && <p style={{ color: '#dc2626', margin: 0 }}>Error occurred.</p>}
+      </div>
+    )}
+  </div>
+)};
