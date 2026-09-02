@@ -1,23 +1,31 @@
-.contentContainer{
+.contentContainer {
     width: 100%;
 }
 
-.section{
+.section {
     width: 100%;
 }
 
-.adminTable{
+.adminTable {
     width: 100%;
     text-align: left;
 }
 
-.adminTableHeader{
+.adminTableHeader {
     background-color: aqua;
 }
 
-.adminTableActions{
+.adminTableActions {
     display: flex;
-flex-direction: row;
-align-content: space-between;
-justify-content: space-between;
+    flex-direction: row;
+    align-content: space-between;
+    justify-content: space-between;
+}
+
+.editPostButton{
+    background-color: blueviolet;
+}
+
+.deletePostButton{
+    background-color: red;
 }

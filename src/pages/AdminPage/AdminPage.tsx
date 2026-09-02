@@ -43,13 +43,7 @@ export default function AdminPage() {
     await loadPosts();
   }
 
-
-
-
-
-
-
-  return (
+return (
     <div className="admin">
       <header className="admin-header">
         <h1>Blog admin</h1>
@@ -58,6 +52,7 @@ export default function AdminPage() {
           <button onClick={() => navigate("/post-editor")}>
             New post
           </button>
+         <button onClick={() => navigate ("/media-library")}>Media library</button>
         </div>
       </header>
 
@@ -90,11 +85,11 @@ export default function AdminPage() {
                     : "—"}
                 </td>
                 <td className={styles.adminTableActions}>
-                  <button type="button" onClick={() => navigate(`/post-editor/${post.id}`)} >
+                  <button className={styles.editPostButton} type="button" onClick={() => navigate(`/post-editor/${post.id}`)} >
                     Edit
                   </button>
 
-                <button onClick={() => deletePost(post.id!)} className="btn-small btn-danger">Delete</button>
+                <button onClick={() => deletePost(post.id!)} className={styles.deletePostButton}>Delete</button>
               </td>
               </tr>
             ))}
