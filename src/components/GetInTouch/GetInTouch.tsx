@@ -28,3 +28,5 @@ export const GetInTouch: React.FC<GetInTouchProps> = ({
     </section>
   );
 };
+
+export default GetInTouch;

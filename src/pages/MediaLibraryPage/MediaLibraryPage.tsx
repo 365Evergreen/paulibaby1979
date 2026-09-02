@@ -422,7 +422,7 @@ export default function AdminMedia() {
         {loading ? (
           <div className="loading">Loading…</div>
         ) : sortedFiltered.length === 0 ? (
-          <div className="empty">No media found. Click "Add Media" to upload your first image!</div>
+          <div className="empty">No media found. Click "Add media" to upload your first image!</div>
         ) : layout === "grid" ? (
           /* --- Grid view --- */
           <div className={styles.mediaGrid}>
