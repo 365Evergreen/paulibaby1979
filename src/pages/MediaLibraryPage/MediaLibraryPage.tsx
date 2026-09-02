@@ -19,7 +19,6 @@ type Media = {
   created_at: string;
   updated_at: string;
 };
-
 type View = "list" | "edit";
 type Layout = "grid" | "table";
 type SortKey = "created_at" | "content_type";
@@ -27,11 +26,29 @@ type SortDir = "asc" | "desc";
 
 const MEDIA_URL = "https://media.paulibaby.com";
 
+/** Full-size public URL for an R2 object. */
+function fullUrl(r2Key: string): string {
+  return `${MEDIA_URL}/${r2Key}`;
+}
+
 /** Cloudflare Image Resizing via URL — serves a real thumbnail-sized image
  *  instead of downloading the full-size file. Requires the zone to be
- *  proxied (orange-cloud) with Image Resizing enabled. */
+ *  proxied (orange-cloud) with Image Resizing enabled.
+ *  If Image Resizing is not enabled, the <img> onError handler falls back
+ *  to the full-size URL. */
 function thumbUrl(r2Key: string, width: number, height: number): string {
   return `${MEDIA_URL}/cdn-cgi/image/width=${width},height=${height},fit=cover/${r2Key}`;
+}
+
+/** Fallback handler: if the Image Resizing URL fails (feature not enabled,
+ *  zone not proxied, etc.), swap the src to the full-size object URL. */
+function handleImgError(e: React.SyntheticEvent<HTMLImageElement>, r2Key: string) {
+  const img = e.currentTarget;
+  const fallback = fullUrl(r2Key);
+  // Prevent infinite loop if the full URL also fails
+  if (img.src !== fallback) {
+    img.src = fallback;
+  }
 }
 
 export default function AdminMedia() {
@@ -433,6 +450,7 @@ export default function AdminMedia() {
                     src={thumbUrl(m.r2_key, 400, 160)}
                     alt={m.alt_text || m.filename}
                     loading="lazy"
+                         onError={(e) => handleImgError(e, m.r2_key)}
                   />
                 </div>
                 <div className={styles.mediaCard__body}>
