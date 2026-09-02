@@ -4,7 +4,7 @@
 }
 
 .sectionHeader{
-  padding-top: 1rem;
+width: 100%;
 }
 
 
@@ -12,11 +12,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+  padding-bottom: 1rem;
 }
 
 .section {
   width: 100%;
-  padding: 0 4rem;
+  padding: 1rem 4rem;
   background-color: rgb(227, 230, 230);
 }
 
@@ -29,8 +30,7 @@
   h2 {
     color: black;
     font-size: 1.5rem;
-    margin: 0.5rem;
-  }
+    }
   link {
     text-decoration: none;
     color: black;

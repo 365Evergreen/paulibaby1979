@@ -1,27 +1,53 @@
 .navContainer {
-   padding: 0 4rem;
-   display: flex;
-   flex-direction: row-reverse;
-   justify-content: space-between;  
-   align-items: center;
-   padding: 1rem;
+  padding: 0 4rem;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
 }
-  
-.logo { 
-   font-size: 1.5rem; 
-   font-weight: bold
- }
 
-.navLinks { 
- 
-list-style: none;
-margin: 0;
-padding: 0;
-   display: flex; 
-   flex-direction: row;
-  gap:  1rem;
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold
+}
+
+
+/* 1. This rule applies to ALL links (acting as the INACTIVE style) */
+.navLinks a {
   text-decoration: none;
-  color: #5f6d7a; 
+  color: #64748b; /* Muted slate gray for inactive tabs */
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+/* 2. Hover state for inactive links to make them feel interactive */
+.navLinks a:hover {
+  color: #021425; /* Darkens slightly when hovered */
+}
+
+/* 3. This rule overrides the base style ONLY when a link matches the current route */
+.navLinks a:global(.active) {
+  color: #3b82f6; /* Bright brand blue for the active page */
+  font-weight: 600; /* Optional: make it bold so it stands out */
+}
+
+.navLinks {
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+}
+
+.navLinks a {
+  text-decoration: none;
+  /* Removes the standard underline */
+  color: #021425;
+  /* Forces your desired text colour */
 }
 
 .list {
@@ -48,7 +74,7 @@ padding: 0;
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
-  color:aliceblue;
+  color: rgb(10, 15, 19);
   text-decoration: none;
   text-align: left;
   font: inherit;
@@ -117,7 +143,7 @@ padding: 0;
 }
 
 .active {
-  color: var(--text-secondary, #5f6d7a);
+  color: var(--text-secondary, #5f81a0);
   text-decoration: underline;
   text-decoration-color: var(--border-subtle, #e5e5e5);
 }
@@ -126,7 +152,7 @@ padding: 0;
   opacity: 0.7;
 }
 
-.itemOpen > .triggerButton {
+.itemOpen>.triggerButton {
   text-decoration: underline;
 }
 
@@ -158,6 +184,3 @@ padding: 0;
   }
 }
 
-a:link{
-  color: #e0d3d3;
-text-decoration: none; }
