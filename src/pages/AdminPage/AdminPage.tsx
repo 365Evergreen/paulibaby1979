@@ -54,7 +54,7 @@ export default function AdminPage() {
           {/* ✅ FIXED: Swapped hardcoded strings out for your CSS module classes */}
           <div className={styles.adminHeaderButtons}>
 
-       
+
             <button className={styles.homeButton} onClick={() => navigate("/")}>Back to site</button>
             <button className={styles.newPostButton} onClick={() => navigate("/post-editor")}>New post</button>
             <button className={styles.mediaLibraryButton} onClick={() => navigate("/media-library")}>Media library</button>
@@ -73,12 +73,12 @@ export default function AdminPage() {
                   <th>Title</th>
                   <th>Status</th>
                   <th>Date</th>
-                  <th>Actions</th>
+                  <th>Actions</th> {/* Keep columns aligned here */}
                 </tr>
               </thead>
               <tbody>
                 {posts.map((post) => (
-                  <tr key={post.id}>
+                  <tr key={post.id} className={styles.tableRow}> {/* Added class for separator */}
                     <td>{post.title || "(untitled)"}</td>
                     <td>
                       <span className={`badge ${post.published ? "badge-published" : "badge-draft"}`}>
@@ -90,8 +90,8 @@ export default function AdminPage() {
                         ? new Date(post.created_at).toLocaleDateString()
                         : "—"}
                     </td>
-                    {/* ✅ The action column container wrapper */}
-                    <td className={styles.adminTableActionsColumn}>
+                    <td>
+                      {/* Wrapper div keeps the buttons inside the correct column boundary */}
                       <div className={styles.adminTableActions}>
                         <button onClick={() => navigate(`/post-editor/${post.id}`)} className={styles.editPostButton}>
                           Edit
@@ -106,6 +106,7 @@ export default function AdminPage() {
               </tbody>
             </table>
           </div>
+
         )}
 
       </section> {/* ✅ FIXED: Closed section cleanly at the very bottom of your layout */}

@@ -1,26 +1,141 @@
 .contentContainer {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  padding: 0 4rem;
+}
+
+.editorToolbar {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important; /* Pushes Left container to the left, Right container to the right */
+  align-items: center !important;          /* ── CRITICAL: Midline vertical alignment across the bar ── */
+  padding: 1.75rem 1.5rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.editorToolbarLeft {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;          /* ── CRITICAL: Centers Back button and Heading title text ── */
+  gap: 1.5rem;                             /* Safe, spacious separation gap */
+}
+
+.editorPageHeading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 !important;                     /* Removes layout-breaking margins */
+  line-height: 1 !important;                /* Keeps line boxes uniform */
+}
+
+.editorToolbarRight {
+  width: fit-content;
+  display: flex !important;
+  flex-direction: row !important;           /* Arranges text message, save, and settings from left to right */
+  align-items: center !important;          /* ── CRITICAL: Centers notification text and button actions ── */
+  gap: 1.75rem;
+}
+
+/* Ensure notification labels do not expand your vertical height */
+.editorMessage-success,
+.editorMessage-error {
+  line-height: 1 !important;
+  display: inline-block;
+  margin: 0 !important;
+}
+
+
+.editorButtonPrimary {
+  position: static; /* Reset any inherited positioning */
+  background: var(--accent);
+  color: white;
+  border: 1px solid transparent !important; /* Matches thickness of standard buttons */
+  box-sizing: border-box !important;        /* Includes padding/border in total size */
+  display: inline-flex !important;          /* Standardises baseline execution engine */
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.editorButtonPrimary:hover {
+  background: var(--accent-hover);
+}
+
+.editorButtonSecondary {
+  position: static; /* Reset any inherited positioning */
+  border: 1px solid var(--border) !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.5rem 1rem; /* Must be identical to Primary */
+  border-radius: 6px;
+}
+.editorButtonSecondary:hover {
+  background: #f0f0f0;
+}
+
+.editorOpenDrawerButton {
+  background: #f0f0f0;
+}
+
+.editorPageHeading {
+  border: 5px solid black;
+  font-size: 1.25rem;
+  font-weight: 700;
+  width: fit-content;
 }
 
 .section {
-  width: 100%;  display: flex;
+  width: 100%;
+  display: flex;
   height: 100vh;
   flex-direction: column;
   padding: 0 4rem;
   background-color: rgb(225, 225, 225);
 }
 
-.editorTitle{
+.editorTitle {
   width: 100%;
   color: #333;
   font-size: xx-large;
 }
 
-.editorBody{
-flex: 1;
+.editorTitleInput {
   width: 100%;
-  background-color: white;
+  border: none;
+  outline: none;
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: inherit;
+  color: var(--text);
+  background: white;
+  padding: 0.5rem 0;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.editorTitleInput::placeholder {
+  color: #ccc;
+}
+
+.editorBody {
   flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
 }
 
 .drawerOverlay {
@@ -52,22 +167,28 @@ flex: 1;
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border);
+ 
 }
 
 .drawerHeader h2 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
+  color: black;
 }
 
-.drawerClose {
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  cursor: pointer;
-  color: var(--text-muted);
-  padding: 0.25rem 0.5rem;
+.drawerCloseButton {
+  position: static; /* Reset any inherited positioning */
+  background: var(--accent);
+  color: rgb(40, 29, 29);
+  border: 1px solid transparent !important; /* Matches thickness of standard buttons */
+  box-sizing: border-box !important;        /* Includes padding/border in total size */
+  display: inline-flex !important;          /* Standardises baseline execution engine */
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.5rem 1rem;
   border-radius: 6px;
+  cursor: pointer;
   transition: background 0.2s;
 }
 
@@ -84,4 +205,54 @@ flex: 1;
 .drawerFooter {
   padding: 1.25rem 1.5rem;
   border-top: 1px solid var(--border);
+}
+
+/*Drawer form*/
+.drawerFormGroup {
+  margin-bottom: 1.5rem;
+}
+
+.drawerFormGroup label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.drawerFormGroup small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+.drawerFormGroup .formInput {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.drawerFormGroup .formInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232, 93, 78, 0.1);
+}
+
+.drawerFormGroup .formTextarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.drawerFormGroup .formCheckbox label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
 }

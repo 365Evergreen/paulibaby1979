@@ -1,0 +1,138 @@
+.contentContainer {
+    width: 100%;
+    padding: 0 4rem;
+}
+
+.postFullContent {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.postFull {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+}
+
+.postCoverFull {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+
+.postFull h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+}
+
+.postFullBody {
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.postFullBody h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.postFullBody h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.postFullBody h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+}
+
+.postFullBody ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.postFullBody ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.postFullBody li {
+  margin-bottom: 0.25rem;
+}
+
+.postFullBody blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin: 0 0 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.postFullBody code {
+  background: #f0f0f0;
+  padding: 0.15rem 0.3rem;
+  border-radius: 4px;
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 0.9em;
+}
+
+.postFullBody pre {
+  background: #1a1a1a;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0 0 0.75rem;
+}
+
+.postFullBody pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.postFullBody img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+}
+
+.postFullBody a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.postFullBody hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.postFullBody audio,
+.postFullBody video {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.postFullBody video {
+  height: auto;
+}
+
+.postDate {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}

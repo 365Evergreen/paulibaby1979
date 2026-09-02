@@ -385,8 +385,8 @@ export default function PageEditorPage() {
   if (id && !hasValidRouteId) {
     return (
       <main className={styles.contentContainer}>
-        <header className="editor-topbar">
-          <div className="editor-topbar-left">
+        <header className={styles.editorToolbar}>
+          <div className={styles.editorToolbarLeft}>
             <button
               type="button"
               onClick={goBack}
@@ -408,9 +408,9 @@ export default function PageEditorPage() {
   }
 
   return (
-    <main className={styles.contenContainer}>
-      <header className="editor-topbar">
-        <div className="editor-topbar-left">
+    <main className={styles.contentContainer}>
+      <header className={styles.editorToolbar}>
+        <div className={styles.editorToolbarLeft}>
           <button
             type="button"
             onClick={goBack}
@@ -420,65 +420,63 @@ export default function PageEditorPage() {
             ← Back
           </button>
 
-          <span className="editor-page-heading">
+          <span className={styles.editorPageHeading}>
             {isEditingExistingPost ? "Edit Post" : "New Post"}
           </span>
-        </div>
-
-        <div className="editor-topbar-right">
-          {message && (
+      
+  {message && (
             <span
-              className={`editor-message editor-message-${messageType}`}
+              className={styles[`editorMessage-${messageType}`]}
               role={messageType === "error" ? "alert" : "status"}
               aria-live="polite"
             >
               {message}
             </span>
-          )}
-
+          )}</div>
+        <div className={styles.editorToolbarRight}>
+               <button
+            type="button"
+            onClick={() => void savePost()}
+            disabled={saving || uploading}
+            className={styles.editorButtonPrimary}
+          >
+            {saving ? "Saving..." : "Save post"}
+          </button>
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className="btn-secondary"
+            className={styles.editorButtonSecondary}
             disabled={saving || uploading}
             aria-haspopup="dialog"
             aria-expanded={drawerOpen}
           >
-            ⚙ Post Settings
+            ⚙ Post settings
           </button>
 
-          <button
-            type="button"
-            onClick={() => void savePost()}
-            disabled={saving || uploading}
-            className="btn-primary"
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
         </div>
       </header>
 
       <section className={styles.section}>
         <div className={styles.editorHeader}>
-        <label
-          htmlFor="post-title"
-          className={styles.editorTitle}        >
-          Post title
-        </label>
+          <label
+            htmlFor="post-title"
+            className={styles.editorTitle}        >
+            Post title
+          </label>
 
-        <input
-          id="post-title"
-          name="title"
-          type="text"
-          value={editing.title}
-          onChange={(event) =>
-            updatePost("title", event.target.value)
-          }
-          placeholder="Post title..."
-          className="editor-title-input"
-          autoComplete="off"
-          autoFocus
-        /></div>
+          <input
+            id="post-title"
+            name="title"
+            type="text"
+            value={editing.title}
+            onChange={(event) =>
+              updatePost("title", event.target.value)
+            }
+            placeholder="Post title..."
+            className="editor-title-input"
+            autoComplete="off"
+            autoFocus
+          /></div>
 
         <div className={styles.editorBody}>
           <RichTextEditor
@@ -512,15 +510,15 @@ export default function PageEditorPage() {
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="drawer-close"
+                className={styles.drawerCloseButton}
                 aria-label="Close post settings"
               >
-                ✕
+                ✕ Close
               </button>
             </div>
 
             <div className={styles.drawerBody}>
-              <div className="form-group">
+              <div className={styles.drawerFormGroup}>
                 <label htmlFor="post-slug">
                   Slug
                 </label>
@@ -534,7 +532,7 @@ export default function PageEditorPage() {
                     updatePost("slug", event.target.value)
                   }
                   placeholder="auto-generated-from-title"
-                  className="form-input"
+                  className={styles.formInput}
                   autoComplete="off"
                   aria-describedby="post-slug-help"
                 />
@@ -544,7 +542,7 @@ export default function PageEditorPage() {
                 </small>
               </div>
 
-              <div className="form-group">
+              <div className={styles.drawerFormGroup}>
                 <label htmlFor="post-excerpt">
                   Excerpt
                 </label>
@@ -557,12 +555,12 @@ export default function PageEditorPage() {
                     updatePost("excerpt", event.target.value)
                   }
                   placeholder="Short summary shown in the post list"
-                  className="form-textarea"
+                  className={styles.formTextArea}
                   rows={4}
                 />
               </div>
 
-              <div className="form-group">
+              <div className={styles.drawerFormGroup}>
                 <label htmlFor="post-cover-url">
                   Cover Image
                 </label>
@@ -579,7 +577,7 @@ export default function PageEditorPage() {
                       <button
                         type="button"
                         onClick={removeCoverImage}
-                        className="btn-secondary btn-full"
+                        className={styles.editorButtonSecondary}
                         disabled={saving || uploading}
                       >
                         Remove Image
@@ -618,7 +616,7 @@ export default function PageEditorPage() {
                     onClick={() =>
                       fileInputRef.current?.click()
                     }
-                    className="btn-secondary btn-full"
+                    className={styles.editorButton}
                     disabled={saving || uploading}
                   >
                     {uploading
@@ -666,11 +664,11 @@ export default function PageEditorPage() {
               )}
             </div>
 
-            <div className={styles.drawerFooter}>
+            <div className={styles}>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="btn-primary btn-full"
+                className={styles.editorButtonPrimary}
               >
                 Done
               </button>

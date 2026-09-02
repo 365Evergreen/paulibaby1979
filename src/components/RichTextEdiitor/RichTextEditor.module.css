@@ -1,22 +1,80 @@
-.contentContainer {
+/* Update your Editor.module.css inside the :global wrapper */
+.tipTapWrapper :global {
+
+  /* Core Layout Grid structural containment box */
+  div[data-type="columns-layout"] {
+    display: grid !important;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+    width: 100%;
+    box-sizing: border-box;
+    /* Keeps inner absolute items inside layout boxes contextually stable */
+    position: relative; 
+  }
+
+  /* 2-Column Forceful Layout Division */
+  div[data-type="columns-layout"].cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  /* 3-Column Forceful Layout Division */
+  div[data-type="columns-layout"].cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  /* 4-Column Forceful Layout Division */
+  div[data-type="columns-layout"].cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  /* Individual Columns Baseline Style */
+  div[data-type="column"] {
+    border: 2px dashed #cbd5e1;
+    padding: 1.25rem;
+    border-radius: 0.375rem;
+    min-height: 100px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    width: 100% !important; /* Forces compliance inside its grid track cell assignment */
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  /* Clear out standard paragraph vertical alignment issues inside layouts */
+  div[data-type="column"] > * {
+    margin-top: 0;
+  }
+  div[data-type="column"] > *:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Active focus highlight state */
+  div[data-type="column"]:focus-within {
+    border-color: var(--accent, #3b82f6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+}
+
+
+.tipTapWrapper {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
   width: 100%;
 }
 
-.section {
-  width: 100%;
-  padding: 0 4rem;
-height: 100vh;
+.tipTapToolbar {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.tipTapToolbar{
-  width: 100%;
-display: flex;  background-color: rgb(225, 225, 225);
-flex-direction: row;
-align-content: space-between;
-justify-content: space-between ;
+  flex-direction: row;
+   flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  background: #f9f9f9;
+  position: sticky;
+  top: 56px;
+  z-index: 500;  
+  justify-content: flex-start !important;
+  align-items: center !important;
 }
 
 .editorCanvas{
@@ -25,3 +83,249 @@ justify-content: space-between ;
   border: 1px lightgray solid;
   margin-top: 10px;
 }
+
+.editorButtonPrimary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.editorButtonPrimary:hover {
+  background: var(--accent-hover);
+}
+
+.editorButtonSecondary {
+  background: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.editorButtonSecondary:hover {
+  background: #f0f0f0;
+}
+.tiptapLoading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+
+
+.tiptapButton {  position: static !important;      /* Forces standard horizontal engine placement */
+  display: inline-flex !important;  /* Centers inner SVG/Icons perfectly */
+  justify-content: center !important;
+  align-items: center !important;
+  float: none !important;           /* Stops items from layout-breaking drifting */
+  transform: none !important;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-width: 2rem;
+  transition: all 0.15s;
+  color: var(--text);
+}
+
+.tiptapButton:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+.tiptapButton.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.tiptap-divider {
+  width: 1px;
+  background: var(--border);
+  margin: 0 0.25rem;
+}
+
+.tiptapEditor {
+  background: white;
+  padding: 1rem;
+  min-height: 300px;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.tiptapEditor:focus {
+  outline: none;
+}
+
+.tiptapEditor:empty::before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  pointer-events: none;
+}
+
+.tiptapEditor p {
+  margin: 0 0 0.75rem;
+}
+
+.tiptapEditor h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.tiptapEditor h2 {
+  color: var(--accent);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.tiptapEditor h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+}
+
+.tiptapEditor ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.tiptapEditor ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.tiptapEditor li {
+  margin-bottom: 0.25rem;
+}
+
+.tiptapEditor li p {
+  margin: 0;
+}
+
+.tiptapEditor blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin: 0 0 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tiptapEditor code {
+  background: #f0f0f0;
+  padding: 0.15rem 0.3rem;
+  border-radius: 4px;
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 0.9em;
+}
+
+.tiptapEditor pre {
+  background: #1a1a1a;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0 0 0.75rem;
+}
+
+.tiptapEditor pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.tiptapEditor a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.tiptapEditor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+}
+
+.tiptapEditor hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.tiptapEditor audio,
+.tiptapEditor video {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+}
+
+.tiptapEditor video {
+  height: auto;
+}
+
+.tiptapEditor .youtube-embed {
+  position: relative;
+  width: 100%;
+  margin: 0.75rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tiptapEditor .youtube-embed iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  border-radius: 8px;
+}
+
+/*Columns*/
+
+/* Parent Container */
+div[data-type="columns-layout"] {
+  display: grid;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+/* Dynamic Column Layouts */
+div[data-type="columns-layout"].cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+div[data-type="columns-layout"].cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+div[data-type="columns-layout"].cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Individual Column Styling */
+div[data-type="column"] {
+  border: 1px dashed #e2e8f0;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  min-height: 50px;
+}
+
+/* Visual cue when focused */
+div[data-type="column"]:focus-within {
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+}
+/* Inside your CSS Module file (e.g., Editor.module.css) */
+

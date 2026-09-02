@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import styles from './SinglePostPage.module.css';
 
 type Post = {
   id: number;
@@ -56,7 +57,7 @@ export default function SinglePostPage() {
 
   if (loading) {
     return (
-      <div className="app">
+      <div className={styles.contentContainer}>
         <div className="loading">Loading…</div>
       </div>
     );
@@ -64,7 +65,7 @@ export default function SinglePostPage() {
 
   if (error || !post) {
     return (
-      <div className="app">
+      <div className={styles.contentContainer}>
         <div className="loading">Post not found.</div>
         <div className="back-link">
           <Link to="/">← Back to blog</Link>
@@ -74,17 +75,17 @@ export default function SinglePostPage() {
   }
 
   return (
-    <div className="app">
-      <article className="post-full">
+    <div className={styles.contentContainer}>
+      <article className={styles.postFullContent}>
         {post.cover_image && (
           <img
             src={post.cover_image}
             alt={post.title}
-            className="post-cover-full"
+            className={styles.postCoverFull}
           />
         )}
         <h1>{post.title}</h1>
-        <time className="post-date">
+        <time className={styles.postDate}>
           {new Date(post.created_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -92,7 +93,7 @@ export default function SinglePostPage() {
           })}
         </time>
         <div
-          className="post-body"
+          className={styles.postFullBody}
           dangerouslySetInnerHTML={{ __html: renderMarkdown(post.body) }}
         />
       </article>

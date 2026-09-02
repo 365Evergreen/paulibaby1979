@@ -16,6 +16,7 @@ import ImageResize from "tiptap-extension-resize-image";
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YoutubeExtension";
+import { ColumnsLayout, Column } from "../tiptap/ColumnsExtension";
 import styles from './RichTextEditor.module.css'
 
 interface RichTextEditorProps {
@@ -90,6 +91,8 @@ export default function RichTextEditor({
       Audio,
       Video,
       YoutubeEmbed,
+      ColumnsLayout,
+      Column
     ],
 
     content: value ?? "",
@@ -155,8 +158,8 @@ export default function RichTextEditor({
     if (!response.ok) {
       throw new Error(
         data.error ||
-          data.message ||
-          `Upload failed with status ${response.status}.`,
+        data.message ||
+        `Upload failed with status ${response.status}.`,
       );
     }
 
@@ -235,7 +238,7 @@ export default function RichTextEditor({
 
       const url = await uploadToR2(file);
 
-     ( editor
+      (editor
         .chain()
         .focus() as any)
         .setAudio(url)
@@ -379,20 +382,20 @@ export default function RichTextEditor({
   const controlsDisabled = uploading !== null;
 
   return (
-    <section className={styles.contentContainer}>
+    <section className={styles.tipTapwrapper}>
       <div
         className={styles.tipTapToolbar}
         role="toolbar"
-        aria-label="Toolbarg"
+        aria-label="Toolbar"
       ><button
-          type="button"
-          onClick={() =>
-            editor.chain().focus().toggleBold().run()
-          }
-          className={buttonClass(editor.isActive("bold"))}
-          aria-pressed={editor.isActive("bold")}
-          title="Bold"
-        >
+        type="button"
+        onClick={() =>
+          editor.chain().focus().toggleBold().run()
+        }
+        className={styles.tiptapButton + " " + buttonClass(editor.isActive("bold"))}
+        aria-pressed={editor.isActive("bold")}
+        title="Bold"
+      >
           <strong>B</strong>
         </button>
 
@@ -401,7 +404,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().toggleItalic().run()
           }
-          className={buttonClass(editor.isActive("italic"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("italic"))}
           aria-pressed={editor.isActive("italic")}
           title="Italic"
         >
@@ -413,7 +416,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().toggleStrike().run()
           }
-          className={buttonClass(editor.isActive("strike"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("strike"))}
           aria-pressed={editor.isActive("strike")}
           title="Strikethrough"
         >
@@ -434,9 +437,7 @@ export default function RichTextEditor({
               .toggleHeading({ level: 1 })
               .run()
           }
-          className={buttonClass(
-            editor.isActive("heading", { level: 1 }),
-          )}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("heading", { level: 1 }))}
           aria-pressed={editor.isActive("heading", {
             level: 1,
           })}
@@ -454,7 +455,7 @@ export default function RichTextEditor({
               .toggleHeading({ level: 2 })
               .run()
           }
-          className={buttonClass(
+          className={styles.tiptapButton + " " + buttonClass(
             editor.isActive("heading", { level: 2 }),
           )}
           aria-pressed={editor.isActive("heading", {
@@ -474,9 +475,7 @@ export default function RichTextEditor({
               .toggleHeading({ level: 3 })
               .run()
           }
-          className={buttonClass(
-            editor.isActive("heading", { level: 3 }),
-          )}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("heading", { level: 3 }))}
           aria-pressed={editor.isActive("heading", {
             level: 3,
           })}
@@ -490,7 +489,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().setParagraph().run()
           }
-          className={buttonClass(editor.isActive("paragraph"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("paragraph"))}
           aria-pressed={editor.isActive("paragraph")}
           title="Paragraph"
         >
@@ -507,7 +506,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().toggleBulletList().run()
           }
-          className={buttonClass(editor.isActive("bulletList"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("bulletList"))}
           aria-pressed={editor.isActive("bulletList")}
           title="Bullet list"
         >
@@ -519,7 +518,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().toggleOrderedList().run()
           }
-          className={buttonClass(editor.isActive("orderedList"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("orderedList"))}
           aria-pressed={editor.isActive("orderedList")}
           title="Numbered list"
         >
@@ -531,7 +530,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().toggleBlockquote().run()
           }
-          className={buttonClass(editor.isActive("blockquote"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("blockquote"))}
           aria-pressed={editor.isActive("blockquote")}
           title="Quote"
         >
@@ -543,7 +542,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().toggleCode().run()
           }
-          className={buttonClass(editor.isActive("code"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("code"))}
           aria-pressed={editor.isActive("code")}
           title="Inline code"
         >
@@ -558,17 +557,32 @@ export default function RichTextEditor({
         <button
           type="button"
           onClick={setLink}
-          className={buttonClass(editor.isActive("link"))}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("link"))}
           aria-pressed={editor.isActive("link")}
           title="Add or edit link"
         >
           🔗
         </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().insertColumns(2).run()}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 2 }))}
+        >
+          2 Columns
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().insertColumns(3).run()}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 3 }))}
+        >
+          3 Columns
+        </button>
+
 
         <button
           type="button"
           onClick={addImage}
-          className="tiptap-btn"
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("image"))}
           title="Insert image"
           disabled={controlsDisabled}
         >
@@ -578,7 +592,7 @@ export default function RichTextEditor({
         <button
           type="button"
           onClick={addAudio}
-          className="tiptap-btn"
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("audio"))}
           title="Insert audio"
           disabled={controlsDisabled}
         >
@@ -588,7 +602,7 @@ export default function RichTextEditor({
         <button
           type="button"
           onClick={addVideo}
-          className="tiptap-btn"
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("video"))}
           title="Insert video"
           disabled={controlsDisabled}
         >
@@ -598,7 +612,7 @@ export default function RichTextEditor({
         <button
           type="button"
           onClick={addYoutube}
-          className="tiptap-btn"
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("youtube"))}
           title="Embed YouTube video"
           disabled={controlsDisabled}
         >
@@ -615,7 +629,7 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().undo().run()
           }
-          className="tiptap-btn"
+          className={styles.tiptapButton}
           title="Undo"
           disabled={!editor.can().chain().focus().undo().run()}
         >
@@ -627,14 +641,14 @@ export default function RichTextEditor({
           onClick={() =>
             editor.chain().focus().redo().run()
           }
-          className="tiptap-btn"
+          className={styles.tiptapButton}
           title="Redo"
           disabled={!editor.can().chain().focus().redo().run()}
         >
           ↪
         </button> </div>
-        
-   
+
+
 
       {uploadError && (
         <div
@@ -643,7 +657,7 @@ export default function RichTextEditor({
         >
           {uploadError}
         </div>
-        )}
+      )}
 
       <input
         ref={imageInputRef}
@@ -669,7 +683,7 @@ export default function RichTextEditor({
         hidden
       />
       <div className={styles.editorCanvas}>
-      <EditorContent editor={editor} /></div>
+        <EditorContent editor={editor} /></div>
     </section>
   );
 }
