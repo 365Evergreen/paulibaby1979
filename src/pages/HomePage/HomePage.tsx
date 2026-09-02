@@ -10,7 +10,7 @@ interface Post {
   id: number;
   title: string;
   excerpt: string;
-  image: string;
+  cover_image: string;
   url: string;
 }
 

@@ -43,63 +43,72 @@ export default function AdminPage() {
     await loadPosts();
   }
 
-return (
-    <div className="admin">
-      <header className="admin-header">
-        <h1>Blog admin</h1>
-        <div className="admin-actions">
-          <a href="/" className="btn-secondary">View Blog</a>
-          <button onClick={() => navigate("/post-editor")}>
-            New post
-          </button>
-         <button onClick={() => navigate ("/media-library")}>Media library</button>
+
+  return (
+    <div className={styles.adminPage}>
+      {/* ✅ Open the wrapper section */}
+      <section className={styles.contentContainer}>
+
+        <div className={styles.adminHeader}>
+          <h1>Blog admin</h1>
+          {/* ✅ FIXED: Swapped hardcoded strings out for your CSS module classes */}
+          <div className={styles.adminHeaderButtons}>
+
+       
+            <button className={styles.homeButton} onClick={() => navigate("/")}>Back to site</button>
+            <button className={styles.newPostButton} onClick={() => navigate("/post-editor")}>New post</button>
+            <button className={styles.mediaLibraryButton} onClick={() => navigate("/media-library")}>Media library</button>
+          </div>
         </div>
-      </header>
 
-      {loading ? (
-        <div className="loading">Loading…</div>
-      ) : posts.length === 0 ? (
-        <div className="empty">No posts yet. Create your first post!</div>
-      ) : (
-        <table className={styles.adminTable}>
-          <thead>
-            <tr className={styles.adminTableHeader}>
-              <th>Title</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr key={post.id}>
-                <td>{post.title || "(untitled)"}</td>
-                <td>
-                  <span className={`badge ${post.published ? "badge-published" : "badge-draft"}`}>
-                    {post.published ? "Published" : "Draft"}
-                  </span>
-                </td>
-                <td>
-                  {post.created_at
-                    ? new Date(post.created_at).toLocaleDateString()
-                    : "—"}
-                </td>
-                <td className={styles.adminTableActions}>
-                  <button className={styles.editPostButton} type="button" onClick={() => navigate(`/post-editor/${post.id}`)} >
-                    Edit
-                  </button>
+        {loading ? (
+          <div className="loading">Loading…</div>
+        ) : posts.length === 0 ? (
+          <div className="empty">No posts yet. Create your first post!</div>
+        ) : (
+          <div className={styles.adminTableContainer}>
+            <table className={styles.adminTable}>
+              <thead>
+                <tr className={styles.adminTableHeader}>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map((post) => (
+                  <tr key={post.id}>
+                    <td>{post.title || "(untitled)"}</td>
+                    <td>
+                      <span className={`badge ${post.published ? "badge-published" : "badge-draft"}`}>
+                        {post.published ? "Published" : "Draft"}
+                      </span>
+                    </td>
+                    <td>
+                      {post.created_at
+                        ? new Date(post.created_at).toLocaleDateString()
+                        : "—"}
+                    </td>
+                    {/* ✅ The action column container wrapper */}
+                    <td className={styles.adminTableActionsColumn}>
+                      <div className={styles.adminTableActions}>
+                        <button onClick={() => navigate(`/post-editor/${post.id}`)} className={styles.editPostButton}>
+                          Edit
+                        </button>
+                        <button onClick={() => deletePost(post.id!)} className={styles.deletePostButton}>
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-                <button onClick={() => deletePost(post.id!)} className={styles.deletePostButton}>Delete</button>
-              </td>
-              </tr>
-            ))}
-        </tbody>
-        </table>
+      </section> {/* ✅ FIXED: Closed section cleanly at the very bottom of your layout */}
+    </div>
   )
-}
-    </div >
-  );
-
-
-return null;
-}
+};

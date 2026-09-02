@@ -1,13 +1,72 @@
-.contentContainer {
+/* Layout and spacing */
+.adminPage {
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.section {
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 24px;
     width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+/* Admin header */
+.adminHeader {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+.adminHeaderButtons {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Clean up button defaults to cancel out index.css layout overrides */
+.homeButton,
+.newPostButton,
+.mediaLibraryButton {
+    position: static !important;
+    /* Cancels out any bad absolute positioning */
+    display: inline-block !important;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.homeButton {
+    background-color: #c5c9cc;
+
+}
+
+.newPostButton {
+    background-color: blueviolet;
+}
+
+.mediaLibraryButton {
+    background-color: #007bff;
+}
+
+/* Table Section */
+.adminTableContainer {
+    width: 100%;
+    overflow-x: auto;
 }
 
 .adminTable {
     width: 100%;
+    border-collapse: collapse;
     text-align: left;
 }
 
@@ -15,17 +74,32 @@
     background-color: aqua;
 }
 
+/* Isolating the table action wrapper completely */
 .adminTableActions {
-    display: flex;
-    flex-direction: row;
-    align-content: space-between;
-    justify-content: space-between;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
 }
 
-.editPostButton{
+.editPostButton,
+.deletePostButton {
+    position: static !important;
+    /* Stops table buttons from floating away */
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.editPostButton {
     background-color: blueviolet;
 }
 
-.deletePostButton{
+.deletePostButton {
     background-color: red;
 }

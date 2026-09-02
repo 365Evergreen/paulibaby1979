@@ -36,7 +36,7 @@ export default function LatestPostsSlider({
   return (
     <div className={styles.slideshowContainer}>
       <div className={styles.slide}>
-        <img src={currentPost.image} alt={currentPost.title} />
+        <img src={currentPost.cover_image} alt={currentPost.title} />
         <div className={styles.slideContent}>
           <h3>{currentPost.title}</h3>
           <p>{currentPost.excerpt}</p>
