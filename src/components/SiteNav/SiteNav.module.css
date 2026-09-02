@@ -1,186 +1,78 @@
-.navContainer {
+/* Navigation bar layout */
+.navBar {
   padding: 0 4rem;
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-}
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold
-}
-
-
-/* 1. This rule applies to ALL links (acting as the INACTIVE style) */
-.navLinks a {
-  text-decoration: none;
-  color: #64748b; /* Muted slate gray for inactive tabs */
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-/* 2. Hover state for inactive links to make them feel interactive */
-.navLinks a:hover {
-  color: #021425; /* Darkens slightly when hovered */
-}
-
-/* 3. This rule overrides the base style ONLY when a link matches the current route */
-.navLinks a:global(.active) {
-  color: #3b82f6; /* Bright brand blue for the active page */
-  font-weight: 600; /* Optional: make it bold so it stands out */
 }
 
 .navLinks {
-
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-
-}
-
-.navLinks a {
-  text-decoration: none;
-  /* Removes the standard underline */
-  color: #021425;
-  /* Forces your desired text colour */
-}
-
-.list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
 }
 
-.item {
-  position: relative;
+.navItem {
+  position: relative; /* Anchor for absolute container positioning */
 }
 
-.link,
-.triggerButton {
-  display: inline-flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  padding: calc(var(--space-2) * 0.5) var(--space-2);
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: rgb(10, 15, 19);
+.navLink {
+  display: block;
+  padding: 1.5rem 1rem;
+  color: #4b2d2d;
   text-decoration: none;
-  text-align: left;
-  font: inherit;
 }
 
-.triggerButton {
-  cursor: pointer;
+.arrow {
+  font-size: 0.7rem;
+  margin-left: 0.5rem;
 }
 
-.link:hover,
-.triggerButton:hover,
-.triggerButton:focus-visible {
-  color: var(--text-primary);
-  text-decoration: underline;
-  outline: none;
+/* Mega menu overlay box */
+.megamenuDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 500px;
+  background-color: #ffffff;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  padding: 1.5rem;
+  z-index: 100;
 }
 
-.chevron {
-  font-size: 0.85em;
-  line-height: 1;
-  color: var(--text-secondary, #5f6d7a);
-}
-
-.panel {
-  margin-top: var(--space-2);
-  padding: var(--space-3);
-  border: 1px solid var(--border-subtle, #e5e5e5);
-  border-radius: var(--radius-sm);
-  background: var(--surface, #ffffff);
-}
-
-.panelColumns {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* Grid splits your JSON columns configuration natively */
+.megamenuGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
 }
 
-.column {
-  min-width: 0;
+.columnHeading {
+  margin: 0 0 0.5rem 0;
+  color: #333333;
+  font-size: 1rem;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 0.25rem;
 }
 
-.nestedList {
+.columnLinks {
   list-style: none;
-  margin: var(--space-2) 0 0;
-  padding: var(--space-2) 0 0 var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  border-left: 2px solid var(--border-subtle, #e5e5e5);
+  padding: 0;
+  margin: 0;
 }
 
 .subLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  color: var(--text-primary);
+  display: block;
+  padding: 0.35rem 0;
+  color: #666666;
   text-decoration: none;
-  font-size: var(--font-size-sm, 0.95rem);
+  font-size: 0.9rem;
 }
 
 .subLink:hover {
-  text-decoration: underline;
+  color: #0066cc;
 }
-
-.active {
-  color: var(--text-secondary, #5f81a0);
-  text-decoration: underline;
-  text-decoration-color: var(--border-subtle, #e5e5e5);
-}
-
-.pending {
-  opacity: 0.7;
-}
-
-.itemOpen>.triggerButton {
-  text-decoration: underline;
-}
-
-@media (min-width: 769px) {
-  .list {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--space-4);
-  }
-
-  .link,
-  .triggerButton {
-    width: auto;
-  }
-
-  .panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: min(56rem, 85vw);
-    margin-top: var(--space-2);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    z-index: 30;
-  }
-
-  .panelColumns {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-4);
-  }
-}
-

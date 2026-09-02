@@ -1,49 +1,47 @@
-{
-    "items": [
-        {
-            "id": "01",
-            "label": "Home",
-            "parent": "",
-            "route": "/"
-        },
-        {
-            "id": "02",
-            "label": "Music",
-            "parent": "",
-            "route": "/music"
-        },
-        {
-            "id": "03",
-            "label": "Video",
-            "parent": "",
-            "route": "/video"
-        },
-        {
-            "id": "04",
-            "label": "Podcasts and radio",
-            "parent":"",
-            "route":"/radio-podcasts",
-            "children": [
-                {
-                    "id": "05",
-                    "label": "Comedy",
-                    "parent": "04",
-                    "route": "/radio-podcasts/comedy"
-                },
-                {
-                    "id": "06",
-                    "label": "Documentaries",
-                    "parent":"04",
-                    "route": "/radio-podcasts/documentaries"
-                }
-            ]
-        },
-        {
-            "id": "07",
-            "label": "Admin",
-            "parent":"",
-            "route": "/admin"
-
-        }
+[
+  {
+    "id": 1,
+    "title": "Products",
+    "href": "/products",
+    "hasMegaMenu": true,
+    "columns": [
+      {
+        "heading": "Software",
+        "links": [
+          { "label": "Analytics Platform", "href": "/products/analytics" },
+          { "label": "CRM Software", "href": "/products/crm" },
+          { "label": "Cloud Storage", "href": "/products/cloud" }
+        ]
+      },
+      {
+        "heading": "Hardware",
+        "links": [
+          { "label": "Enterprise Servers", "href": "/products/servers" },
+          { "label": "IoT Gateways", "href": "/products/iot" }
+        ]
+      }
     ]
-}
+  },
+  {
+    "id": 2,
+    "title": "Services",
+    "href": "/services",
+    "hasMegaMenu": false
+  },
+  {
+    "id": 3,
+    "title": "Resources",
+    "href": "/resources",
+    "hasMegaMenu": true,
+    "columns": [
+      {
+        "heading": "Learn",
+        "links": [
+          { "label": "Blog", "href": "/blog" },
+          { "label": "Whitepapers", "href": "/whitepapers" },
+          { "label": "Webinars", "href": "/webinars" }
+        ]
+      }
+    ]
+  }
+]

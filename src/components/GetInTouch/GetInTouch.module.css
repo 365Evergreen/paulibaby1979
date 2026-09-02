@@ -1,26 +1,33 @@
 .twoColumnContainer {
-  display: flex;
+  padding: 1rem 4rem ;
+  display: flex !important;
   flex-direction: row;
+  align-items: flex-start; /* 👈 CRITICAL: Prevents columns from forcing rigid heights */
+  gap: 2rem;
   width: 100%;
-  padding: 0 4rem;
-  gap: 2rem; /* Adds spacing between columns */
+  height: auto !important; /* Forces layout to match contents */
 }
 
 .column {
-  flex: 1; /* Splits the width exactly 50/50 */
-  min-width: 0;
-  padding: 1rem;
-  border-radius: 8px;
-
+  flex: 1;
+  min-width: 0; /* Prevents text overflow breaking column bounds */
+  height: auto !important;
 }
 
+.columnRight {
+  display: block !important; /* Overrides accidental flex properties */
+  position: relative;
+  height: auto !important;
+}
 
 .twoColumnContainer .columnLeft {
   background-color: transparent; /* Darker shade for the left column */
+  height: auto !important;
 }
 
 .twoColumnContainer .columnRight {
   background-color: transparent; /* Lighter shade for the right column */
+  height: auto !important;
 }
 
 .content .h2 {

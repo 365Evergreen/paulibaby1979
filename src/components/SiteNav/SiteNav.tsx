@@ -1,18 +1,48 @@
-import React from "react";
-import { NavLink } from "react-router-dom"; // Make sure this is NavLink, not Link
+import  { useState } from 'react';
+import menuData from './siteNav.json';
 import styles from './SiteNav.module.css';
 
-const SiteNav: React.FC = () => {
- return (
-   <nav className={styles.navContainer}>
-     <ul className={styles.navLinks}>
-       <li><NavLink to="/">Home</NavLink></li>
-       <li><NavLink to="/media-library">Media library</NavLink></li>
-       <li><NavLink to="/admin">Editor</NavLink></li>
-       <li><NavLink to="/contact">Contact</NavLink></li>
-     </ul>
-   </nav>
- );
-};
+export default function SiteNav() {
+  const [activeMenuId, setActiveMenuId] = useState<string | number | null>(null);
 
-export default SiteNav;
+  return (
+    <nav className={styles.navBar} aria-label="Main Navigation">
+      <ul className={styles.navLinks}>
+        {menuData.map((item) => (
+          <li 
+            key={item.id} 
+            className={styles.navItem}
+            onMouseEnter={() => setActiveMenuId(item.id)}
+            onMouseLeave={() => setActiveMenuId(null)}
+          >
+        <a href={item.href} className={styles.navLink}>
+          {item.title}
+          {item.hasMegaMenu && <span className={styles.arrow}>▼</span>}
+        </a>
+            {/* Conditionally render Mega Menu dropdown if data exists and active */}
+            {item.hasMegaMenu && activeMenuId === item.id && (
+              <div className={styles.megamenuDropdown}>
+                <div className={styles.megamenuGrid}>
+                  {item.columns?.map((column, colIdx) => (
+                    <div key={colIdx} className="megamenu-column">
+                      <h4 className="column-heading">{column.heading}</h4>
+                      <ul className="column-links">
+                        {column.links.map((link, linkIdx) => (
+                          <li key={linkIdx}>
+                            <a href={link.href} className="sub-link">
+                              {link.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}

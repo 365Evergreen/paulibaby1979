@@ -1,117 +1,119 @@
+/* 1. Target the root wrapper container */
 .cardContainer {
-  width: 100%;
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  box-sizing: border-box;
+  display: block !important;
+  position: relative !important;
+  float: none !important;
+  clear: both !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  height: auto !important;
+  margin: 2rem auto !important;
+  padding: 2rem !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  box-sizing: border-box !important;
 }
 
+/* 2. Reset the form flex tracks entirely */
 .formElement {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Replicates Adaptive Cards column layout splitting at 50/50 proportions */
+/* 3. Forces side-by-side columns to sit inline and prevents wrapping collapse */
 .row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
+  height: auto !important;
+  position: relative !important;
 }
 
-@media (max-width: 480px) {
-  .row {
-    grid-template-columns: 1fr; /* Stack columns vertically on very small mobile configurations */
-  }
-}
-
+/* 4. Strict vertical stacking isolation for inputs and labels */
 .fieldGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  height: auto !important;
 }
 
 .fieldGroup label {
-  font-family: "Inter", "Segoe UI", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #1e293b;
+  display: block !important;
+  font-family: system-ui, sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  margin: 0 !important;
 }
 
-.required {
-  color: #dc2626;
-}
-
+/* 5. Force standard block properties onto inputs to break absolute positioning overrides */
 .fieldGroup input,
 .fieldGroup select,
 .fieldGroup textarea {
-  font-family: "Inter", "Segoe UI", sans-serif;
-  font-size: 0.95rem;
-  padding: 0.625rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.375rem;
-  background-color: #ffffff;
-  color: #0f172a;
-  outline: none;
-  box-sizing: border-box;
-  width: 100%;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  display: block !important;
+  position: relative !important;
+  top: auto !important;
+  transform: none !important;
+  font-family: inherit !important;
+  font-size: 0.95rem !important;
+  padding: 0.625rem !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.375rem !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  width: 100% !important;
+  height: auto !important;
+  box-sizing: border-box !important;
 }
 
-.fieldGroup input:focus,
-.fieldGroup select:focus,
-.fieldGroup textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+/* Fix explicit textarea row spacing bounds */
+.fieldGroup textarea {
+  min-height: 100px !important;
+  resize: vertical !important;
 }
 
+/* 6. Isolate the final button row block */
 .actionsRow {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 0.5rem;
+  display: block !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  margin-top: 0.5rem !important;
+  padding: 0 !important;
+  text-align: right !important;
 }
 
 .submitBtn {
-  font-family: "Inter", "Segoe UI", sans-serif;
-  background-color: #2563eb;
-  color: #ffffff;
-  border: none;
-  padding: 0.625rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  width: auto;
-}
-
-.submitBtn:hover:not(:disabled) {
-  background-color: #1d4ed8;
-}
-
-.submitBtn:disabled {
-  background-color: #94a3b8;
-  cursor: not-allowed;
-}
-
-.statusBanner {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.successText {
-  color: #16a34a;
-  font-weight: 500;
-  margin: 0;
-}
-
-.errorText {
-  color: #dc2626;
-  font-weight: 500;
-  margin: 0;
+  display: inline-block !important;
+  position: relative !important;
+  top: auto !important;
+  transform: none !important;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.625rem 1.5rem !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  width: auto !important;
+  height: auto !important;
 }
