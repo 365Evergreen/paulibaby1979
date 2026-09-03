@@ -6,9 +6,9 @@ import { Outlet } from 'react-router-dom';
 export function AppShell(){
 
     return (
-        <div className="app-shell">
+        <div className={styles.shellContainer}>
             <SiteHeader />
-            <main className={styles.mainContainer}>
+            <main className={styles.mainContent}>
              <Outlet/>            
             </main>
             <SiteFooter />

@@ -1,51 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SiteNav from '../SiteNav/SiteNav'; // Your existing nav component
 import styles from './SiteHeader.module.css';
-import SiteNav from '../SiteNav/SiteNav';
 
-const SiteHeader: React.FC = () => {
-  // Move state inside the component
-  const [isSticky, setIsSticky] = useState(false);
+interface SiteHeaderProps {
+  className?: string;
+}
 
-  // Move effect inside the component
+export const SiteHeader: React.FC<SiteHeaderProps> = ({ className = '' }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Monitor scrolling to handle the background change animation transition effect
   useEffect(() => {
     const handleScroll = () => {
-      // Becomes true when user scrolls past 100px
-      if (window.scrollY > 100) {
-        setIsSticky(true);
+      if (window.scrollY > 20) {
+        setScrolled(true);
       } else {
-        setIsSticky(false);
+        setScrolled(false);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll); // Cleanup
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <header className={`${styles.headerContainer} ${isSticky ? styles.scrolled : ''}`}>
-        <div className={styles.left}>
-          <Link
-            className={styles.brand}
-            to="/"
-            aria-label="365 Evergreen Home"
-          >
-            <img
-              className={styles.brandLogo}
-              src="__sitelogo__Evergreen_Logo__50.png"
-              alt="365 Evergreen"
-            />
-            <span className={styles.brandText}>Paulibaby</span>
-          </Link>
-        </div>
+  // Close the drop menu instantly whenever a path changes or layout scales
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
 
-      {/* Fixed a minor typo in your class name from siteaAv to siteNav if applicable */}
-      <div className={styles.siteNav}>
-        <SiteNav />
-      </div>
-    </header>
-  );
-};
+return (
+  <header 
+    className={`${styles.headerContainer} ${scrolled ? styles.scrolled : ''} ${className}`}
+  >
+    {/* 1. Logo Left Block Context (Stays on the left margin) */}
+    <div className={styles.left}>
+      <Link to="/" className={styles.brand} onClick={closeMenu}>
+        <img src="/__sitelogo__Evergreen_Logo__50.png" alt="Logo" className={styles.brandLogo} />
+        <span className={styles.brandText}>Paulibaby</span>
+      </Link>
+    </div>
 
-export default SiteHeader;
+    {/* 2. 🍔 Responsive Hamburger Trigger (MOVED HERE TO FIX THE POSITIONING BUG) */}
+    <button 
+      type="button"
+      className={`${styles.hamburgerBtn} ${menuOpen ? styles.isHamburgerActive : ''}`}
+      onClick={toggleMenu}
+      aria-label="Toggle navigation menu"
+    >
+      <span className={styles.hamburgerBar}></span>
+      <span className={styles.hamburgerBar}></span>
+      <span className={styles.hamburgerBar}></span>
+    </button>
 
+    {/* 3. Navigation Wrapper Grid Overlay Layer Container */}
+    <div className={`${styles.siteNav} ${menuOpen ? styles.isMenuOpen : ''}`}>
+      <SiteNav onItemClick={closeMenu} />
+    </div>
+  </header>
+)};
+export default SiteHeader

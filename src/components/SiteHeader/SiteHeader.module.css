@@ -1,18 +1,15 @@
 .headerContainer {  
   position: fixed;
-  top: 0; /* Ensures it starts at the top */
+  top: 0; 
   left: 0;
-  background-color: transparent; 
-  border-bottom: none;
-  z-index: 1000;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   width: 100%;
-  padding: 0 4rem;
-  display: flex;
-  flex-direction: row;
-  align-content: space-between;
-  justify-content: space-between;
-  align-items: stretch;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem; 
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important; /* 👈 Spreads Logo and Button to polar opposite edges */
+  align-items: center !important;
+  box-sizing: border-box;
 }
 
 /* This targets the element when BOTH classes are applied via CSS Modules */
@@ -77,3 +74,98 @@ h2 {
     color: #2b0f0f;
 }
 
+h2 {
+  color: #2b0f0f;
+  margin: 0;
+}
+/* --- 🍔 MOBILE BURGER BUTTON LAYOUT ENGINE --- */
+.hamburgerBtn{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  order: 0; /* Keeps order aligned sequentially with DOM rendering layout blocks */
+}
+
+.hamburgerBar {
+  width: 100%;
+  height: 2px;
+  background-color: #000000; /* Match your typography brand theme colors */
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Transform standard bars into a neat 'X' exit glyph when active */
+.hamburgerBtn.isHamburgerActive .hamburgerBar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburgerBtn.isHamburgerActive .hamburgerBar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerBtn.isHamburgerActive .hamburgerBar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* --- 🧭 RESPONSIVE NAVIGATION WRAPPER CONTROLLER --- */
+@media (max-width: 767px) {
+  .siteNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    padding: 6rem 2rem 2rem 2rem; /* Drop below the top boundary bar to clear logo block */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    
+    /* Offscreen layout position by default */
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+  }
+
+  /* Slide down smoothly into view frame area */
+  .siteNav.isMenuOpen {
+    transform: translateY(0);
+  }
+}
+
+/* --- 💻 DESKTOP SCALE MEDIA QUERY BREAKPOINT TRANSITION --- */
+@media (min-width: 768px) {
+  .headerContainer {
+    padding: 0 4rem;
+    height: 70px;
+  }
+
+  .brandLogo { width: 36px; height: 36px; }
+  .brandText { font-size: 1.125rem; }
+
+  /* Permanently deactivate mobile hamburger triggers on desktop layouts */
+  .hamburgerBtn {
+    display: none;
+  }
+
+  .siteNav {
+    display: flex;
+    align-items: center;
+    width: auto;
+    position: relative;
+    top: auto;
+    left: auto;
+    height: auto;
+    background-color: transparent;
+    padding: 0;
+    transform: none !important; /* Force overrides dynamic mobile slide positioning translations */
+  }
+}

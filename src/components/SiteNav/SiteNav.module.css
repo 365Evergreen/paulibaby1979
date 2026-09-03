@@ -1,3 +1,7 @@
+.navContainer {
+  width: 100%;
+}
+
 /* Navigation bar layout */
 .navBar {
   padding: 0 4rem;
@@ -8,12 +12,31 @@
 
 }
 
-.navLinks {
-  display: flex;
+.navLinks { 
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex; 
+  flex-direction: column; /* 📱 Mobile default layout position stacking downwards */
+  gap: 2rem; /* Large tap clearance spacing for links on screen inputs */
+  width: 100%;
 }
+
+.navLinks a {
+  display: block;
+  text-decoration: none;
+  color: #021425; 
+  font-size: 1.25rem; /* Larger scaling font helps visibility bounds on touch points */
+  font-weight: 500;
+  transition: color 0.2s ease;
+  width: 100%;
+}
+
+.navLinks a:global(.active) {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
 
 .navItem {
   position: relative; /* Anchor for absolute container positioning */
@@ -75,4 +98,17 @@
 
 .subLink:hover {
   color: #0066cc;
+}
+/* 💻 Snap elements back to tight right desktop header ribbons grid */
+@media (min-width: 768px) {
+  .navLinks {
+    flex-direction: row;
+    gap: 1.5rem;
+    width: auto;
+  }
+
+  .navLinks a {
+    font-size: 0.95rem;
+    width: auto;
+  }
 }

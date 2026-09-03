@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "title": "Products",
-    "href": "/products",
+    "title": "Admin",
+    "href": "/admin",
     "hasMegaMenu": true,
     "columns": [
       {
