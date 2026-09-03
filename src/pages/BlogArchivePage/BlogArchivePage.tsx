@@ -41,8 +41,8 @@ const BlogArchivePage: React.FC = () => {
   }
 
   return (
-    <div className={styles.archivePage}>
-      <h1>Blog Archive</h1>
+    <div className={styles.contentContainer}>
+    <div className={styles.contentPageTitle}>  <h1>Blog archive</h1></div>
 
       {/* Search box for filtering posts */}
       <SearchBox posts={blogPosts} onSelect={handleSelect} />

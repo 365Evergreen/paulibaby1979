@@ -1,3 +1,11 @@
 .contentContainer{
+    margin-top: var(--header-height);
+    padding: 0 4rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.contentPageTitle{
     width: 100%;
 }

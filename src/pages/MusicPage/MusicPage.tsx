@@ -55,10 +55,9 @@ const MusicPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.musicPage}>
-      <h1>Blog Archive</h1>
-
-      {/* Category Filter */}
+      <div className={styles.contentContainer}>
+      <div className={styles.contentPageTitle}>  <h1>Music archive</h1></div>
+         {/* Category Filter */}
       <div className={styles.filterBar}>
         <label htmlFor="category">Filter by Category: </label>
         <select
