@@ -7,6 +7,7 @@ import BlogArchivePage from "../pages/BlogArchivePage/BlogArchivePage";
 import SinglePostPage from '../pages/SinglePostPage/SinglePostPage'
 import PostEditorPage from '../pages/PostEditorPage/PostEditorPage'
 import MediaLibraryPage from "../pages/MediaLibraryPage/MediaLibraryPage";
+import MusicPage from "../pages/MusicPage/MusicPage";
 
 export default function AppRouter() {
   return (
@@ -15,6 +16,7 @@ export default function AppRouter() {
         <Route element={<AppShell />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/blog" element={<BlogArchivePage />} />
+          <Route path="/music" element={<MusicPage />}/>
           <Route path="/blog/:slug" element={<SinglePostPage />} />
           </Route>
           <Route element={<EditorShell/>}/>

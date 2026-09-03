@@ -1,21 +1,5 @@
 /**
- * paulibaby1979 Worker - Blog API + Admin Panel
- * 
- * Routes:
- *   GET  /api/posts           list published posts
- *   GET  /api/posts/:slug     get single post
- *   GET  /api/admin/posts     list all posts (incl. drafts)
- *   GET  /api/admin/posts/:id  get single post by ID
- *   POST /api/admin/posts     create post
- *   PUT  /api/admin/posts/:id  update post
- *   DELETE /api/admin/posts/:id  delete post
- *   POST /api/admin/upload    upload image to R2
- *   GET  /api/admin/upload    list R2 objects
- *   GET  /api/admin/media        list all media (with D1 metadata)
- *   POST /api/admin/media        upload to R2 + insert metadata in D1
- *   GET  /api/admin/media/:id    get single media record
- *   PUT  /api/admin/media/:id     update media metadata
- *   DELETE /api/admin/media/:id   delete from R2 + D1
+ * paulibaby1979 Worker — Blog API + Admin Panel
  */
 
 export interface Env {
@@ -32,8 +16,17 @@ interface Post {
   body: string;
   cover_image: string | null;
   published: number;
+  category_id: number | null;
   created_at: string;
   updated_at: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  parent_id: number | null;
+  created_at: string;
 }
 
 interface Media {
@@ -91,7 +84,12 @@ export default {
     // --- Public API: list published posts ---
     if (path === "/api/posts" && method === "GET") {
       const results = await env.DB.prepare(
-        "SELECT id, slug, title, excerpt, cover_image, created_at FROM posts WHERE published = 1 ORDER BY created_at DESC"
+        `SELECT p.id, p.slug, p.title, p.excerpt, p.cover_image, p.created_at,
+                c.id AS category_id, c.name AS category_name, c.slug AS category_slug
+         FROM posts p
+         LEFT JOIN categories c ON p.category_id = c.id
+         WHERE p.published = 1
+         ORDER BY p.created_at DESC`
       ).all();
       return json(results.results);
     }
@@ -101,7 +99,10 @@ export default {
     if (postMatch && method === "GET") {
       const slug = postMatch[1];
       const post = await env.DB.prepare(
-        "SELECT * FROM posts WHERE slug = ? AND published = 1"
+        `SELECT p.*, c.id AS category_id, c.name AS category_name, c.slug AS category_slug
+         FROM posts p
+         LEFT JOIN categories c ON p.category_id = c.id
+         WHERE p.slug = ? AND p.published = 1`
       ).bind(slug).first<Post>();
       if (!post) return json({ error: "Not found" }, 404);
       return json(post);
@@ -110,7 +111,10 @@ export default {
     // --- Admin API: list all posts ---
     if (path === "/api/admin/posts" && method === "GET") {
       const results = await env.DB.prepare(
-        "SELECT * FROM posts ORDER BY created_at DESC"
+        `SELECT p.*, c.id AS category_id, c.name AS category_name, c.slug AS category_slug
+         FROM posts p
+         LEFT JOIN categories c ON p.category_id = c.id
+         ORDER BY p.created_at DESC`
       ).all();
       return json(results.results);
     }
@@ -120,14 +124,15 @@ export default {
       const body = await request.json() as Partial<Post>;
       const slug = body.slug || slugify(body.title || "untitled");
       const result = await env.DB.prepare(
-        "INSERT INTO posts (slug, title, excerpt, body, cover_image, published) VALUES (?, ?, ?, ?, ?, ?)"
+        "INSERT INTO posts (slug, title, excerpt, body, cover_image, published, category_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
       ).bind(
         slug,
         body.title || "",
         body.excerpt || "",
         body.body || "",
         body.cover_image || null,
-        body.published ? 1 : 0
+        body.published ? 1 : 0,
+        body.category_id || null
       ).run();
       return json({ id: result.meta.last_row_id, slug }, 201);
     }
@@ -138,8 +143,12 @@ export default {
       const id = parseInt(adminPostMatch[1]);
 
       if (method === "GET") {
-        const post = await env.DB.prepare("SELECT * FROM posts WHERE id = ?")
-          .bind(id).first<Post>();
+        const post = await env.DB.prepare(
+          `SELECT p.*, c.id AS category_id, c.name AS category_name, c.slug AS category_slug
+           FROM posts p
+           LEFT JOIN categories c ON p.category_id = c.id
+           WHERE p.id = ?`
+        ).bind(id).first<Post>();
         if (!post) return json({ error: "Not found" }, 404);
         return json(post);
       }
@@ -148,7 +157,7 @@ export default {
         const body = await request.json() as Partial<Post>;
         const slug = body.slug || slugify(body.title || "untitled");
         await env.DB.prepare(
-          "UPDATE posts SET slug = ?, title = ?, excerpt = ?, body = ?, cover_image = ?, published = ?, updated_at = datetime('now') WHERE id = ?"
+          "UPDATE posts SET slug = ?, title = ?, excerpt = ?, body = ?, cover_image = ?, published = ?, category_id = ?, updated_at = datetime('now') WHERE id = ?"
         ).bind(
           slug,
           body.title || "",
@@ -156,6 +165,7 @@ export default {
           body.body || "",
           body.cover_image || null,
           body.published ? 1 : 0,
+          body.category_id || null,
           id
         ).run();
         return json({ success: true });
@@ -167,7 +177,7 @@ export default {
       }
     }
 
-    // --- Admin API: upload image to R2 (legacy, kept for backwards compat) ---
+    // --- Admin API: upload image to R2 (legacy) ---
     if (path === "/api/admin/upload" && method === "POST") {
       const formData = await request.formData();
       const file = formData.get("file") as File;
@@ -184,10 +194,9 @@ export default {
       }, 201);
     }
 
-    // --- Admin API: list R2 objects (legacy) ---
     if (path === "/api/admin/upload" && method === "GET") {
       const listed = await env.BUCKET.list();
-      const objects = listed.objects.map((obj: { key: any; size: any; uploaded: { toISOString: () => any; }; }) => ({
+      const objects = listed.objects.map((obj) => ({
         key: obj.key,
         size: obj.size,
         uploaded: obj.uploaded.toISOString(),
@@ -198,7 +207,6 @@ export default {
 
     // --- Admin API: media library ---
 
-    // List all media with D1 metadata
     if (path === "/api/admin/media" && method === "GET") {
       const results = await env.DB.prepare(
         "SELECT * FROM media ORDER BY created_at DESC"
@@ -206,7 +214,6 @@ export default {
       return json(results.results);
     }
 
-    // Upload: store file in R2 + insert metadata row in D1
     if (path === "/api/admin/media" && method === "POST") {
       const formData = await request.formData();
       const file = formData.get("file") as File;
@@ -251,7 +258,6 @@ export default {
       return json(media, 201);
     }
 
-    // Get / update / delete single media by ID
     const mediaMatch = path.match(/^\/api\/admin\/media\/(\d+)$/);
     if (mediaMatch) {
       const id = parseInt(mediaMatch[1]);
@@ -290,7 +296,6 @@ export default {
         ).bind(id).first<{ r2_key: string; thumbnail_key: string | null }>();
         if (!media) return json({ error: "Media not found" }, 404);
 
-        // Delete the file from R2
         await env.BUCKET.delete(media.r2_key);
         if (media.thumbnail_key) {
           try { await env.BUCKET.delete(media.thumbnail_key); } catch (e) { /* ignore */ }
@@ -298,6 +303,45 @@ export default {
         await env.DB.prepare("DELETE FROM media WHERE id = ?").bind(id).run();
         return json({ success: true });
       }
+    }
+
+    // --- Admin API: categories ---
+
+    if (path === "/api/admin/categories" && method === "GET") {
+      const results = await env.DB.prepare(
+        "SELECT * FROM categories ORDER BY name ASC"
+      ).all<Category>();
+      return json(results.results);
+    }
+
+    if (path === "/api/admin/categories" && method === "POST") {
+      const body = await request.json() as { name: string; parent_id?: number | null };
+      if (!body.name || !body.name.trim()) {
+        return json({ error: "Category name is required" }, 400);
+      }
+      const slug = slugify(body.name);
+      const existing = await env.DB.prepare("SELECT id FROM categories WHERE slug = ?")
+        .bind(slug).first();
+      if (existing) {
+        return json({ error: "A category with that slug already exists" }, 409);
+      }
+      const result = await env.DB.prepare(
+        "INSERT INTO categories (name, slug, parent_id) VALUES (?, ?, ?)"
+      ).bind(
+        body.name.trim(),
+        slug,
+        body.parent_id || null
+      ).run();
+      const category = await env.DB.prepare("SELECT * FROM categories WHERE id = ?")
+        .bind(result.meta.last_row_id).first<Category>();
+      return json(category, 201);
+    }
+
+    const categoryMatch = path.match(/^\/api\/admin\/categories\/(\d+)$/);
+    if (categoryMatch && method === "DELETE") {
+      const catId = parseInt(categoryMatch[1]);
+      await env.DB.prepare("DELETE FROM categories WHERE id = ?").bind(catId).run();
+      return json({ success: true });
     }
 
     // --- Fallback: serve static assets (SPA) ---
