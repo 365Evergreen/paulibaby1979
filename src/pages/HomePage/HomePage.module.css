@@ -1,5 +1,8 @@
-.contentContainer{
-  width: 100%;
+.contentContainer {
+  width: 100vw !important;
+padding: 0;
+margin: 0;
+
 }
 
 .section {
@@ -7,6 +10,22 @@
 
 }
 
-.carousel {
+.carouselSection {
   width: 100%;
+}
+
+.carouselContainer {
+  width: 100% !important;
+  height: 75vh;
+  margin: 0;
+  padding: 0;
+  z-index: 50;
+}
+
+.shellContainer {
+width: 100vw !important;
+padding: 0;
+margin: 0;
+
+
 }

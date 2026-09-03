@@ -1,29 +1,110 @@
 .slideshowContainer {
   position: relative;
-  margin: auto;
+  margin: 0;
   overflow: hidden;
-  border-radius: 8px;
-  height: 75vh;
+  min-height: 75vh;
 }
-.slide img {
+
+.slide {
+  height: 100%;
+  width: 100vw;
+  background-color: brown;
+}
+
+.slideTitle {
+  font-size: larger;
+  font-weight: 500;
+  color: #000;
+}
+
+.slideContent {
+
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center; /* Vertically centers text */
+  justify-content: center; /* Horizontally centers text */
+}
+
+.slideImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1; 
+}
+
+.slideImage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.2) 70%);
+  pointer-events: none;
+}
+
+.slideImageElement {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.slideContent {
-  padding: 0 4rem;
-  background: #f9f9f9;
+  object-position: right center;
+  animation: slowZoom 20s ease-in-out infinite alternate;
+  transform-origin: right center;
 }
 
-button {
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Darkens image by 40% for text readability */
+  z-index: 2;
+}
+.slideText {
+  position: relative;
+  z-index: 3;
+  color: #ffffff; /* White text looks best on dark overlays */
+  text-align: center;
+  max-width: 600px;
+  padding: 20px;
+}
+
+/* Layer 4: Navigation controls (Top-most or split to sides) */
+.controls {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 4; /* Keeps arrows above everything else */
+  pointer-events: none; /* Allows clicking through the empty space between arrows */
+}
+
+.prevBtn, .nextBtn {
+  pointer-events: auto; /* Re-enables clicking on the buttons themselves */
+  background: rgba(21, 21, 21, 0.5);
+  border: none;
+  color: white;
+  padding: 12px;
+  cursor: pointer;
+}
+.button {
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(38, 18, 18, 0.5);
   color: white;
   border: none;
   cursor: pointer;
   padding: 10px;
 }
-.prevBtn { left: 10px; }
-.nextBtn { right: 10px; }

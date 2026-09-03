@@ -5,18 +5,21 @@
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
-  min-height: 100vh;
+  min-height: 10vh;
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
 }
 
+
+
+
 /* Fluid main container wrapper */
 .mainContent {
-  padding: 1rem;
+  padding: 0;
   width: 100%;
   box-sizing: border-box;
-  margin: 0 auto;
+  margin: 0 ;
 }
 
 /* 💻 Tablets and Small Laptops (Desktop mode) */
@@ -27,8 +30,9 @@
   }
 
   .mainContent {
-    grid-column: 2; /* Forces content to sit safely to the right of the sidebar */
-    padding: 2.5rem;
-    max-width: 1200px; /* Optional standard content page constraint */
+    grid-column: auto; /* Forces content to sit safely to the right of the sidebar */
+    padding:  0 rem;
+    width: 100vw;
+   
   }
 }

@@ -4,8 +4,9 @@ import GetInTouch from '../../components/GetInTouch/GetInTouch'
 import Carousel from '../../components/Carousel/Carousel'
 import styles from './HomePage.module.css'
 
-// Define the type structure for your posts
-interface Post {
+
+interface Slide {
+  date: string | Date | number;
   id: number;
   title: string;
   excerpt: string;
@@ -13,54 +14,58 @@ interface Post {
   url: string;
   autoslide: boolean;
   interval?: number
-}
 
+}
 const HomePage = () => {
-  const [posts, setPosts] = useState<Post[]>([])
+  const [slides, setSlides] = useState<Slide[]>([])
+
   const [loading, setLoading] = useState<boolean>(true)
 
   // Fetch the latest posts at the page level
   useEffect(() => {
     fetch("/api/posts")
       .then((r) => r.json())
-      .then((data: Post[]) => {
-        setPosts(data)
+      .then((data: Slide[]) => {
+        setSlides(data)
         setLoading(false)
       })
       .catch(() => setLoading(false))
   }, [])
 
   // Slice the 5 most recent posts specifically for the carousel header
-  const carouselPosts = posts.slice(0, 5)
-
+  const carouselSlide = slides.slice(0, 5)
   if (loading) {
     return <div className={styles.loading}>Loading content...</div>
   }
   return (
-    <section className={styles.section}>
-      <div className={styles.carousel}><Carousel posts={carouselPosts} autoSlide={true} interval={5000}
+    <main className={styles.contentContainer}> 
+    <div className={styles.carouselContainer}>
+     
+      <Carousel slides={carouselSlide} autoSlide={true} interval={5000}/>
+      
+      
+    </div>
+      <section className={styles.section}>
+        <div className={styles.latestPosts}>
+          <LatestPosts/>
+        </div>
+        <div className={styles.getInTouch}>
+          <GetInTouch
+            {...{
+              leftColumn: (
+                <div>
+                </div>
+              ),
+              rightColumn: (
+                <div>
+                </div>
+              ),
+            }
 
-      /></div>
-
-      <div className={styles.latestPosts}>
-        <LatestPosts />
-      </div>
-      <div className={styles.getInTouch}>
-        <GetInTouch
-          {...{
-            leftColumn: (
-              <div>
-              </div>
-            ),
-            rightColumn: (
-              <div>
-              </div> 
-            ),
-          }
-
-          }
-        /></div> 
-    </section>
+            }
+          /></div>
+      </section>
+    </main>
   );
 }
 
