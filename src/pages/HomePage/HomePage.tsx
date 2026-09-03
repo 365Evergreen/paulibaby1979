@@ -11,6 +11,8 @@ interface Post {
   excerpt: string;
   cover_image: string;
   url: string;
+  autoslide: boolean;
+  interval?: number
 }
 
 const HomePage = () => {
@@ -36,7 +38,7 @@ const HomePage = () => {
   }
   return (
     <section className={styles.section}>
-      <div className={styles.hero}><Carousel posts={carouselPosts} autoSlide={true} interval={5000}
+      <div className={styles.carousel}><Carousel posts={carouselPosts} autoSlide={true} interval={5000}
 
       /></div>
 

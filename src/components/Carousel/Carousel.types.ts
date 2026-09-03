@@ -4,6 +4,7 @@ export interface Post {
   excerpt: string;
   cover_image: string;
   url: string;
+  interval?: number;
 }
 ;
 export interface Carousel {
