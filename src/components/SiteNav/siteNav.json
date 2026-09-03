@@ -6,26 +6,18 @@
     "hasMegaMenu": true,
     "columns": [
       {
-        "heading": "Software",
+        "heading": "Posts",
         "links": [
-          { "label": "Analytics Platform", "href": "/products/analytics" },
-          { "label": "CRM Software", "href": "/products/crm" },
-          { "label": "Cloud Storage", "href": "/products/cloud" }
-        ]
-      },
-      {
-        "heading": "Hardware",
-        "links": [
-          { "label": "Enterprise Servers", "href": "/products/servers" },
-          { "label": "IoT Gateways", "href": "/products/iot" }
-        ]
+          { "label": "All posts", "href": "/blog" },
+          { "label": "Media library", "href": "/media-library" }
+          ]
       }
     ]
   },
   {
     "id": 2,
-    "title": "Services",
-    "href": "/services",
+    "title": "Music",
+    "href": "/music",
     "hasMegaMenu": false
   },
   {

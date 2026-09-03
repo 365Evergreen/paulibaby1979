@@ -13,7 +13,8 @@ interface Slide {
   cover_image: string;
   url: string;
   autoslide: boolean;
-  interval?: number
+  interval?: number;
+  slug: string;
 
 }
 const HomePage = () => {

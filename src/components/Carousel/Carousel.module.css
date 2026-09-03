@@ -1,14 +1,22 @@
 .slideshowContainer {
   position: relative;
-  margin: 0;
+  width: 100%;
+  height: 75vh;
   overflow: hidden;
-  min-height: 75vh;
+  background-color: #000;
 }
 
+
 .slide {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  width: 100%;
   height: 100%;
-  width: 100vw;
-  background-color: brown;
+  opacity: 0;
+  z-index: 0;
+  transition: opacity 1s ease-in-out;
 }
 
 .slideTitle {
@@ -19,11 +27,15 @@
 
 .slideContent {
 
-  width: 100%;
-  overflow: hidden;
+ position: absolute;
+  inset: 0;
   display: flex;
-  align-items: center; /* Vertically centers text */
-  justify-content: center; /* Horizontally centers text */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+  padding: 0 1rem;
 }
 
 .slideImage {
@@ -31,7 +43,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+height: 75vh;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -60,7 +72,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 75vh;
   background-color: rgba(0, 0, 0, 0.4); /* Darkens image by 40% for text readability */
   z-index: 2;
 }
@@ -96,6 +108,7 @@
   cursor: pointer;
 }
 .button {
+  pointer-events: auto;
   width: fit-content;
   display: flex;
   flex-direction: row;
@@ -105,6 +118,6 @@
   background-color: rgba(38, 18, 18, 0.5);
   color: white;
   border: none;
-  cursor: pointer;
+  cursor:pointer;
   padding: 10px;
 }

@@ -6,6 +6,7 @@ export interface Slide {
   cover_image: string;
   url: string;
   interval?: number;
+  slug: string;
 }
 ;
 export interface Carousel {
@@ -16,5 +17,6 @@ date: string | number | Date;
   cover_image: string;
   url: string;
   interval?: number;
+  slug: string;
 }
 ;

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Slide } from "./Carousel.types";
 import styles from './Carousel.module.css';
+import { Link } from "react-router-dom";
 
 interface LatestslidesSliderProps {
   slides: Slide[];
@@ -68,7 +69,7 @@ export default function LatestslidesSlider({
     <div className={styles.slideText}>
       <h3 className={styles.slideTitle}>{currentSlide.title}</h3>
       <p>{currentSlide.excerpt}</p>
-      <a href={currentSlide.url} className={styles.button}>Read more</a>
+      <Link to={`/blog/${currentSlide.slug}`} className={styles.button}>Read more</Link>
     </div>
 )</div>
     {/* Foreground Controls Layer */}
