@@ -1,7 +1,7 @@
 .editorShell{
-    background-color: antiquewhite;
+    background-color: var(--bg);
 }
 
 .mainContainer{
-    padding-top: 0x;
+    padding-top: 0;
 }

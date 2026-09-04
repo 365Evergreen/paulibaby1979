@@ -76,12 +76,12 @@ export default function SinglePostPage() {
 
   return (
     <div className={styles.contentContainer}>
-      <article className={styles.postFullContent}>
+      <article className={styles.singlePostFullContent}>
         {post.cover_image && (
           <img
             src={post.cover_image}
             alt={post.title}
-            className={styles.postCoverFull}
+            className={styles.singlePostCoverFull}
           />
         )}
         <h1>{post.title}</h1>
@@ -93,7 +93,7 @@ export default function SinglePostPage() {
           })}
         </time>
         <div
-          className={styles.postFullBody}
+          className={styles.singlePostFullBody}
           dangerouslySetInnerHTML={{ __html: renderMarkdown(post.body) }}
         />
       </article>

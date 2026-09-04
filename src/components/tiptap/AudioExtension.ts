@@ -1,7 +1,22 @@
 import { Node } from "@tiptap/core";
 
+/**
+ * Custom TipTap Audio extension.
+ * Renders an <audio> element with controls.
+ * Stored as <audio src="..." controls></audio> in HTML.
+ */
+
 export interface AudioOptions {
   HTMLAttributes: Record<string, any>;
+}
+
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    audio: {
+      /** Insert an audio element */
+      setAudio: (src: string) => ReturnType;
+    };
+  }
 }
 
 export const Audio = Node.create<AudioOptions>({
@@ -38,13 +53,12 @@ export const Audio = Node.create<AudioOptions>({
   addCommands() {
     return {
       setAudio:
-        (_src: string) =>
-        ({ commands }: { commands: any }) => {
-          return commands.insertContent({
-            type: "audio",
-            attrs: { src: _src },
-          });
-        },
-    } as any;
+        (src: string) =>
+          ({ commands }) =>
+            commands.insertContent({
+              type: "audio",
+              attrs: { src },
+            }),
+    };
   },
 });

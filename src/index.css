@@ -14,7 +14,19 @@
   color: var(--text);
   background: var(--bg);
 }
-
+.theme{
+    --theme-ui-colors-black: #0c0c0c;
+    --theme-ui-colors-white: #fff;
+    --theme-ui-colors-white100: rgba(255, 255, 255, 0.88);
+    --theme-ui-colors-white200: rgba(255, 255, 255, 0.4);
+    --theme-ui-colors-white300: rgba(255, 255, 255, 0.2);
+    --theme-ui-colors-red100: #E31B23;
+    --theme-ui-colors-red200: #400000;
+    --theme-ui-colors-gray100: rgba(12, 12, 12, 0.7);
+    --theme-ui-colors-gray200: rgba(12, 12, 12, 0.17);
+    --theme-ui-colors-gray300: #F6F6F6;
+    --theme-ui-colors-yellow: #FFD700;
+    --theme-ui-colors-green: #009982;}
 * {
   box-sizing: border-box;
 }

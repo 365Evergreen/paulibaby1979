@@ -4,6 +4,15 @@ export interface VideoOptions {
   HTMLAttributes: Record<string, any>;
 }
 
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    video: {
+      /** Insert a video element */
+      setVideo: (src: string) => ReturnType;
+    };
+  }
+}
+
 export const Video = Node.create<VideoOptions>({
   name: "video",
   group: "block",
@@ -38,13 +47,12 @@ export const Video = Node.create<VideoOptions>({
   addCommands() {
     return {
       setVideo:
-        (_src: string) =>
-        ({ commands }: { commands: any }) => {
-          return commands.insertContent({
-            type: "video",
-            attrs: { src: _src },
-          });
-        },
-    } as any;
+        (src: string) =>
+          ({ commands }) =>
+            commands.insertContent({
+              type: "video",
+              attrs: { src },
+            }),
+    };
   },
 });

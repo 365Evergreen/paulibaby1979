@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import styles from "./MediaLibraryPage.module.css";
-type Media = {
-  id: number;
+import styles from './MediaLibraryPage.module.css'
+
+type MediaType = "audio" | "document" | "image" | "video" | "other";
+
+type MediaItem = {
+  id: number | null;
   r2_key: string;
   filename: string;
   content_type: string;
+  media_type: MediaType;
   size_bytes: number;
   width: number | null;
   height: number | null;
@@ -18,13 +22,22 @@ type Media = {
   thumbnail_key: string;
   created_at: string;
   updated_at: string;
+  url: string;
 };
-type View = "list" | "edit";
+
 type Layout = "grid" | "table";
-type SortKey = "created_at" | "content_type";
+type SortKey = "created_at" | "content_type" | "size_bytes";
 type SortDir = "asc" | "desc";
 
 const MEDIA_URL = "https://media.paulibaby.com";
+
+const FILTER_PILLS: { label: string; value: MediaType | "all"; icon: string }[] = [
+  { label: "All", value: "all", icon: "✦" },
+  { label: "Image", value: "image", icon: "🖼" },
+  { label: "Video", value: "video", icon: "🎬" },
+  { label: "Audio", value: "audio", icon: "🎵" },
+  { label: "Document", value: "document", icon: "📄" },
+];
 
 /** Full-size public URL for an R2 object. */
 function fullUrl(r2Key: string): string {
@@ -45,19 +58,63 @@ function thumbUrl(r2Key: string, width: number, height: number): string {
 function handleImgError(e: React.SyntheticEvent<HTMLImageElement>, r2Key: string) {
   const img = e.currentTarget;
   const fallback = fullUrl(r2Key);
-  // Prevent infinite loop if the full URL also fails
   if (img.src !== fallback) {
     img.src = fallback;
   }
 }
 
+/** Render a preview tile for non-image media types. */
+function MediaPreview({ item, size }: { item: MediaItem; size: "card" | "thumb" }) {
+  const iconSize = size === "card" ? "3rem" : "1.5rem";
+  const fontSize = size === "card" ? "0.85rem" : "0.7rem";
+
+  if (item.media_type === "image") {
+    const w = size === "card" ? 400 : 88;
+    const h = size === "card" ? 160 : 88;
+    return (
+      <img
+        src={thumbUrl(item.r2_key, w, h)}
+        alt={item.alt_text || item.filename}
+        loading="lazy"
+        onError={(e) => handleImgError(e, item.r2_key)}
+        style={size === "card" ? { maxWidth: "100%", maxHeight: "100%", objectFit: "contain" } : { width: 44, height: 44, objectFit: "cover", borderRadius: 6, border: "1px solid var(--border)" }}
+      />
+    );
+  }
+
+  const icons: Record<MediaType, string> = {
+    audio: "🎵",
+    video: "🎬",
+    document: "📄",
+    image: "🖼",
+    other: "📦",
+  };
+
+  return (
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "0.25rem",
+      width: "100%",
+      height: "100%",
+      color: "var(--text-muted)",
+    }}>
+      <span style={{ fontSize: iconSize }}>{icons[item.media_type]}</span>
+      {size === "card" && (
+        <span style={{ fontSize, textTransform: "capitalize" }}>{item.media_type}</span>
+      )}
+    </div>
+  );
+}
+
 export default function AdminMedia() {
-  const [view, setView] = useState<View>("list");
-  const [media, setMedia] = useState<Media[]>([]);
+  const [media, setMedia] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [search, setSearch] = useState("");
-  const [editing, setEditing] = useState<Media | null>(null);
+  const [activeFilter, setActiveFilter] = useState<MediaType | "all">("all");
   const [message, setMessage] = useState("");
   const [layout, setLayout] = useState<Layout>("grid");
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
@@ -83,11 +140,11 @@ export default function AdminMedia() {
   async function loadMedia() {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/media");
-      const data: Media[] = await res.json();
+      const res = await fetch("/api/admin/media-library");
+      const data: MediaItem[] = await res.json();
       setMedia(data);
     } catch {
-      console.error("Failed to load media");
+      console.error("Failed to load media library");
     } finally {
       setLoading(false);
     }
@@ -121,8 +178,7 @@ export default function AdminMedia() {
         throw new Error(err.error || "Upload failed");
       }
 
-      const newMedia: Media = await res.json();
-      setMedia((prev) => [newMedia, ...prev]);
+      // Reset form
       setAltText("");
       setTitle("");
       setCaption("");
@@ -131,6 +187,8 @@ export default function AdminMedia() {
       setSelectedFile(null);
       if (fileRef.current) fileRef.current.value = "";
       showMessage("Uploaded successfully!");
+      // Reload to pick up the new file with merged metadata
+      await loadMedia();
     } catch (e) {
       showMessage(e instanceof Error ? e.message : "Upload failed");
     } finally {
@@ -187,45 +245,21 @@ export default function AdminMedia() {
     e.stopPropagation();
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm("Delete this media file? This removes it from R2 and the database.")) return;
+  async function handleDelete(r2Key: string) {
+    if (!confirm("Delete this file? This removes it from R2 and the database.")) return;
     try {
-      const res = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
+      const res = await fetch("/api/admin/media-library", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ r2_key: r2Key }),
+      });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || "Delete failed");
       }
-      setMedia((prev) => prev.filter((m) => m.id !== id));
-      if (editing?.id === id) setView("list");
+      setMedia((prev) => prev.filter((m) => m.r2_key !== r2Key));
     } catch (e) {
       alert(e instanceof Error ? e.message : "Delete failed");
-    }
-  }
-
-  async function handleSaveEdit() {
-    if (!editing) return;
-    try {
-      const res = await fetch(`/api/admin/media/${editing.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          alt_text: editing.alt_text,
-          title: editing.title,
-          caption: editing.caption,
-          description: editing.description,
-          tags: editing.tags,
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Update failed");
-      }
-      const updated: Media = await res.json();
-      setMedia((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
-      setView("list");
-      setEditing(null);
-    } catch (e) {
-      alert(e instanceof Error ? e.message : "Update failed");
     }
   }
 
@@ -243,8 +277,27 @@ export default function AdminMedia() {
     }
   }
 
+  function clearFilters() {
+    setActiveFilter("all");
+    setSearch("");
+  }
+
+  // Count items per media type for pill badges
+  const filterCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: media.length, image: 0, video: 0, audio: 0, document: 0, other: 0 };
+    for (const m of media) {
+      counts[m.media_type] = (counts[m.media_type] || 0) + 1;
+    }
+    return counts;
+  }, [media]);
+
+  const hasActiveFilters = activeFilter !== "all" || search.trim() !== "";
+
   const sortedFiltered = useMemo(() => {
     const filtered = media.filter((m) => {
+      // Media type filter
+      if (activeFilter !== "all" && m.media_type !== activeFilter) return false;
+      // Search filter
       if (!search) return true;
       const q = search.toLowerCase();
       return (
@@ -261,12 +314,14 @@ export default function AdminMedia() {
         cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       } else if (sortKey === "content_type") {
         cmp = a.content_type.localeCompare(b.content_type);
+      } else if (sortKey === "size_bytes") {
+        cmp = a.size_bytes - b.size_bytes;
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
 
     return sorted;
-  }, [media, search, sortKey, sortDir]);
+  }, [media, search, activeFilter, sortKey, sortDir]);
 
   const formatDate = useCallback((dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
@@ -284,20 +339,20 @@ export default function AdminMedia() {
 
   // --- Upload modal ---
   const uploadModal = showUpload && (
-    <div className="drawer-overlay" onClick={() => setShowUpload(false)}>
+    <div className={styles.drawerOverlay} onClick={() => setShowUpload(false)}>
       <div
-        className="media-upload-modal"
+        className={styles.mediaUploadModal}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="drawer-header">
+        <div className={styles.drawerHeader}>
           <h2>Add Media</h2>
           <button onClick={() => setShowUpload(false)} className="drawer-close">✕</button>
         </div>
 
-        <div className="drawer-body">
+        <div className={styles.drawerBody}>
           {/* Drag & drop zone */}
           <div
-            className={`media-dropzone ${dragging ? "media-dropzone--active" : ""}`}
+            className={`mediaDropzone ${dragging} ? styles.mediaDropzone--active : ""`}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -305,14 +360,21 @@ export default function AdminMedia() {
             onClick={() => fileRef.current?.click()}
           >
             {selectedFile ? (
-              <div className="media-dropzone__selected">
-                <img
-                  src={URL.createObjectURL(selectedFile)}
-                  alt="Preview"
-                  className="media-dropzone__preview"
-                />
-                <p className="media-dropzone__filename">{selectedFile.name}</p>
-                <p className="media-dropzone__filesize">{formatSize(selectedFile.size)}</p>
+              <div className={styles.mediaDropzone__selected}>
+                {selectedFile.type.startsWith("image/") ? (
+                  <img
+                    src={URL.createObjectURL(selectedFile)}
+                    alt="Preview"
+                    className={styles.mediaDropzone__preview}
+                  />
+                ) : (
+                  <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>
+                    {selectedFile.type.startsWith("audio/") ? "🎵" :
+                     selectedFile.type.startsWith("video/") ? "🎬" : "📄"}
+                  </div>
+                )}
+                <p className="mediaDropzone__filename">{selectedFile.name}</p>
+                <p className="mediaDropzone__filesize">{formatSize(selectedFile.size)}</p>
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setSelectedFile(null); if (fileRef.current) fileRef.current.value = ""; }}
@@ -322,18 +384,18 @@ export default function AdminMedia() {
                 </button>
               </div>
             ) : (
-              <div className="media-dropzone__empty">
-                <div className="media-dropzone__icon">📁</div>
-                <p className="media-dropzone__text">
-                  Drag &amp; drop an image here, or <span className="media-dropzone__link">browse</span>
+              <div className={styles.mediaDropzone__empty}>
+                <div className={styles.mediaDropzone__icon}>📁</div>
+                <p className={styles.mediaDropzone__text}>
+                  Drag &amp; drop a file here, or <span className={styles.mediaDropzone__link}>browse</span>
                 </p>
-                <p className="media-dropzone__hint">PNG, JPG, WebP, GIF — max 10MB</p>
+                <p className="mediaDropzone__hint">Images, audio, video, documents — max 50MB</p>
               </div>
             )}
             <input
               ref={fileRef}
               type="file"
-              accept="image/*"
+              accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.md"
               onChange={handleFileSelect}
               style={{ display: "none" }}
             />
@@ -341,7 +403,7 @@ export default function AdminMedia() {
 
           {/* Metadata fields */}
           {selectedFile && (
-            <form onSubmit={handleUpload} className="media-upload-form">
+            <form onSubmit={handleUpload} className={styles.mediaUploadForm}>
               <div className="form-group">
                 <label>Title</label>
                 <input
@@ -358,17 +420,7 @@ export default function AdminMedia() {
                   type="text"
                   value={altText}
                   onChange={(e) => setAltText(e.target.value)}
-                  placeholder="Accessibility description"
-                  className="form-input"
-                />
-              </div>
-              <div className="form-group">
-                <label>Caption</label>
-                <input
-                  type="text"
-                  value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                  placeholder="Short caption"
+                  placeholder="Accessibility description (for images)"
                   className="form-input"
                 />
               </div>
@@ -392,247 +444,167 @@ export default function AdminMedia() {
     </div>
   );
 
-  // --- List view ---
-  if (view === "list") {
-    return (
-      <div className={styles.contentContainer}>
-        <header className={styles.adminHeader}>
-          <h1>Media library</h1>
-          <div className={styles.adminActions}>
-            <a href="/admin" className={styles.btnSecondary}>← Posts</a>
-            <button onClick={() => setShowUpload(true)} className={styles.btnPrimary}>
-              + Add Media
-            </button>
-          </div>
-        </header>
-
-        {message && <div className={styles.adminMessage}>{message}</div>}
-
-        {/* Toolbar: search + view toggle */}
-        <div className={styles.mediaToolbar}>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by filename, title, tags, or alt text…"
-            className={`${styles.formInput} ${styles.mediaToolbar__search}`}
-          />
-          <div className={styles.mediaToolbar__toggle}>
-            <button
-              onClick={() => setLayout("grid")}
-              className={`media-toolbar__btn ${layout === "grid" ? "media-toolbar__btn--active" : ""}`}
-              title="Grid view"
-            >
-              ▦
-            </button>
-            <button
-              onClick={() => setLayout("table")}
-              className={`media-toolbar__btn ${layout === "table" ? "media-toolbar__btn--active" : ""}`}
-              title="Table view"
-            >
-              ☰
-            </button>
-          </div>
+  return (
+    <div className={styles.admin}>
+      <header className={styles.adminHeader}>
+        <h1>Media Library</h1>
+        <div className={styles.adminActions}>
+          <a href="/admin" className={styles.mediaToolbar__btn}>← Posts</a>
+          <button onClick={() => setShowUpload(true)} className="btn-primary">
+            + Add Media
+          </button>
         </div>
+      </header>
 
-        {/* Content */}
-        {loading ? (
-          <div className="loading">Loading…</div>
-        ) : sortedFiltered.length === 0 ? (
-          <div className="empty">No media found. Click "Add media" to upload your first image!</div>
-        ) : layout === "grid" ? (
-          /* --- Grid view --- */
-          <div className={styles.mediaGrid}>
-            {sortedFiltered.map((m) => (
-              <div key={m.id} className={styles.mediaCard}>
-                <div className={styles.mediaCard__thumb}>
-                  <img
-                    src={thumbUrl(m.r2_key, 400, 160)}
-                    alt={m.alt_text || m.filename}
-                    loading="lazy"
-                         onError={(e) => handleImgError(e, m.r2_key)}
-                  />
-                </div>
-                <div className={styles.mediaCard__body}>
-                  <p className={styles.mediaCard__title}>{m.title || m.filename}</p>
-                  <p className={styles.mediaCard__meta}>
-                    {formatSize(m.size_bytes)} · {m.content_type}
-                  </p>
-                  <p className={styles.mediaCard__meta}>{formatDate(m.created_at)}</p>
-                  {m.tags && <p className={styles.mediaCard__tags}>{m.tags}</p>}
-                  <div className={styles.mediaCard__actions}>
-                    <button onClick={() => copyUrl(`${MEDIA_URL}/${m.r2_key}`)} className={styles.btnSmall}>
-                      Copy URL
-                    </button>
-                    <button onClick={() => { setEditing(m); setView("edit"); }} className={styles.btnSmall}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(m.id)} className={styles.btnSmall} style={{ backgroundColor: "var(--danger)" }}>
-                      Delete
-                    </button>
-                  </div>
+      {message && <div className="admin-message">{message}</div>}
+
+      {/* Filter pills */}
+      <div className="media-filters">
+        {FILTER_PILLS.map((pill) => (
+          <button
+            key={pill.value}
+            onClick={() => setActiveFilter(pill.value)}
+            className={`media-pill ${activeFilter === pill.value ? styles.mediaPill__active: ""}`}
+          >
+            <span className={styles.mediaPill__icon}>{pill.icon}</span>
+            {pill.label}
+            <span className={styles.mediaPill__count}>
+              {filterCounts[pill.value] ?? 0}
+            </span>
+          </button>
+        ))}
+        {hasActiveFilters && (
+          <button onClick={clearFilters} className={styles.mediaPill__clear}>
+            ✕ Clear filters
+          </button>
+        )}
+      </div>
+
+      {/* Toolbar: search + view toggle */}
+      <div className={styles.mediaToolbar}>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by filename, title, tags, or alt text…"
+          className="form-input media-toolbar__search"
+        />
+        <div className="media-toolbar__toggle">
+          <button
+            onClick={() => setLayout("grid")}
+            className={`media-toolbar__btn ${layout === "grid" ? "media-toolbar__btn--active" : ""}`}
+            title="Grid view"
+          >
+            ▦
+          </button>
+          <button
+            onClick={() => setLayout("table")}
+            className={`media-toolbar__btn ${layout === "table" ? "media-toolbar__btn--active" : ""}`}
+            title="Table view"
+          >
+            ☰
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      {loading ? (
+        <div className="loading">Loading…</div>
+      ) : sortedFiltered.length === 0 ? (
+        <div className="empty">
+          {hasActiveFilters
+            ? "No media matches your filters. Try clearing them."
+            : 'No media found. Click "Add Media" to upload your first file!'}
+        </div>
+      ) : layout === "grid" ? (
+        /* --- Grid view --- */
+        <div className={styles.mediaGrid}>
+          {sortedFiltered.map((m) => (
+            <div key={m.r2_key} className={styles.mediaCard}>
+              <div className="media-card__thumb">
+                <MediaPreview item={m} size="card" />
+              </div>
+              <div className="media-card__body">
+                <p className="media-card__title">{m.title || m.filename}</p>
+                <p className="media-card__meta">
+                  {formatSize(m.size_bytes)} · {m.content_type}
+                </p>
+                <p className="media-card__meta">{formatDate(m.created_at)}</p>
+                {m.tags && <p className="media-card__tags">{m.tags}</p>}
+                <div className="media-card__actions">
+                  <button onClick={() => copyUrl(m.url)} className="btn-small">
+                    Copy URL
+                  </button>
+                  <button onClick={() => handleDelete(m.r2_key)} className="btn-small btn-danger">
+                    Delete
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          /* --- Table view --- */
-          <table className="admin-table media-table">
-            <thead>
-              <tr>
-                <th style={{ width: 60 }}>Thumb</th>
-                <th>Title / Filename</th>
-                <th>Content Type</th>
-                <th>Size</th>
-                <th
-                  onClick={() => toggleSort("created_at")}
-                  className="media-table__sort"
-                >
-                  Uploaded {sortKey === "created_at" && (sortDir === "asc" ? "↑" : "↓")}
-                </th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedFiltered.map((m) => (
-                <tr key={m.id}>
-                  <td>
-                    <img
-                      src={thumbUrl(m.r2_key, 88, 88)}
-                      alt={m.alt_text || m.filename}
-                      className="media-table__thumb"
-                      loading="lazy"
-                    />
-                  </td>
-                  <td>
-                    <div className="media-table__name">{m.title || m.filename}</div>
-                    {m.alt_text && <div className="media-table__alt">{m.alt_text}</div>}
-                  </td>
-                  <td>
-                    <span
-                      onClick={() => toggleSort("content_type")}
-                      className="media-table__sort media-table__type"
-                    >
-                      {m.content_type}
-                      {sortKey === "content_type" && (sortDir === "asc" ? " ↑" : " ↓")}
-                    </span>
-                  </td>
-                  <td>{formatSize(m.size_bytes)}</td>
-                  <td>{formatDate(m.created_at)}</td>
-                  <td>
-                    <button onClick={() => copyUrl(`${MEDIA_URL}/${m.r2_key}`)} className="btn-small">
-                      Copy
-                    </button>
-                    <button onClick={() => { setEditing(m); setView("edit"); }} className="btn-small">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(m.id)} className="btn-small btn-danger">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        {uploadModal}
-      </div>
-    );
-  }
-
-  // --- Edit view ---
-  if (view === "edit" && editing) {
-    return (
-      <div className="editor-page">
-        <header className="editor-topbar">
-          <div className="editor-topbar-left">
-            <button onClick={() => setView("list")} className="btn-secondary">← Back</button>
-            <span className="badge badge-published">Media</span>
-          </div>
-          <div className="editor-topbar-right">
-            {message && <span className="editor-message">{message}</span>}
-            <button onClick={handleSaveEdit} className="btn-primary">
-              Save
-            </button>
-          </div>
-        </header>
-
-        <div className="editor-content">
-          <img
-            src={thumbUrl(editing.r2_key, 800, 300)}
-            alt={editing.alt_text}
-            style={{ width: "100%", maxHeight: 300, objectFit: "contain", borderRadius: 8, marginBottom: "1.5rem" }}
-          />
-
-          <div className="admin-form">
-            <div className="form-group">
-              <label>Title</label>
-              <input
-                type="text"
-                value={editing.title}
-                onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                className="form-input"
-              />
             </div>
-            <div className="form-group">
-              <label>Alt text</label>
-              <input
-                type="text"
-                value={editing.alt_text}
-                onChange={(e) => setEditing({ ...editing, alt_text: e.target.value })}
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label>Caption</label>
-              <input
-                type="text"
-                value={editing.caption}
-                onChange={(e) => setEditing({ ...editing, caption: e.target.value })}
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea
-                value={editing.description}
-                onChange={(e) => setEditing({ ...editing, description: e.target.value })}
-                rows={4}
-                className="form-textarea"
-              />
-            </div>
-            <div className="form-group">
-              <label>Tags</label>
-              <input
-                type="text"
-                value={editing.tags}
-                onChange={(e) => setEditing({ ...editing, tags: e.target.value })}
-                placeholder="comma, separated, tags"
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label>File URL</label>
-              <input
-                type="text"
-                value={`${MEDIA_URL}/${editing.r2_key}`}
-                readOnly
-                className="form-input"
-              />
-              <button
-                onClick={() => copyUrl(`${MEDIA_URL}/${editing.r2_key}`)}
-                className="btn-secondary"
-                style={{ marginTop: "0.5rem" }}
-              >
-                Copy URL
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
-      </div>
-    );
-  }
+      ) : (
+        /* --- Table view --- */
+        <table className="admin-table media-table">
+          <thead>
+            <tr>
+              <th style={{ width: 60 }}>Preview</th>
+              <th>Title / Filename</th>
+              <th>Type</th>
+              <th
+                onClick={() => toggleSort("content_type")}
+                className="media-table__sort"
+              >
+                Content Type {sortKey === "content_type" && (sortDir === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => toggleSort("size_bytes")}
+                className="media-table__sort"
+              >
+                Size {sortKey === "size_bytes" && (sortDir === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => toggleSort("created_at")}
+                className="media-table__sort"
+              >
+                Uploaded {sortKey === "created_at" && (sortDir === "asc" ? "↑" : "↓")}
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedFiltered.map((m) => (
+              <tr key={m.r2_key}>
+                <td>
+                  <MediaPreview item={m} size="thumb" />
+                </td>
+                <td>
+                  <div className="media-table__name">{m.title || m.filename}</div>
+                  {m.alt_text && <div className="media-table__alt">{m.alt_text}</div>}
+                </td>
+                <td>
+                  <span className="media-type-badge" data-type={m.media_type}>
+                    {m.media_type}
+                  </span>
+                </td>
+                <td>{m.content_type}</td>
+                <td>{formatSize(m.size_bytes)}</td>
+                <td>{formatDate(m.created_at)}</td>
+                <td>
+                  <button onClick={() => copyUrl(m.url)} className="btn-small">
+                    Copy
+                  </button>
+                  <button onClick={() => handleDelete(m.r2_key)} className="btn-small btn-danger">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
-  return null;
+      {uploadModal}
+    </div>
+  );
 }

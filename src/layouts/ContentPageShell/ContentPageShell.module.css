@@ -1,7 +1,11 @@
 .contentPageShell{
-    background-color: antiquewhite;
+    background-color: var(--bg);    margin-inline: auto;
+    max-width: 1200px;
+    padding-inline: clamp(1.5rem, 5vw, 4rem); 
+    box-sizing: border-box; 
 }
 
 .mainContainer{
     padding-top: 100px;
-}
+  max-width: 65ch;
+  margin-inline: auto;}

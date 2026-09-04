@@ -11,7 +11,7 @@ type Post = {
   body: string;
   cover_image: string | null;
   published: number | boolean;
-  category_id: number | null;
+  category_ids: number[];
   created_at?: string;
   updated_at?: string;
 };
@@ -70,7 +70,7 @@ export default function PostEditorPage() {
     body: "",
     cover_image: null,
     published: false,
-    category_id: null,
+    category_ids: [],
   });
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
@@ -102,7 +102,11 @@ export default function PostEditorPage() {
     const res = await fetch(`/api/admin/posts/${postId}`);
     if (res.ok) {
       const data = await res.json();
-      setEditing({ ...data, published: Boolean(data.published) });
+      setEditing({
+        ...data,
+        published: Boolean(data.published),
+        category_ids: data.category_ids || [],
+      });
     }
     setLoading(false);
   }
@@ -196,12 +200,24 @@ export default function PostEditorPage() {
       setNewCategoryParent("");
       await loadCategories();
       // Auto-select the newly created category
-      setEditing({ ...editing, category_id: created.id });
+      setEditing({
+        ...editing,
+        category_ids: [...editing.category_ids, created.id],
+      });
     } else {
       const err = await res.json().catch(() => ({}));
       setMessage(err.error || "Failed to create category.");
       setTimeout(() => setMessage(""), 3000);
     }
+  }
+
+  function toggleCategory(catId: number) {
+    setEditing({
+      ...editing,
+      category_ids: editing.category_ids.includes(catId)
+        ? editing.category_ids.filter((c) => c !== catId)
+        : [...editing.category_ids, catId],
+    });
   }
 
   if (loading) {
@@ -215,13 +231,13 @@ export default function PostEditorPage() {
   const categoryOptions = flattenCategoryTree(buildCategoryTree(categories));
 
   return (
-    <main className={styles.contentContainer}>
+    <div className={styles.editorPage}>
       {/* Top bar */}
-      <header className={styles.editorToolbar}>
-        <div className={styles.editorToolbarLeft}>
+      <header className={styles.topbar}>
+        <div className={styles.topbarLeft}>
           <button
             onClick={() => navigate("/admin")}
-            className={styles.editorButtonSecondary}
+            className={styles.btnSecondary}
           >
             ← Back
           </button>
@@ -233,18 +249,18 @@ export default function PostEditorPage() {
             {editing.published ? "Published" : "Draft"}
           </span>
         </div>
-        <div className={styles.editorToolbarRight}>
+        <div className={styles.topbarRight}>
           {message && <span className={styles.message}>{message}</span>}
           <button
             onClick={() => setDrawerOpen(true)}
-            className={styles.editorButtonSecoondary}
+            className={styles.btnSecondary}
           >
             ⚙ Post Settings
           </button>
           <button
             onClick={savePost}
             disabled={saving}
-            className={styles.editorButtonPrimary}
+            className={styles.btnPrimary}
           >
             {saving ? "Saving…" : "Save"}
           </button>
@@ -252,25 +268,19 @@ export default function PostEditorPage() {
       </header>
 
       {/* Full-width editor area */}
-      <section className={styles.section}>
-                <div className={styles.editorHeader}>
-          <label
-            htmlFor="post-title"
-            className={styles.editorTitle}        >
-            Post title
-          </label>
+      <div className={styles.editorContent}>
         <input
           type="text"
           value={editing.title}
           onChange={(e) => setEditing({ ...editing, title: e.target.value })}
           placeholder="Post title…"
           className={styles.titleInput}
-        /></div>
+        />
         <RichTextEditor
           value={editing.body}
           onChange={(html) => setEditing({ ...editing, body: html })}
         />
-      </section>
+      </div>
 
       {/* Settings drawer */}
       {drawerOpen && (
@@ -292,7 +302,7 @@ export default function PostEditorPage() {
 
             <div className={styles.drawerBody}>
               {/* Slug */}
-              <div className={styles.drawerFormGroup}>
+              <div className={styles.formGroup}>
                 <label>Slug</label>
                 <input
                   type="text"
@@ -307,7 +317,7 @@ export default function PostEditorPage() {
               </div>
 
               {/* Excerpt */}
-              <div className={styles.drawerFormGroup}>
+              <div className={styles.formGroup}>
                 <label>Excerpt</label>
                 <textarea
                   value={editing.excerpt}
@@ -321,7 +331,7 @@ export default function PostEditorPage() {
               </div>
 
               {/* Cover Image */}
-              <div className={styles.drawerFormGroup}>
+              <div className={styles.formGroup}>
                 <label>Cover Image</label>
                 <div className={styles.coverUpload}>
                   {editing.cover_image && (
@@ -356,32 +366,29 @@ export default function PostEditorPage() {
                 </div>
               </div>
 
-              {/* Category selector */}
-              <div className={styles.drawerFormGroup}>
-                <label>Category</label>
-                <select
-                  value={editing.category_id ?? ""}
-                  onChange={(e) =>
-                    setEditing({
-                      ...editing,
-                      category_id: e.target.value
-                        ? parseInt(e.target.value)
-                        : null,
-                    })
-                  }
-                  className={styles.formInput}
-                >
-                  <option value="">No category</option>
+              {/* Category selector (multi-select) */}
+              <div className={styles.formGroup}>
+                <label>Categories</label>
+                <div className={styles.categoryList}>
+                  {categoryOptions.length === 0 && (
+                    <small>No categories yet — create one below</small>
+                  )}
                   {categoryOptions.map((opt) => (
-                    <option key={opt.id} value={opt.id}>
-                      {opt.label}
-                    </option>
+                    <label key={opt.id} className={styles.categoryItem}>
+                      <input
+                        type="checkbox"
+                        checked={editing.category_ids.includes(opt.id)}
+                        onChange={() => toggleCategory(opt.id)}
+                      />
+                      <span>{opt.label}</span>
+                    </label>
                   ))}
-                </select>
+                </div>
+                <small>Select one or more categories for this post</small>
               </div>
 
               {/* Inline category creator */}
-              <div className={styles.drawerFormGroup}>
+              <div className={styles.formGroup}>
                 <label>Add new category</label>
                 <div className={styles.categoryAddRow}>
                   <input
@@ -415,7 +422,7 @@ export default function PostEditorPage() {
               </div>
 
               {/* Published toggle */}
-              <div className={styles.drawerFormGroup}>
+              <div className={styles.formGroup}>
                 <label className={styles.checkboxLabel}>
                   <input
                     type="checkbox"
@@ -440,6 +447,6 @@ export default function PostEditorPage() {
           </aside>
         </>
       )}
-    </main>
+    </div>
   );
 }
