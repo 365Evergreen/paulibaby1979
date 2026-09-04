@@ -370,7 +370,7 @@ export default function AdminMedia() {
                 ) : (
                   <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>
                     {selectedFile.type.startsWith("audio/") ? "🎵" :
-                     selectedFile.type.startsWith("video/") ? "🎬" : "📄"}
+                      selectedFile.type.startsWith("video/") ? "🎬" : "📄"}
                   </div>
                 )}
                 <p className="mediaDropzone__filename">{selectedFile.name}</p>
@@ -459,12 +459,12 @@ export default function AdminMedia() {
       {message && <div className="admin-message">{message}</div>}
 
       {/* Filter pills */}
-      <div className="media-filters">
+      <div className={styles.mediaFilters}>
         {FILTER_PILLS.map((pill) => (
           <button
             key={pill.value}
             onClick={() => setActiveFilter(pill.value)}
-            className={`media-pill ${activeFilter === pill.value ? styles.mediaPill__active: ""}`}
+            className={`media-pill ${activeFilter === pill.value ? styles.mediaPill__active : ""}`}
           >
             <span className={styles.mediaPill__icon}>{pill.icon}</span>
             {pill.label}
@@ -487,9 +487,9 @@ export default function AdminMedia() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by filename, title, tags, or alt text…"
-          className="form-input media-toolbar__search"
+          className={[styles.formInput, styles.mediaToolbar__search].join(' ')}
         />
-        <div className="media-toolbar__toggle">
+        <div className={styles.mediaToolbar__toggle}>
           <button
             onClick={() => setLayout("grid")}
             className={`media-toolbar__btn ${layout === "grid" ? "media-toolbar__btn--active" : ""}`}
@@ -521,57 +521,56 @@ export default function AdminMedia() {
         <div className={styles.mediaGrid}>
           {sortedFiltered.map((m) => (
             <div key={m.r2_key} className={styles.mediaCard}>
-              <div className="media-card__thumb">
+              <div className={styles.mediaCard__thumb}>
                 <MediaPreview item={m} size="card" />
               </div>
-              <div className="media-card__body">
-                <p className="media-card__title">{m.title || m.filename}</p>
-                <p className="media-card__meta">
+              <div className={styles.mediaCard__body}>
+                <p className={styles.mediaCard__title}>{m.title || m.filename}</p>
+                <p className={styles.mediaCard__meta}>
                   {formatSize(m.size_bytes)} · {m.content_type}
                 </p>
-                <p className="media-card__meta">{formatDate(m.created_at)}</p>
-                {m.tags && <p className="media-card__tags">{m.tags}</p>}
-                <div className="media-card__actions">
-                  <button onClick={() => copyUrl(m.url)} className="btn-small">
+                <p className={styles.mediaCard__meta}>{formatDate(m.created_at)}</p>
+                {m.tags && <p className={styles.mediaCard__tags}>{m.tags}</p>}
+                <div className={styles.mediaCard__actions}>
+                  <button onClick={() => copyUrl(m.url)} className={styles.btnSmall}>
                     Copy URL
                   </button>
-                  <button onClick={() => handleDelete(m.r2_key)} className="btn-small btn-danger">
+                  <button onClick={() => handleDelete(m.r2_key)} className={[styles.btnSmall, styles.btnDanger].join(' ')}>
                     Delete
                   </button>
-                </div>
+                </div>  
               </div>
             </div>
           ))}
         </div>
       ) : (
         /* --- Table view --- */
-        <table className="admin-table media-table">
-          <thead>
-            <tr>
-              <th style={{ width: 60 }}>Preview</th>
-              <th>Title / Filename</th>
-              <th>Type</th>
-              <th
-                onClick={() => toggleSort("content_type")}
-                className="media-table__sort"
-              >
-                Content Type {sortKey === "content_type" && (sortDir === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => toggleSort("size_bytes")}
-                className="media-table__sort"
-              >
-                Size {sortKey === "size_bytes" && (sortDir === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => toggleSort("created_at")}
-                className="media-table__sort"
-              >
-                Uploaded {sortKey === "created_at" && (sortDir === "asc" ? "↑" : "↓")}
-              </th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <table className={[styles.adminTable, styles.mediaTable].join(' ')}>          <thead>
+          <tr>
+            <th style={{ width: 60 }}>Preview</th>
+            <th>Title / Filename</th>
+            <th>Type</th>
+            <th
+              onClick={() => toggleSort("content_type")}
+              className={styles.mediaTable__sort}
+            >
+              Content Type {sortKey === "content_type" && (sortDir === "asc" ? "↑" : "↓")}
+            </th>
+            <th
+              onClick={() => toggleSort("size_bytes")}
+              className={styles.mediaTable__sort}
+            >
+              Size {sortKey === "size_bytes" && (sortDir === "asc" ? "↑" : "↓")}
+            </th>
+            <th
+              onClick={() => toggleSort("created_at")}
+              className={styles.mediaTable__sort}
+            >
+              Uploaded {sortKey === "created_at" && (sortDir === "asc" ? "↑" : "↓")}
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
           <tbody>
             {sortedFiltered.map((m) => (
               <tr key={m.r2_key}>
@@ -579,11 +578,11 @@ export default function AdminMedia() {
                   <MediaPreview item={m} size="thumb" />
                 </td>
                 <td>
-                  <div className="media-table__name">{m.title || m.filename}</div>
-                  {m.alt_text && <div className="media-table__alt">{m.alt_text}</div>}
+                  <div className="mediaTable__name">{m.title || m.filename}</div>
+                  {m.alt_text && <div className="mediaTable__alt">{m.alt_text}</div>}
                 </td>
                 <td>
-                  <span className="media-type-badge" data-type={m.media_type}>
+                  <span className={styles.mediaTypeBadge} data-type={m.media_type}>
                     {m.media_type}
                   </span>
                 </td>
@@ -591,10 +590,10 @@ export default function AdminMedia() {
                 <td>{formatSize(m.size_bytes)}</td>
                 <td>{formatDate(m.created_at)}</td>
                 <td>
-                  <button onClick={() => copyUrl(m.url)} className="btn-small">
+                  <button onClick={() => copyUrl(m.url)} className={styles.btnSmall}>
                     Copy
                   </button>
-                  <button onClick={() => handleDelete(m.r2_key)} className="btn-small btn-danger">
+                  <button onClick={() => handleDelete(m.r2_key)} className={[styles.btnSmall, styles.btnDanger].join(' ')}>
                     Delete
                   </button>
                 </td>
