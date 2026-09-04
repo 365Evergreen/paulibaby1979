@@ -37,6 +37,7 @@ export const Iframe = Node.create<IframeOptions>({
   group: 'block',
 
   atom: true, 
+  selectable: true,
 
   draggable: true,
 

@@ -16,8 +16,11 @@ import { Iframe } from "../tiptap/iFrameExtension/iFrameExtension"
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
-import { ColumnsLayout, Column } from "../tiptap/ColumnExtension";
+import { Column } from "../tiptap/ColumnsExtension/Column";
+import { Columns } from "../tiptap/ColumnsExtension/Columns"
 import { FileHandler } from "@tiptap/extension-file-handler";
+import { BlockSettingsMenu } from "../BlockSettingsMenu/BlockSettingsMenu";
+import { GlobalBlockModifiers } from "./GlobalModifiers";
 import styles from './RichTextEditor.module.css'
 
 interface RichTextEditorProps {
@@ -95,8 +98,11 @@ export default function RichTextEditor({
       Audio,
       Video,
       YoutubeEmbed,
-      ColumnsLayout,
-      Column, FileHandler, Iframe
+      Column,
+      Columns,
+      FileHandler,
+      Iframe,
+      GlobalBlockModifiers
     ],
 
     content: value ?? "",
@@ -392,6 +398,7 @@ export default function RichTextEditor({
 
   return (
     <section className={styles.tipTapwrapper}>
+      <BlockSettingsMenu editor={editor}/>
       <div
         className={styles.tipTapToolbar}
         role="toolbar"
@@ -650,6 +657,17 @@ export default function RichTextEditor({
           disabled={controlsDisabled}
         >
           ▶ YouTube
+        </button>        <button 
+          onClick={() => editor.chain().focus().insertColumns(2).run()} 
+          title="Add 2 Columns Layout"
+        >
+          ◫ 2 Cols
+        </button>
+        <button 
+          onClick={() => editor.chain().focus().insertColumns(3).run()} 
+          title="Add 3 Columns Layout"
+        >
+          ◪ 3 Cols
         </button>
         <span
           className={styles.tiptapDivider}

@@ -830,3 +830,25 @@ body {
   right: -6px;
   cursor: nwse-resize;
 }
+
+/* WordPress FSE Block Indicators */
+.tiptap .ProseMirror-selectednode {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 4px;
+  border-radius: 2px;
+  transition: outline 0.15s ease-in-out;
+}
+
+/* Base structural targets for draggable entities */
+.tiptap > [draggable="true"],
+.tiptap .columnsContainer,
+.tiptap .iframe-wrapper {
+  position: relative;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Visual cue when dragging a block over another */
+.ProseMirror-dragtarget {
+  border-top: 3px solid #3b82f6 !important;
+  background-color: rgba(59, 130, 246, 0.05);
+}

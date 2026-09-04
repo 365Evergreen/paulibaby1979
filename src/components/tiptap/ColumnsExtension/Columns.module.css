@@ -1,0 +1,35 @@
+/* Container block that wraps the row layout */
+.columnsContainer {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  margin: 1.5rem 0;
+  padding: 0.5rem;
+  border: 1px dashed #e2e8f0; /* FSE style guidelines placeholder border */
+  border-radius: 6px;
+}
+
+/* Base style for editable individual column units */
+.column {
+  flex: 1 1 0%;
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+
+/* Highlight columns slightly when a user focuses inside them */
+.column:focus-within {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+/* Explicit Width layouts mapped to layout counts */
+.layoutTwoCols > .column {
+  flex: 1 1 50%;
+}
+
+.layoutThreeCols > .column {
+  flex: 1 1 33.33%;
+}
