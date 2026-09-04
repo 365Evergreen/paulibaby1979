@@ -1,11 +1,22 @@
 .slideshowContainer {
   position: relative;
   width: 100%;
-  height: 75vh;
+  height: 75vh; /* Adjust height to fit your layout requirements */
   overflow: hidden;
-  background-color: #000;
 }
-
+.slideTrack {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+}
+.slideWrapper {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 100%;
+  height: 100%;
+}
 
 .slide {
   position: absolute;
@@ -19,35 +30,25 @@
   transition: opacity 1s ease-in-out;
 }
 
-.slideTitle {
-  font-size:xx-large;
-  font-weight: 900;
-  color: #471a1a;
-}
-
 .slideContent {
-
- position: absolute;
-  inset: 0;
+  position: relative;
+  z-index: 3;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: start;
-  justify-content:start;
-  text-align: center;
-  color: #ffffff;
-  padding: 0 1rem;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 10%; /* Balances text formatting neatly */
 }
-
 .slideImage {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-height: 75vh;
+  height: 100%;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .slideImage::after {
@@ -72,15 +73,22 @@ height: 75vh;
   top: 0;
   left: 0;
   width: 100%;
-  height: 75vh;
-  background-color: rgba(0, 0, 0, 0.4); /* Darkens image by 40% for text readability */
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity as desired */
   z-index: 2;
 }
+
+.slideTitle {
+  font-size:xx-large;
+  font-weight: 600;
+  color: #471a1a;
+}
+
 .slideText {
   position: relative;
   z-index: 3;
-  color: #ffffff; /* White text looks best on dark overlays */
-  text-align: center;
+  color: var(--text);
+  text-align: left;
   max-width: 600px;
   padding: 20px;
 }
@@ -89,25 +97,21 @@ height: 75vh;
 .controls {
   position: absolute;
   top: 50%;
-  left: 0;
-  right: 0;
   transform: translateY(-50%);
+  width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
-  z-index: 4; /* Keeps arrows above everything else */
-  pointer-events: none; /* Allows clicking through the empty space between arrows */
+  z-index: 10;
+  pointer-events: none; /* Allows clicks to pass through empty space */
 }
 
 .prevBtn, .nextBtn {
-  pointer-events: auto; /* Re-enables clicking on the buttons themselves */
-  background: rgba(21, 21, 21, 0.5);
-  border: none;
-  color: white;
-  padding: 12px;
+  pointer-events: auto; /* Makes sure buttons remain clickable */
   cursor: pointer;
+  /* Add your custom button styles here */
 }
-.button {
+.ReadMoreButton {
   pointer-events: auto;
   width: fit-content;
   display: flex;
@@ -120,4 +124,5 @@ height: 75vh;
   border: none;
   cursor:pointer;
   padding: 10px;
+  z-index: 5;
 }
