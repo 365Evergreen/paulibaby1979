@@ -310,6 +310,31 @@ div[data-type="column"]:focus-within {
   border-radius: 8px;
 }
 
+.youtubeEmbed {
+  position: relative;
+  padding: 0 5rem;
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+ .tiptapEditor .embed {
+  position: relative;
+  padding: 0 5rem;
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tiptapEditor .embed iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  border-radius: 8px;
+}
+
 /*Columns*/
 
 /* Parent Container */

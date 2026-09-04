@@ -1,0 +1,48 @@
+.embed {
+  position: relative;
+  padding: 0 5rem;
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.embed iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  border-radius: 8px;
+}
+
+/* Responsive outer wrapper for the iframe */
+.iframeWrapper {
+  position: relative;
+  width: 100%;
+  margin: 1.5rem 0;
+  clear: both;
+}
+
+/* Specific styling targeted to the iframe element */
+.iframeEmbed {
+  display: block;
+  max-width: 100%;
+  border: none;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Fallback placeholder card if an iframe is empty */
+.iframePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 150px;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  background-color: #784f4f;
+  color: #888;
+  font-family: sans-serif;
+  font-size: 14px;
+  margin: 1rem 0;
+}

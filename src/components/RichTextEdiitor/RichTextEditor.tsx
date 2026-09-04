@@ -12,7 +12,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import ImageResize from "tiptap-extension-resize-image";
-import { Iframe } from "../tiptap/iFrameExtension"
+import { Iframe } from "../tiptap/iFrameExtension/iFrameExtension"
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
@@ -96,7 +96,7 @@ export default function RichTextEditor({
       Video,
       YoutubeEmbed,
       ColumnsLayout,
-      Column, FileHandler
+      Column, FileHandler, Iframe
     ],
 
     content: value ?? "",
@@ -629,7 +629,7 @@ export default function RichTextEditor({
           title="Insert audio"
           disabled={controlsDisabled}
         >
-          {uploading === "audio" ? "…" : "🎵"}
+          {uploading === "audio" ? "…" : "🎵 Audio"}
         </button>
 
         <button
@@ -639,7 +639,7 @@ export default function RichTextEditor({
           title="Insert video"
           disabled={controlsDisabled}
         >
-          {uploading === "video" ? "…" : "🎬"}
+          {uploading === "video" ? "…" : "🎬 Video"}
         </button>
 
         <button
@@ -649,17 +649,7 @@ export default function RichTextEditor({
           title="Embed YouTube video"
           disabled={controlsDisabled}
         >
-          ▶
-        </button>
-
-        <button
-          type="button"
-          onClick={addYoutube}
-          className={styles.tiptapButton + " " + buttonClass(editor.isActive("youtube"))}
-          title="Embed YouTube video"
-          disabled={controlsDisabled}
-        >
-          ▶
+          ▶ YouTube
         </button>
         <span
           className={styles.tiptapDivider}
@@ -682,7 +672,7 @@ export default function RichTextEditor({
           title="Undo"
           disabled={!editor.can().chain().focus().undo().run()}
         >
-          ↩
+          ↩ Undo
         </button>
 
         <button
@@ -694,7 +684,7 @@ export default function RichTextEditor({
           title="Redo"
           disabled={!editor.can().chain().focus().redo().run()}
         >
-          ↪
+          ↪ Redo
         </button> </div>
 
 
