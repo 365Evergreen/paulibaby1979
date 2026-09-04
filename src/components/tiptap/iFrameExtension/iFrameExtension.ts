@@ -1,5 +1,5 @@
 import { Node, mergeAttributes } from '@tiptap/core'
-import styles from './IframeExtension.module.css'
+import styles from './iFrameExtension.module.css'
 
 export interface IframeOptions {
   allowFullscreen: boolean,
