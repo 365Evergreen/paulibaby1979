@@ -51,36 +51,36 @@ export default function LatestslidesSlider({
   const currentSlide = recentSlides[currentIndex];
 
   return (
-<div className={styles.sliderContainer}>
-  <div className={styles.slideContent}>
-    
-    {/* Background Image Layer */}
-    <div 
-      className={styles.slideImage}
-      style={{ backgroundImage: `url(${currentSlide.cover_image})` }}
-      role="img"
-      aria-label={currentSlide.title} 
-    />
-    
-    {/* Dark Overlay Layer */}
-    <div className={styles.overlay} />
-    
-    {/* Foreground Text Layer */}
-    <div className={styles.slideText}>
-      <h3 className={styles.slideTitle}>{currentSlide.title}</h3>
-      <p>{currentSlide.excerpt}</p>
-      <Link to={`/blog/${currentSlide.slug}`} className={styles.button}>Read more</Link>
-    </div>
-)</div>
-    {/* Foreground Controls Layer */}
-    {recentSlides.length > 1 && (
-      <div className={styles.controls}>
-        <button className={styles.prevBtn} onClick={prevSlide} aria-label="Previous slide"> ❮ </button>
-        <button className={styles.nextBtn} onClick={nextSlide} aria-label="Next slide"> ❯ </button>
+    <div className={styles.sliderContainer}>
+
+
+      {/* Background Image Layer */}
+      <div
+        className={styles.slideImage}
+        style={{ backgroundImage: `url(${currentSlide.cover_image})` }}
+        role="img"
+        aria-label={currentSlide.title}
+      />
+
+      {/* Dark Overlay Layer */}
+      <div className={styles.overlay} />
+      <div className={styles.slideContent}>
+        {/* Foreground Text Layer */}
+        <div className={styles.slideText}>
+          <h3 className={styles.slideTitle}>{currentSlide.title}</h3>
+          <p>{currentSlide.excerpt}</p></div>
+         <Link to={`/blog/${currentSlide.slug}`} className={styles.button}>Read more</Link>
+        
       </div>
-    )}
-    
- 
-</div>
+      {/* Foreground Controls Layer */}
+      {recentSlides.length > 1 && (
+        <div className={styles.controls}>
+          <button className={styles.prevBtn} onClick={prevSlide} aria-label="Previous slide"> ❮ </button>
+          <button className={styles.nextBtn} onClick={nextSlide} aria-label="Next slide"> ❯ </button>
+        </div>
+      )}
+
+
+    </div>
   )
 }

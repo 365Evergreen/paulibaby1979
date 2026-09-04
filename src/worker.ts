@@ -154,8 +154,8 @@ function classifyMediaType(contentType: string, key: string): "audio" | "documen
   if (ct.startsWith("audio/") || ["mp3", "wav", "ogg", "m4a", "flac", "aac"].includes(ext)) return "audio";
   if (ct.startsWith("video/") || ["mp4", "webm", "mov", "avi", "mkv", "m4v"].includes(ext)) return "video";
   if (ct.startsWith("text/") || ct.includes("pdf") || ct.includes("msword") || ct.includes("officedocument") ||
-      ct.includes("spreadsheet") || ct.includes("presentation") || ct.includes("json") ||
-      ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "csv", "md"].includes(ext)) return "document";
+    ct.includes("spreadsheet") || ct.includes("presentation") || ct.includes("json") ||
+    ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "csv", "md"].includes(ext)) return "document";
   return "other";
 }
 
@@ -410,6 +410,13 @@ export default {
         return json({ success: true });
       }
     }
+
+
+    // Auth check — Access protects this path, so 200 = authenticated, 403 = not
+    if (path === "/api/admin/auth-check" && method === "GET") {
+      return json({ authenticated: true });
+    }
+
 
     // --- Admin API: media library (all R2 objects merged with D1 metadata) ---
 

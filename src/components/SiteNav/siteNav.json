@@ -3,6 +3,7 @@
     "id": 1,
     "title": "Admin",
     "href": "/admin",
+    "requiresAuth": true,
     "hasMegaMenu": true,
     "columns": [
       {
@@ -18,12 +19,14 @@
     "id": 2,
     "title": "Music",
     "href": "/music",
+    "requiresAuth": false,
     "hasMegaMenu": false
   },
   {
     "id": 3,
     "title": "Resources",
     "href": "/resources",
+    "requiresAuth": false,
     "hasMegaMenu": true,
     "columns": [
       {
@@ -35,5 +38,12 @@
         ]
       }
     ]
-  }
+  },
+{
+  "id": 4,
+  "title": "Sign in",
+  "href": "https://round-sky-6e19.cloudflareaccess.com/cdn-cgi/access/login/blog.paulibaby.com?kid=e7a71d333750a25c1f1fce3fb6d5fd6d9adf5ea5437a765d30766c7bd1b6f3bc&meta=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjQ4MmYxNTFkMTA3NzE4OGU1ODc0N2VkODljN2YzNjU0MmRjNDcwYTgyYTZjOTJmOTQ2ZjI2MDg0NjVhYzMyOGEifQ.eyJ0eXBlIjoibWV0YSIsImF1ZCI6ImU3YTcxZDMzMzc1MGEyNWMxZjFmY2UzZmI2ZDVmZDZkOWFkZjVlYTU0MzdhNzY1ZDMwNzY2YzdiZDFiNmYzYmMiLCJob3N0bmFtZSI6ImJsb2cucGF1bGliYWJ5LmNvbSIsInJlZGlyZWN0X3VybCI6Ii9hZG1pbiIsInNlcnZpY2VfdG9rZW5fc3RhdHVzIjpmYWxzZSwiaXNfd2FycCI6ZmFsc2UsImlzX2dhdGV3YXkiOmZhbHNlLCJleHAiOjE3ODg1MjQ3ODEsIm5iZiI6MTc4ODUyNDQ4MSwiaWF0IjoxNzg4NTI0NDgxLCJhdXRoX3N0YXR1cyI6Ik5PTkUiLCJtdGxzX2F1dGgiOnsiY2VydF9pc3N1ZXJfZG4iOiIiLCJjZXJ0X3NlcmlhbCI6IiIsImNlcnRfaXNzdWVyX3NraSI6IiIsImNlcnRfcHJlc2VudGVkIjpmYWxzZSwiY29tbW9uX25hbWUiOiIiLCJhdXRoX3N0YXR1cyI6Ik5PTkUifSwicmVhbF9jb3VudHJ5IjoiQVUiLCJhcHBfc2Vzc2lvbl9oYXNoIjoiZWUxM2Y5Nzk1ODg4NGU4MjI4ZGFiZDdlOTc5NmM3NDc3ZWU5YTNjM2RhMzliMzU5NTNjZThjZWRmNTcwYzYyOSJ9.z8eQrH75xel4uCuTwn5-95lZAPjcuXZqdXyjYrDoyzEWQgoh3FtVmYUuBQrHkCIi1-doP9qfMxtOI_rtRZfdNLjoa5NuNb5TgNln4fE2uJwu6foIyY1mNvseri4MbxmsNw_3FTCsIOjLh9z_f1ihlL0nBCUdQ3eq3po7-R-wLEQ3eZ9liFx7eA57KTn2NiyRTCzK78W45fr8Qvf1U4G9WHtGBZenNbKk46pCDwKB8eXGBXP6jFkKSGqlQhX9Z0f6RBp4--43MJ516QdKDEeElrlQMo_RZ96YszRxkFj9E6xTaAgwubf7ArDmRlCSB8J5qFstFpXrtezhJSrvJSpbDw&redirect_url=%2Fadmin",
+  "requiresAuth":false,
+  "hasMegaMenu": false
+}
 ]
