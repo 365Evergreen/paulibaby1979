@@ -73,12 +73,12 @@ export default function AdminPage() {
                   <th>Title</th>
                   <th>Status</th>
                   <th>Date</th>
-                  <th>Actions</th> {/* Keep columns aligned here */}
+                  <th>Actions</th> 
                 </tr>
               </thead>
               <tbody>
                 {posts.map((post) => (
-                  <tr key={post.id} className={styles.tableRow}> {/* Added class for separator */}
+                  <tr key={post.id} className={styles.tableRow}> 
                     <td>{post.title || "(untitled)"}</td>
                     <td>
                       <span className={`badge ${post.published ? "badge-published" : "badge-draft"}`}>

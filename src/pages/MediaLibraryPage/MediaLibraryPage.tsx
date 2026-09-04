@@ -141,6 +141,10 @@ export default function AdminMedia() {
     setLoading(true);
     try {
       const res = await fetch("/api/admin/media-library");
+      if (res.status === 403) {
+        window.location.reload();
+        return;
+      }
       const data: MediaItem[] = await res.json();
       setMedia(data);
     } catch {
@@ -172,6 +176,10 @@ export default function AdminMedia() {
         method: "POST",
         body: formData,
       });
+         if (res.status === 403) {
+        window.location.reload();
+        return;
+      }
 
       if (!res.ok) {
         const err = await res.json();
@@ -252,7 +260,10 @@ export default function AdminMedia() {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ r2_key: r2Key }),
-      });
+      }); if (res.status === 403) {
+        window.location.reload();
+        return;
+      }
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || "Delete failed");

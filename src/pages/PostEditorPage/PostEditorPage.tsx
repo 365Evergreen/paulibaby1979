@@ -91,6 +91,10 @@ export default function PostEditorPage() {
 
   async function loadCategories() {
     const res = await fetch("/api/admin/categories");
+    if (res.status === 403) {
+      window.location.reload();
+      return;
+    }
     if (res.ok) {
       const data = await res.json();
       setCategories(data);
@@ -100,6 +104,10 @@ export default function PostEditorPage() {
   async function loadPost(postId: string) {
     setLoading(true);
     const res = await fetch(`/api/admin/posts/${postId}`);
+    if (res.status === 403) {
+      window.location.reload();
+      return;
+    }
     if (res.ok) {
       const data = await res.json();
       setEditing({
@@ -140,6 +148,11 @@ export default function PostEditorPage() {
         }
       }
 
+      if (res.status === 403) {
+        window.location.reload();
+        return;
+      }
+
       if (res.ok) {
         setMessage("Saved successfully!");
       } else {
@@ -160,6 +173,11 @@ export default function PostEditorPage() {
       method: "POST",
       body: formData,
     });
+
+    if (res.status === 403) {
+      window.location.reload();
+      return null;
+    }
 
     if (res.ok) {
       const data = await res.json();
@@ -194,6 +212,10 @@ export default function PostEditorPage() {
       }),
     });
     setAddingCategory(false);
+    if (res.status === 403) {
+      window.location.reload();
+      return;
+    }
     if (res.ok) {
       const created = await res.json();
       setNewCategoryName("");
@@ -220,7 +242,7 @@ export default function PostEditorPage() {
     });
   }
 
-  if (loading) {
+ if (loading) {
     return (
       <div className={styles.editorPage}>
         <div className={styles.loading}>Loading…</div>
@@ -229,8 +251,8 @@ export default function PostEditorPage() {
   }
 
   const categoryOptions = flattenCategoryTree(buildCategoryTree(categories));
+    return (
 
-  return (
     <div className={styles.editorPage}>
       {/* Top bar */}
       <header className={styles.topbar}>
