@@ -1,0 +1,46 @@
+/* Base Container Box Rules */
+.calloutContainer {
+  width: 100%;
+  margin: 1.5rem 0;
+  padding: 16px 20px;
+  border-left: 4px solid transparent;
+  border-radius: 0 6px 6px 0;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+/* 1. Info Callout Variant Style */
+.info {
+  background-color: #eff6ff;
+  border-left-color: #3b82f6;
+  color: #1e3a8a;
+}
+
+/* 2. Warning Callout Variant Style */
+.warning {
+  background-color: #fffbeb;
+  border-left-color: #f59e0b;
+  color: #78350f;
+}
+
+/* 3. Success Callout Variant Style */
+.success {
+  background-color: #f0fdf4;
+  border-left-color: #22c55e;
+  color: #14532d;
+}
+
+/* 4. Error/Danger Callout Variant Style */
+.error {
+  background-color: #fef2f2;
+  border-left-color: #ef4444;
+  color: #7f1d1d;
+}
+
+/* Tighten child typography layouts slightly inside the box */
+.calloutContainer p {
+  margin: 0 0 8px 0;
+}
+.calloutContainer p:last-child {
+  margin-bottom: 0;
+}

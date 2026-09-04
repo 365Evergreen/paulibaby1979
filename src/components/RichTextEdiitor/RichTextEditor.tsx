@@ -17,7 +17,11 @@ import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
 import { Column } from "../tiptap/ColumnsExtension/Column";
-import { Columns } from "../tiptap/ColumnsExtension/Columns"
+import { Columns } from "../tiptap/ColumnsExtension/Columns";
+import { Accordion } from '../tiptap/AccordionExtension/Accordion'
+import { AccordionHeader } from '../tiptap/AccordionExtension/AccordionHeader'
+import { AccordionContent } from '../tiptap/AccordionExtension/AccordionContent'
+import { Callout } from "../tiptap/CalloutExtension/Callout";
 import { FileHandler } from "@tiptap/extension-file-handler";
 import { BlockHoverOverlay } from "../BlockHoverOverlay";
 import { GlobalBlockModifiers } from "./GlobalModifiers";
@@ -102,7 +106,11 @@ export default function RichTextEditor({
       Columns,
       FileHandler,
       Iframe,
-      GlobalBlockModifiers
+      GlobalBlockModifiers,
+      Accordion,
+      AccordionContent,
+      AccordionHeader,
+      Callout,
     ],
 
     content: value ?? "",
@@ -398,7 +406,7 @@ export default function RichTextEditor({
 
   return (
     <section className={styles.tipTapwrapper}>
-      <BlockHoverOverlay editor={editor}/>
+
       <div
         className={styles.tipTapToolbar}
         role="toolbar"
@@ -540,7 +548,17 @@ export default function RichTextEditor({
         >
           1. List
         </button>
-
+        <button
+          type="button"
+          onClick={() =>
+            editor.chain().focus().insertAccordion().run()
+          }
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("accordion"))}
+          aria-pressed={editor.isActive("accordion")}
+          title="Insert Collapsible Accordion Box"
+        >
+          ▾ Accordion
+        </button>
         <button
           type="button"
           onClick={() =>
@@ -582,42 +600,12 @@ export default function RichTextEditor({
         {/* Insertion Controls */}
         <button
           type="button"
-          onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 2 }).run()}
-          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 2 }))}
+          onClick={() => editor.chain().focus().insertCallout({ type: 'info' }).run()}
+          className={styles.tiptapButton}
+          title="Insert Info Callout Notice Box"
         >
-          2 Columns
+          💡 Callout
         </button>
-        <button
-          type="button"
-          onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 3 }).run()}
-          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 3 }))}
-        >
-          3 Columns
-        </button>
-
-        {/* Dynamic Modification Controls (Only display when active inside a layout) */}
-        {editor.isActive("columnsLayout") && (
-          <>
-            <button
-              type="button"
-              onClick={() => (editor.chain().focus() as any).addColumn().run()}
-              className={styles.tiptapButton}
-              title="Add new column column to this group"
-            >
-              ➕ Add Column
-            </button>
-            <button
-              type="button"
-              onClick={() => (editor.chain().focus() as any).removeColumn().run()}
-              className={styles.tiptapButton}
-              title="Delete current active column block"
-            >
-              ❌ Delete Column
-            </button>
-          </>
-        )}
-
-
 
         <button
           type="button"
@@ -657,14 +645,18 @@ export default function RichTextEditor({
           disabled={controlsDisabled}
         >
           ▶ YouTube
-        </button>        <button 
-          onClick={() => editor.chain().focus().insertColumns(2).run()} 
+        </button>       
+      
+       <button
+          type="button"
+          onClick={() => editor.chain().focus().insertColumns(2).run()}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columns"))}
           title="Add 2 Columns Layout"
         >
           ◫ 2 Cols
         </button>
-        <button 
-          onClick={() => editor.chain().focus().insertColumns(3).run()} 
+        <button
+          onClick={() => editor.chain().focus().insertColumns(3).run()}
           title="Add 3 Columns Layout"
         >
           ◪ 3 Cols
@@ -703,15 +695,14 @@ export default function RichTextEditor({
           disabled={!editor.can().chain().focus().redo().run()}
         >
           ↪ Redo
-        </button> </div>
+        </button>
 
+      </div>
 
-
+      {/* 2. OPERATIONAL / UTILITY APPARATUS */}
+      {/* Keep these isolated here. They won't affect layout because they are hidden or conditional */}
       {uploadError && (
-        <div
-          className="tiptap-error"
-          role="alert"
-        >
+        <div className="tiptap-error" role="alert">
           {uploadError}
         </div>
       )}
@@ -739,33 +730,44 @@ export default function RichTextEditor({
         accept="video/*"
         hidden
       />
-      <div className={styles.editorCanvas}>
-        <EditorContent editor={editor} /></div>
+
+      {/* 3. CANVAS CONTAINER AREA */}
+      {/* This acts as the exclusive coordinate sandbox for your WordPress overlay */}
+      <div className={styles.editorCanvas} style={{ position: 'relative' }}>
+
+        {/* Mount the overlay inside the exact same container context as the content canvas */}
+        <BlockHoverOverlay editor={editor} />
+
+        {/* Tiptap Editable DOM Surface */}
+        <EditorContent editor={editor} />
+
+      </div>
     </section>
-  );
-}
+  )
 
-function buttonClass(active: boolean): string {
-  return active
-    ? "tiptap-btn active"
-    : "tiptap-btn";
-}
 
-function getErrorMessage(
-  error: unknown,
-  fallback: string,
-): string {
-  return error instanceof Error && error.message
-    ? error.message
-    : fallback;
-}
+  function buttonClass(active: boolean): string {
+    return active
+      ? "tiptap-btn active"
+      : "tiptap-btn";
+  }
 
-function isAllowedLink(value: string): boolean {
-  return (
-    value.startsWith("https://") ||
-    value.startsWith("http://") ||
-    value.startsWith("mailto:") ||
-    value.startsWith("/") ||
-    value.startsWith("#")
-  );
+  function getErrorMessage(
+    error: unknown,
+    fallback: string,
+  ): string {
+    return error instanceof Error && error.message
+      ? error.message
+      : fallback;
+  }
+
+  function isAllowedLink(value: string): boolean {
+    return (
+      value.startsWith("https://") ||
+      value.startsWith("http://") ||
+      value.startsWith("mailto:") ||
+      value.startsWith("/") ||
+      value.startsWith("#")
+    );
+  }
 }

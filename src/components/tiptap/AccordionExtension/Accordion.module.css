@@ -1,0 +1,52 @@
+/* Outer details frame wrapper layout */
+.accordionContainer {
+  width: 100%;
+  margin: 1.5rem 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+/* The summary element toggle bar */
+.accordionHeader {
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e1e1e;
+  background-color: #f8fafc;
+  cursor: pointer;
+  border-bottom: 1px solid #e2e8f0;
+  list-style: none; /* Hides default marker arrow layout */
+  outline: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Add a custom decorative indicator pseudo-element arrow */
+.accordionHeader::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 10px;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate indicator arrow when details attribute changes to open */
+.accordionContainer[open] .accordionHeader::before {
+  transform: rotate(90deg);
+}
+
+/* Nested canvas wrapper for child element nodes */
+.accordionContent {
+  padding: 16px;
+  background-color: #ffffff;
+  min-height: 40px;
+}
+
+/* Visual layout placeholder boundary outline when editing inside the element */
+.accordionContainer:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}

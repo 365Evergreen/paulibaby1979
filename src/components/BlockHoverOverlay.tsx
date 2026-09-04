@@ -8,72 +8,104 @@ interface BlockHoverOverlayProps {
 export const BlockHoverOverlay: React.FC<BlockHoverOverlayProps> = ({ editor }) => {
   const [hoveredNodePos, setHoveredNodePos] = useState<number | null>(null)
   const [nodeType, setNodeType] = useState<string>('')
-  const [style, setStyle] = useState<React.CSSProperties>({ display: 'none' })
+  const [style, setStyle] = useState<React.CSSProperties>({ visibility: 'hidden', opacity: 0 })
   const overlayRef = useRef<HTMLDivElement>(null)
+  const currentPosRef = useRef<number | null>(null)
 
   useEffect(() => {
+    let animationFrameId: number
+
     const handleMouseMove = (event: MouseEvent) => {
-      if (!editor || !editor.view.dom.contains(event.target as Node)) {
+      cancelAnimationFrame(animationFrameId)
+
+      animationFrameId = requestAnimationFrame(() => {
+        // Fix: If the cursor is physically inside the popover toolbar, freeze tracking and do nothing
+        if (overlayRef.current && overlayRef.current.contains(event.target as Node)) {
+          return
+        }
+
+        if (!editor || !editor.view.dom.contains(event.target as Node)) {
+          return
+        }
+
+        const targetElement = document.elementFromPoint(event.clientX, event.clientY)
+        if (!targetElement || !editor.view.dom.contains(targetElement)) return
+
+        const posAtCoords = editor.view.posAtCoords({ left: event.clientX, top: event.clientY })
+        if (!posAtCoords) return
+
+        const { pos } = posAtCoords
+        const { doc } = editor.state
+        
+        if (pos > doc.content.size) return
+
+        const $pos = doc.resolve(pos)
+        const blockDepth = 1
+        
+        if ($pos.depth >= blockDepth) {
+          const startPos = $pos.before(blockDepth)
+          
+          if (currentPosRef.current === startPos) return
+
+          const node = doc.nodeAt(startPos)
+          if (node) {
+            currentPosRef.current = startPos
+            setHoveredNodePos(startPos)
+            setNodeType(node.type.name)
+
+            const nodeDOM = editor.view.nodeDOM(startPos) as HTMLElement
+            const relativeContainer = editor.view.dom.parentElement
+
+            if (nodeDOM && relativeContainer) {
+              const rect = nodeDOM.getBoundingClientRect()
+              const containerRect = relativeContainer.getBoundingClientRect()
+
+              setStyle({
+                visibility: 'visible',
+                opacity: 1,
+                top: `${rect.top - containerRect.top + relativeContainer.scrollTop}px`,
+                left: `${rect.left - containerRect.left}px`,
+              })
+              return
+            }
+          }
+        }
+      })
+    }
+
+    const handleMouseLeave = (event: MouseEvent) => {
+      // Fix: If the mouse leaves the text element but moves into our menu container, do not close it
+      if (overlayRef.current && overlayRef.current.contains(event.relatedTarget as Node)) {
         return
       }
 
-      // Find the Prosemirror position coordinates under the mouse pointer
-      const posAtCoords = editor.view.posAtCoords({ left: event.clientX, top: event.clientY })
-      if (!posAtCoords) return
-
-      const { pos } = posAtCoords
-      const { doc } = editor.state
-      
-      // Resolve the position up to root level 1 to select the whole block element
-      const $pos = doc.resolve(pos)
-      const blockDepth = 1
-      
-      if ($pos.depth >= blockDepth) {
-        const startPos = $pos.before(blockDepth)
-        const node = doc.nodeAt(startPos)
-
-        if (node) {
-          setHoveredNodePos(startPos)
-          setNodeType(node.type.name)
-
-          // Query the real DOM element matching this block to anchor coordinates
-          const nodeDOM = editor.view.nodeDOM(startPos) as HTMLElement
-          if (nodeDOM) {
-            const rect = nodeDOM.getBoundingClientRect()
-            const editorRect = editor.view.dom.getBoundingClientRect()
-
-            setStyle({
-              display: 'flex',
-              top: `${rect.top - editorRect.top + editor.view.dom.scrollTop}px`,
-              left: `${rect.left - editorRect.left}px`,
-              height: `${rect.height}px`,
-            })
-            return
-          }
-        }
+      const relativeContainer = editor.view.dom.parentElement
+      if (relativeContainer && !relativeContainer.contains(event.relatedTarget as Node)) {
+        cancelAnimationFrame(animationFrameId)
+        currentPosRef.current = null
+        setStyle({ visibility: 'hidden', opacity: 0 })
       }
-      
-      // Hide if mouse leaves a valid root block
-      setStyle({ display: 'none' })
-    }
-
-    const handleMouseLeave = () => {
-      setStyle({ display: 'none' })
     }
 
     const dom = editor.view.dom
-    dom.addEventListener('mousemove', handleMouseMove)
-    dom.addEventListener('mouseleave', handleMouseLeave)
+    const container = dom.parentElement
+
+    if (container) {
+      container.addEventListener('mousemove', handleMouseMove)
+      container.addEventListener('mouseleave', handleMouseLeave)
+    }
 
     return () => {
-      dom.removeEventListener('mousemove', handleMouseMove)
-      dom.removeEventListener('mouseleave', handleMouseLeave)
+      cancelAnimationFrame(animationFrameId)
+      if (container) {
+        container.removeEventListener('mousemove', handleMouseMove)
+        container.removeEventListener('mouseleave', handleMouseLeave)
+      }
     }
   }, [editor])
 
   if (hoveredNodePos === null) return null
 
-  // Universal Movement Actions
   const moveBlock = (direction: 'up' | 'down') => {
     const { state, view } = editor
     const doc = state.doc
@@ -103,7 +135,8 @@ export const BlockHoverOverlay: React.FC<BlockHoverOverlayProps> = ({ editor }) 
 
     view.dispatch(tr)
     editor.chain().focus().run()
-    setStyle({ display: 'none' }) // Reset overlay coordinate tracking
+    currentPosRef.current = null
+    setStyle({ visibility: 'hidden', opacity: 0 })
   }
 
   const deleteBlock = () => {
@@ -113,16 +146,16 @@ export const BlockHoverOverlay: React.FC<BlockHoverOverlayProps> = ({ editor }) 
 
     const tr = state.tr.delete(hoveredNodePos, hoveredNodePos + currentBlockNode.nodeSize)
     view.dispatch(tr)
-    setStyle({ display: 'none' })
+    currentPosRef.current = null
+    setStyle({ visibility: 'hidden', opacity: 0 })
   }
 
-  // Dynamic conditional block rendering logic based on active block type
   const renderCustomBlockOptions = () => {
     switch (nodeType) {
       case 'iframe':
         return (
           <>
-            <span className="block-hover-divider">|</span>
+            <span className="block-hover-divider" style={dividerStyle}>|</span>
             <button 
               onClick={() => {
                 const newUrl = window.prompt('Update Iframe URL:')
@@ -131,6 +164,7 @@ export const BlockHoverOverlay: React.FC<BlockHoverOverlayProps> = ({ editor }) 
                 }
               }}
               title="Change Source URL"
+              style={btnStyle}
             >
               🔗 URL
             </button>
@@ -139,13 +173,13 @@ export const BlockHoverOverlay: React.FC<BlockHoverOverlayProps> = ({ editor }) 
       case 'columns':
         return (
           <>
-            <span className="block-hover-divider">|</span>
+            <span className="block-hover-divider" style={dividerStyle}>|</span>
             <button 
               onClick={() => {
-                // Dynamically transform a 2-col to a 3-col wrapper structure
                 editor.chain().focus().setNodeSelection(hoveredNodePos).updateAttributes('columns', { count: 3 }).run()
               }}
               title="Switch layout schema"
+              style={btnStyle}
             >
               ◪ 3-Col
             </button>
@@ -154,37 +188,134 @@ export const BlockHoverOverlay: React.FC<BlockHoverOverlayProps> = ({ editor }) 
       case 'heading':
         return (
           <>
-            <span className="block-hover-divider">|</span>
+            <span className="block-hover-divider" style={dividerStyle}>|</span>
             <button 
               onClick={() => {
                 editor.chain().focus().setNodeSelection(hoveredNodePos).toggleHeading({ level: 2 }).run()
               }}
               title="Convert to Heading 2"
+              style={btnStyle}
             >
               H2
             </button>
           </>
         )
+        case 'accordion':
+  return (
+    <>
+      <span className="block-hover-divider" style={dividerStyle}>|</span>
+      <button 
+        onClick={() => {
+          // Selects the target element and shifts open state parameters
+          editor.chain().focus().setNodeSelection(hoveredNodePos).run()
+        }}
+        title="Focus element selection container"
+        style={btnStyle}
+      >
+        👁️ Focus Frame
+      </button>
+    </>
+  )
+case 'callout':
+  return (
+    <>
+      <span className="block-hover-divider" style={dividerStyle}>|</span>
+      <button 
+        onClick={() => {
+          editor.chain().focus().updateAttributes('callout', { type: 'info' }).run()
+        }}
+        title="Switch to Info theme style"
+        style={btnStyle}
+      >
+        🔵 Info
+      </button>
+      <button 
+        onClick={() => {
+          editor.chain().focus().updateAttributes('callout', { type: 'warning' }).run()
+        }}
+        title="Switch to Warning theme style"
+        style={btnStyle}
+      >
+        🟡 Warn
+      </button>
+      <button 
+        onClick={() => {
+          editor.chain().focus().updateAttributes('callout', { type: 'success' }).run()
+        }}
+        title="Switch to Success theme style"
+        style={btnStyle}
+      >
+        🟢 Success
+      </button>
+    </>
+  )
+
       default:
-        return null // Standard text nodes like paragraphs just get default actions
+        return null
     }
   }
 
   return (
-    <div ref={overlayRef} className="block-hover-wrapper" style={style}>
-      <div className="block-hover-toolbar">
-        {/* Core Actions shared across all blocks */}
-        <button onClick={() => moveBlock('up')} title="Move Block Up">▲</button>
-        <button onClick={() => moveBlock('down')} title="Move Block Down">▼</button>
-        
-        {/* Context-Aware Dynamic Actions Injection */}
+    <div 
+      ref={overlayRef} 
+      className="block-hover-wrapper" 
+      // Fixed: This container element remains un-hidden and handles layout mouse-leave bubbling checks cleanly
+  
+      style={{
+        ...style,
+        position: 'absolute',
+        pointerEvents: 'auto', // Keep container receptive to catch mouse bridge hovers
+        display: 'block',
+        zIndex: 9999,
+        // Fixed: Added padding-top to create an invisible hover "bridge" connecting the toolbar to the block
+        paddingTop: '32px', 
+        transform: 'translateY(-32px)', // Offsets the padding height adjustment perfectly
+        transition: 'top 0.1s cubic-bezier(0.25, 1, 0.5, 1), left 0.1s cubic-bezier(0.25, 1, 0.5, 1)'
+      }}
+    >
+      <div 
+        className="block-hover-toolbar"
+        style={{ 
+          display: 'flex',
+          background: '#ffffff',
+          border: '1px solid #1e1e1e',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1), 0px 12px 24px rgba(0, 0, 0, 0.05)',
+          borderRadius: '4px',
+          padding: '4px',
+          gap: '4px',
+          position: 'absolute',
+          top: 0, // Aligns toolbar perfectly inside the newly created absolute container bounds
+          left: 0,
+        }}
+      >
+        <button onClick={() => moveBlock('up')} title="Move Block Up" style={btnStyle}>▲</button>
+        <button onClick={() => moveBlock('down')} title="Move Block Down" style={btnStyle}>▼</button>
         {renderCustomBlockOptions()}
-
-        <span className="block-hover-divider">|</span>
-        <button onClick={deleteBlock} className="delete-btn" title="Delete Entire Block">
-          🗑️
-        </button>
+        <span className="block-hover-divider" style={dividerStyle}>|</span>
+        <button onClick={deleteBlock} className="delete-btn" style={deleteBtnStyle} title="Delete Entire Block">🗑️</button>
       </div>
     </div>
   )
+}
+
+const btnStyle: React.CSSProperties = {
+  background: 'transparent',
+  border: 'none',
+  padding: '4px 8px',
+  cursor: 'pointer',
+  fontSize: '12px',
+  color: '#1e1e1e',
+  borderRadius: '2px',
+}
+
+const deleteBtnStyle: React.CSSProperties = {
+  ...btnStyle,
+  color: '#dc2626',
+}
+
+const dividerStyle: React.CSSProperties = {
+  color: '#ccc', 
+  alignSelf: 'center', 
+  margin: '0 2px',
+  fontSize: '12px',
 }
