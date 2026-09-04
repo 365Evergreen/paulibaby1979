@@ -12,10 +12,10 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import ImageResize from "tiptap-extension-resize-image";
-
+import{Iframe} from "../tiptap/iFrameExtension"
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
-import { YoutubeEmbed } from "../tiptap/YoutubeExtension";
+import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
 import { ColumnsLayout, Column } from "../tiptap/ColumnExtension";
 import { FileHandler } from "@tiptap/extension-file-handler";
 import styles from './RichTextEditor.module.css'
@@ -60,6 +60,9 @@ export default function RichTextEditor({
         },
         link: false,
         dropcursor: false,
+      }),
+      Iframe.configure({
+        HTMLAttributes: {class: 'custom-iframe-class'}
       }),
 
       /*
@@ -215,7 +218,12 @@ export default function RichTextEditor({
       input.value = "";
     }
   }
-
+ const addIframeCommand = () => {
+    const url = window.prompt('Enter iframe URL:')
+    if (url && editor) {
+      editor.chain().focus().setIframe({ src: url }).run()
+    }
+  }
   async function handleAudioUpload(
     event: ChangeEvent<HTMLInputElement>,
   ) {
@@ -654,9 +662,16 @@ export default function RichTextEditor({
           ▶
         </button>
         <span
-          className="tiptap-divider"
+          className={styles.tiptapDivider}
           aria-hidden="true"
         />
+        <button type="button" onClick={addIframeCommand}
+        className={styles.tiptapButton + " " + buttonClass(editor.isActive("iframe"))}
+        title="Embed iframe"
+        disabled={controlsDisabled}
+        >
+          Embed
+        </button>
 
         <button
           type="button"

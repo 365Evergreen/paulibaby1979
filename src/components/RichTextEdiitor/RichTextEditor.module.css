@@ -164,7 +164,7 @@ div[data-type="column"]:focus-within {
   border-color: var(--accent);
 }
 
-.tiptap-divider {
+.tiptapDivider {
   width: 1px;
   background: var(--border);
   margin: 0 0.25rem;
@@ -343,8 +343,22 @@ div[data-type="column"] {
 
 /* Visual cue when focused */
 div[data-type="column"]:focus-within {
-  border-color: #3b82f6;
+  border-color: #60070b;
   background-color: #f8fafc;
 }
 
 /* Inside your CSS Module file (e.g., Editor.module.css) */
+
+/* Inside your global or module stylesheet */
+.iframe-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+/* Stops the iframe from stealing focus and clicks while editing */
+.ProseMirror iframe {
+  pointer-events: none; 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

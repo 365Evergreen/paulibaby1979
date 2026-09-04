@@ -10,6 +10,17 @@ type Post = {
   created_at: string;
 };
 
+export function Card({ text }: { text: string }) {
+  const postExcerpt: React.CSSProperties = {
+    WebkitLineClamp: 3,           // Capital 'W' for Webkit vendor prefix
+    WebkitBoxOrient: 'vertical',  // Capital 'W'
+    display: '-webkit-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  };
+
+  return <p style={postExcerpt}>{text}</p>;
+}
 export default function LatestPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);

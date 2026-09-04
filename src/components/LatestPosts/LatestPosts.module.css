@@ -54,6 +54,17 @@ width: 100%;
   margin: 0.5rem;
 }
 
+.postExcerpt{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+  padding: 0 1rem;
+}
+
 .postLink:link {
   text-decoration: none;
   color: black;

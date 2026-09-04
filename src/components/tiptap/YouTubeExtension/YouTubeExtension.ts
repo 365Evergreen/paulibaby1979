@@ -1,4 +1,6 @@
 import { Node } from "@tiptap/core";
+// Fix: Corrected the typo from 'stlyes' to 'styles'
+import styles from './YouTubeExtension.module.css';
 
 function extractYouTubeId(url: string): string | null {
   const patterns = [
@@ -43,7 +45,11 @@ export const YoutubeEmbed = Node.create({
 
     return [
       "div",
-      { "data-youtube": videoId, class: "youtube-embed" },
+      { 
+        "data-youtube": videoId, 
+        // Update: Inject the CSS modules class dynamically here
+        class: styles.embedYouTube 
+      },
       [
         "iframe",
         {
