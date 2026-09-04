@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Slide } from "./Carousel.types";
 import styles from './Carousel.module.css';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface LatestslidesSliderProps {
   slides: Slide[];
@@ -15,6 +15,8 @@ export default function LatestslidesSlider({
   interval = 5000,
 }: LatestslidesSliderProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const navigate = useNavigate();
 
   const recentSlides = useMemo(() => {
     if (!slides || slides.length === 0) return [];
@@ -71,8 +73,8 @@ export default function LatestslidesSlider({
               </div>
               <div className={styles.slideText}>  
                 <p>{slide.excerpt}</p>
-              </div>
-              <Link to={`/blog/${slide.slug}`} className={styles.readMoreButton}>Read more</Link>
+              </div>  <button onClick={() => navigate(`/blog//${slide.slug}`)} className={styles.readMoreButton}> Read more
+          </button>
             </div>
           </div>
         ))}

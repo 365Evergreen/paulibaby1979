@@ -1,9 +1,11 @@
 .slideshowContainer {
   position: relative;
   width: 100%;
-  height: 75vh; /* Adjust height to fit your layout requirements */
+  height: 75vh;
+  /* Adjust height to fit your layout requirements */
   overflow: hidden;
 }
+
 .slideTrack {
   display: flex;
   width: 100%;
@@ -11,6 +13,7 @@
   transition: transform 0.5s ease-in-out;
   will-change: transform;
 }
+
 .slideWrapper {
   position: relative;
   flex: 0 0 100%;
@@ -38,8 +41,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 0 10%; /* Balances text formatting neatly */
+  padding: 0 10%;
+  /* Balances text formatting neatly */
 }
+
 .slideImage {
   position: absolute;
   top: 0;
@@ -74,14 +79,20 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity as desired */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Adjust opacity as desired */
   z-index: 2;
 }
 
 .slideTitle {
-  font-size:xx-large;
-  font-weight: 600;
-  color: #471a1a;
+  padding: 0.25rem;
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 500;
+    color: var(--text);
+
+  }
 }
 
 .slideText {
@@ -103,26 +114,28 @@
   justify-content: space-between;
   padding: 0 20px;
   z-index: 10;
-  pointer-events: none; /* Allows clicks to pass through empty space */
+  pointer-events: none;
+  /* Allows clicks to pass through empty space */
 }
 
-.prevBtn, .nextBtn {
-  pointer-events: auto; /* Makes sure buttons remain clickable */
+.prevBtn,
+.nextBtn {
+  pointer-events: auto;
+  /* Makes sure buttons remain clickable */
   cursor: pointer;
   /* Add your custom button styles here */
 }
-.ReadMoreButton {
-  pointer-events: auto;
-  width: fit-content;
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+
+.readMoreButton {
+  position: static !important;
+  /* Forces buttons to obey structural flows */
   background-color: var(--accent);
   color: white;
   border: none;
-  cursor:pointer;
-  padding: 10px;
-  z-index: 5;
+  padding: 6px 12px;
+  /* Cleaner, proportional button scale */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
 }

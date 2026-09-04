@@ -12,7 +12,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import ImageResize from "tiptap-extension-resize-image";
-import{Iframe} from "../tiptap/iFrameExtension"
+import { Iframe } from "../tiptap/iFrameExtension"
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
@@ -62,7 +62,7 @@ export default function RichTextEditor({
         dropcursor: false,
       }),
       Iframe.configure({
-        HTMLAttributes: {class: 'custom-iframe-class'}
+        HTMLAttributes: { class: 'custom-iframe-class' }
       }),
 
       /*
@@ -218,7 +218,7 @@ export default function RichTextEditor({
       input.value = "";
     }
   }
- const addIframeCommand = () => {
+  const addIframe = () => {
     const url = window.prompt('Enter iframe URL:')
     if (url && editor) {
       editor.chain().focus().setIframe({ src: url }).run()
@@ -572,43 +572,43 @@ export default function RichTextEditor({
         >
           🔗
         </button>
-{/* Insertion Controls */}
-<button 
-  type="button"
-  onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 2 }).run()}
-  className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 2 }))}
->
-  2 Columns
-</button>
-<button 
-  type="button"
-  onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 3 }).run()}
-  className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 3 }))}
->
-  3 Columns
-</button>
+        {/* Insertion Controls */}
+        <button
+          type="button"
+          onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 2 }).run()}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 2 }))}
+        >
+          2 Columns
+        </button>
+        <button
+          type="button"
+          onClick={() => (editor.chain().focus() as any).setColumnsLayout({ columns: 3 }).run()}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("columnsLayout", { columns: 3 }))}
+        >
+          3 Columns
+        </button>
 
-{/* Dynamic Modification Controls (Only display when active inside a layout) */}
-{editor.isActive("columnsLayout") && (
-  <>
-    <button
-      type="button"
-      onClick={() => (editor.chain().focus() as any).addColumn().run()}
-      className={styles.tiptapButton}
-      title="Add new column column to this group"
-    >
-      ➕ Add Column
-    </button>
-    <button
-      type="button"
-      onClick={() => (editor.chain().focus() as any).removeColumn().run()}
-      className={styles.tiptapButton}
-      title="Delete current active column block"
-    >
-      ❌ Delete Column
-    </button>
-  </>
-)}
+        {/* Dynamic Modification Controls (Only display when active inside a layout) */}
+        {editor.isActive("columnsLayout") && (
+          <>
+            <button
+              type="button"
+              onClick={() => (editor.chain().focus() as any).addColumn().run()}
+              className={styles.tiptapButton}
+              title="Add new column column to this group"
+            >
+              ➕ Add Column
+            </button>
+            <button
+              type="button"
+              onClick={() => (editor.chain().focus() as any).removeColumn().run()}
+              className={styles.tiptapButton}
+              title="Delete current active column block"
+            >
+              ❌ Delete Column
+            </button>
+          </>
+        )}
 
 
 
@@ -651,7 +651,7 @@ export default function RichTextEditor({
         >
           ▶
         </button>
-        
+
         <button
           type="button"
           onClick={addYoutube}
@@ -665,12 +665,12 @@ export default function RichTextEditor({
           className={styles.tiptapDivider}
           aria-hidden="true"
         />
-        <button type="button" onClick={addIframeCommand}
-        className={styles.tiptapButton + " " + buttonClass(editor.isActive("iframe"))}
-        title="Embed iframe"
-        disabled={controlsDisabled}
+        <button type="button" onClick={addIframe}
+          className={styles.tiptapButton + " " + buttonClass(editor.isActive("iframe"))}
+          title="Embed iframe"
+          disabled={controlsDisabled}
         >
-          Embed
+          🌐 Embed
         </button>
 
         <button

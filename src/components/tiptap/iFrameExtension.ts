@@ -1,4 +1,4 @@
-import { Node } from '@tiptap/core'
+import { Node, mergeAttributes } from '@tiptap/core'
 
 export interface IframeOptions {
   allowFullscreen: boolean,
@@ -21,7 +21,9 @@ export const Iframe = Node.create<IframeOptions>({
 
   group: 'block',
 
-  atom: true, // Prevents users from typing inside the iframe
+  atom: true, // Prevents users from typing inside the iframe HTML structure
+
+  draggable: true,
 
   addOptions() {
     return {
@@ -55,22 +57,41 @@ export const Iframe = Node.create<IframeOptions>({
     ]
   },
 
-  renderHTML({ HTMLAttributes }) {
-    return ['div', { class: 'iframe-wrapper' }, ['iframe', HTMLAttributes]]
+  renderHTML({ node, HTMLAttributes }) {
+    const { src, width, height } = node.attrs
+
+    if (!src) {
+      return ['div', { class: 'iframe-missing' }]
+    }
+
+    // Merges global options, node-level attributes, and the strict required properties
+    return [
+      'div',
+      { class: 'iframe-wrapper' },
+      [
+        'iframe',
+        mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+          src,
+          width,
+          height,
+          allowfullscreen: this.options.allowFullscreen ? 'true' : undefined,
+        }),
+      ],
+    ]
   },
 
   addCommands() {
     return {
-      setIframe: (options) => ({ tr, dispatch }) => {
-        const { selection } = tr
-        const node = this.type.create(options)
+      setIframe: 
+        (options) => 
+        ({ commands }) => {
+          if (!options.src) return false
 
-        if (dispatch) {
-          tr.replaceRangeWith(selection.from, selection.to, node)
-        }
-
-        return true
-      },
+          return commands.insertContent({
+            type: this.name,
+            attrs: options,
+          })
+        },
     }
   },
 })
