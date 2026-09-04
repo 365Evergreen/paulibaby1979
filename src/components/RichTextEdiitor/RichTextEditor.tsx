@@ -19,7 +19,7 @@ import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
 import { Column } from "../tiptap/ColumnsExtension/Column";
 import { Columns } from "../tiptap/ColumnsExtension/Columns"
 import { FileHandler } from "@tiptap/extension-file-handler";
-import { BlockSettingsMenu } from "../BlockSettingsMenu/BlockSettingsMenu";
+import { BlockHoverOverlay } from "../BlockHoverOverlay";
 import { GlobalBlockModifiers } from "./GlobalModifiers";
 import styles from './RichTextEditor.module.css'
 
@@ -398,7 +398,7 @@ export default function RichTextEditor({
 
   return (
     <section className={styles.tipTapwrapper}>
-      <BlockSettingsMenu editor={editor}/>
+      <BlockHoverOverlay editor={editor}/>
       <div
         className={styles.tipTapToolbar}
         role="toolbar"
