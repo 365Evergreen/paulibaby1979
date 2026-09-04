@@ -56,8 +56,8 @@ export default function AdminPage() {
 
 
             <button className={styles.homeButton} onClick={() => navigate("/")}>Back to site</button>
-            <button className={styles.newPostButton} onClick={() => navigate("/post-editor")}>New post</button>
-            <button className={styles.mediaLibraryButton} onClick={() => navigate("/media-library")}>Media library</button>
+            <button className={styles.newPostButton} onClick={() => navigate("/admin/post-editor")}>New post</button>
+            <button className={styles.mediaLibraryButton} onClick={() => navigate("/admin/media-library")}>Media library</button>
           </div>
         </div>
 
@@ -93,7 +93,7 @@ export default function AdminPage() {
                     <td>
                       {/* Wrapper div keeps the buttons inside the correct column boundary */}
                       <div className={styles.adminTableActions}>
-                        <button onClick={() => navigate(`/post-editor/${post.id}`)} className={styles.editPostButton}>
+                        <button onClick={() => navigate(`/admin/post-editor/${post.id}`)} className={styles.editPostButton}>
                           Edit
                         </button>
                         <button onClick={() => deletePost(post.id!)} className={styles.deletePostButton}>

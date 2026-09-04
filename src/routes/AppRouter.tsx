@@ -26,12 +26,12 @@ export default function AppRouter() {
           <Route path="/blog/:slug" element={<SinglePostPage />} />
         </Route>
 
-        {/* Editor & Admin Layout */}
+        {/* Editor & Admin Layout - all routes must follow the /admin/ path */}
         <Route element={<EditorShell />}>
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/post-editor" element={<PostEditorPage />} />
-          <Route path="/post-editor/:id" element={<PostEditorPage />} />
-          <Route path="/media-library" element={<MediaLibraryPage />} />
+          <Route path="/admin/post-editor" element={<PostEditorPage />} />
+          <Route path="/admin/post-editor/:id" element={<PostEditorPage />} />
+          <Route path="/admin/media-library" element={<MediaLibraryPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

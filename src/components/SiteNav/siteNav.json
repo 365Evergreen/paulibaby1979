@@ -9,7 +9,7 @@
         "heading": "Posts",
         "links": [
           { "label": "All posts", "href": "/blog" },
-          { "label": "Media library", "href": "/media-library" }
+          { "label": "Media library", "href": "/admin/media-library" }
           ]
       }
     ]

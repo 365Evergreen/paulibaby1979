@@ -447,7 +447,7 @@ export default function AdminMedia() {
   return (
     <div className={styles.admin}>
       <header className={styles.adminHeader}>
-        <h1>Media Library</h1>
+        <h1>Media library</h1>
         <div className={styles.adminActions}>
           <a href="/admin" className={styles.mediaToolbar__btn}>← Posts</a>
           <button onClick={() => setShowUpload(true)} className="btn-primary">
