@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import styles from './MediaLibraryPage.module.css'
+import { FileHeadphone, FileVideoCamera, Files, Image, Package, LucideIcon } from "lucide-react";
 
 type MediaType = "audio" | "document" | "image" | "video" | "other";
 
@@ -31,12 +32,12 @@ type SortDir = "asc" | "desc";
 
 const MEDIA_URL = "https://media.paulibaby.com";
 
-const FILTER_PILLS: { label: string; value: MediaType | "all"; icon: string }[] = [
-  { label: "All", value: "all", icon: "✦" },
-  { label: "Image", value: "image", icon: "🖼" },
-  { label: "Video", value: "video", icon: "🎬" },
-  { label: "Audio", value: "audio", icon: "🎵" },
-  { label: "Document", value: "document", icon: "📄" },
+const FILTER_PILLS: { label: string; value: MediaType | "all"; icon: LucideIcon }[] = [
+  { label: "All", value: "all", icon: Package },
+  { label: "Image", value: "image", icon: Image },
+  { label: "Video", value: "video", icon: FileVideoCamera },
+  { label: "Audio", value: "audio", icon: FileHeadphone },
+  { label: "Document", value: "document", icon: Files },
 ];
 
 /** Full-size public URL for an R2 object. */
@@ -82,12 +83,12 @@ function MediaPreview({ item, size }: { item: MediaItem; size: "card" | "thumb" 
     );
   }
 
-  const icons: Record<MediaType, string> = {
-    audio: "🎵",
-    video: "🎬",
-    document: "📄",
-    image: "🖼",
-    other: "📦",
+  const icons: Record<MediaType, LucideIcon> = {
+    audio: FileHeadphone,
+    video: FileVideoCamera,
+    document: Files,
+    image: Image,
+    other: Package,
   };
 
   return (
@@ -101,7 +102,12 @@ function MediaPreview({ item, size }: { item: MediaItem; size: "card" | "thumb" 
       height: "100%",
       color: "var(--text-muted)",
     }}>
-      <span style={{ fontSize: iconSize }}>{icons[item.media_type]}</span>
+      <span style={{ fontSize: iconSize }}>
+        {(() => {
+          const Icon = icons[item.media_type];
+          return <Icon />;
+        })()}
+      </span>
       {size === "card" && (
         <span style={{ fontSize, textTransform: "capitalize" }}>{item.media_type}</span>
       )}
@@ -471,19 +477,22 @@ export default function AdminMedia() {
 
       {/* Filter pills */}
       <div className={styles.mediaFilters}>
-        {FILTER_PILLS.map((pill) => (
-          <button
-            key={pill.value}
-            onClick={() => setActiveFilter(pill.value)}
-            className={`media-pill ${activeFilter === pill.value ? styles.mediaPill__active : ""}`}
-          >
-            <span className={styles.mediaPill__icon}>{pill.icon}</span>
-            {pill.label}
-            <span className={styles.mediaPill__count}>
-              {filterCounts[pill.value] ?? 0}
-            </span>
-          </button>
-        ))}
+        {FILTER_PILLS.map((pill) => {
+          const Icon = pill.icon;
+          return (
+            <button
+              key={pill.value}
+              onClick={() => setActiveFilter(pill.value)}
+              className={`media-pill ${activeFilter === pill.value ? styles.mediaPill__active : ""}`}
+            >
+              <span className={styles.mediaPill__icon}><Icon /></span>
+              {pill.label}
+              <span className={styles.mediaPill__count}>
+                {filterCounts[pill.value] ?? 0}
+              </span>
+            </button>
+          );
+        })}
         {hasActiveFilters && (
           <button onClick={clearFilters} className={styles.mediaPill__clear}>
             ✕ Clear filters

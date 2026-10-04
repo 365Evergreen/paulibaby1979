@@ -12,7 +12,9 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import ImageResize from "tiptap-extension-resize-image";
-import { Iframe } from "../tiptap/iFrameExtension/iFrameExtension"
+import { common, createLowlight } from "lowlight";
+import { Iframe } from "../tiptap/iFrameExtension/iFrameExtension";
+import { CodeBlock } from "../tiptap/CodeBlockExtension/CodeBlock";
 import { Audio } from "../tiptap/AudioExtension";
 import { Video } from "../tiptap/VideoExtension";
 import { YoutubeEmbed } from "../tiptap/YouTubeExtension/YouTubeExtension";
@@ -45,7 +47,7 @@ export default function RichTextEditor({
   const imageInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
-
+  const lowlight = createLowlight(common)
   const [uploading, setUploading] = useState<
     "image" | "audio" | "video" | null
   >(null);
@@ -67,7 +69,9 @@ export default function RichTextEditor({
         },
         link: false,
         dropcursor: false,
+        codeBlock: false,
       }),
+      CodeBlock.configure({ lowlight, }),
       Iframe.configure({
         HTMLAttributes: { class: 'custom-iframe-class' }
       }),
@@ -570,7 +574,18 @@ export default function RichTextEditor({
         >
           ❝
         </button>
-
+      <button
+        type="button"
+        onClick={() => 
+          editor.chain().focus().toggleCodeBlock().run()
+        }
+        className={styles.tiptapButton + " " + buttonClass(editor.isActive("codeblock"))}
+          aria-pressed={editor.isActive("codeblock")}
+          title="Code block"
+>
+        {/* You can replace this text with a code bracket icon if preferred */}
+        Code Block
+      </button>
         <button
           type="button"
           onClick={() =>
@@ -645,9 +660,9 @@ export default function RichTextEditor({
           disabled={controlsDisabled}
         >
           ▶ YouTube
-        </button>       
-      
-       <button
+        </button>
+
+        <button
           type="button"
           onClick={() => editor.chain().focus().insertColumns(2).run()}
           className={styles.tiptapButton + " " + buttonClass(editor.isActive("columns"))}

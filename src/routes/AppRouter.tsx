@@ -9,6 +9,7 @@ import SinglePostPage from '../pages/SinglePostPage/SinglePostPage';
 import PostEditorPage from '../pages/PostEditorPage/PostEditorPage';
 import MediaLibraryPage from "../pages/MediaLibraryPage/MediaLibraryPage";
 import MusicPage from "../pages/MusicPage/MusicPage";
+import MediaPlayerPage from "../pages/MediaPlayerPage/MediaPlayerPage"
 
 export default function AppRouter() {
   return (
@@ -17,6 +18,7 @@ export default function AppRouter() {
         {/* Main App Layout */}
         <Route element={<AppShell />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/media" element={<MediaPlayerPage/>}/>
         </Route>
 
         {/* Content Pages Layout */}

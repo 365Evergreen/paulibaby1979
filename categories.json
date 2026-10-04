@@ -1,0 +1,66 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "name": "Technology",
+        "slug": "technology",
+        "parent_id": null,
+        "created_at": "2026-09-03 13:17:17"
+      },
+      {
+        "id": 2,
+        "name": "Lifestyle",
+        "slug": "lifestyle",
+        "parent_id": null,
+        "created_at": "2026-09-03 13:17:17"
+      },
+      {
+        "id": 3,
+        "name": "Cloud Computing",
+        "slug": "cloud-computing",
+        "parent_id": 1,
+        "created_at": "2026-09-03 13:17:17"
+      },
+      {
+        "id": 4,
+        "name": "Music",
+        "slug": "music",
+        "parent_id": null,
+        "created_at": "2026-09-03 13:19:21"
+      },
+      {
+        "id": 5,
+        "name": "Video",
+        "slug": "video",
+        "parent_id": null,
+        "created_at": "2026-09-04 07:19:38"
+      },
+      {
+        "id": 6,
+        "name": "Comedy",
+        "slug": "comedy",
+        "parent_id": null,
+        "created_at": "2026-10-03 19:05:27"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "OC",
+      "served_by_colo": "SYD",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1397
+      },
+      "duration": 0.1397,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 90112,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

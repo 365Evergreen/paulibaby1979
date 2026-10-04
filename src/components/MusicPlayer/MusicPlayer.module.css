@@ -1,0 +1,389 @@
+/* ── Player bar ───────────────────────────────────────────────── */
+/* Design: backdrop-blur-[47.5px] bg-[rgba(255,255,255,0.4)] flex gap-[28px] items-center px-[30px] py-[20px] */
+
+.bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 20px 30px;
+  backdrop-filter: blur(47.5px);
+  -webkit-backdrop-filter: blur(47.5px);
+  background: rgba(255, 255, 255, 0.72);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── Left: track info ─────────────────────────────────────────── */
+/* Design: flex gap-[20px] items-center shrink-0 */
+
+.trackInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.coverWrap {
+  width: 65px;
+  height: 65px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex-shrink: 0;
+  /* Design: rounded-[100px] size-[65px] */
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.trackText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 220px;
+  /* Design: flex-col gap-[4px] w-[220px] */
+}
+
+.trackTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: normal;
+  color: #121212;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Design: text-[#121212] text-[16px] font-medium */
+}
+
+.trackArtist {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: normal;
+  color: #8e8e8e;
+  margin: 0;
+  white-space: nowrap;
+  /* Design: text-[#8e8e8e] text-[14px] */
+}
+
+/* ── Centre: controls + progress ─────────────────────────────── */
+
+.centre {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+  padding: 0 20px;
+}
+
+/* Transport buttons row */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* Design: gap-[20px] items-center */
+}
+
+/* Progress row */
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  /* Design: flex gap-[12px] items-center w-full */
+}
+
+/* ── Icon buttons ─────────────────────────────────────────────── */
+
+.iconBtn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 4px;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.iconBtn:hover {
+  opacity: 1;
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid #7c74ee;
+  outline-offset: 3px;
+}
+
+.iconSm {
+  width: 24px;
+  height: 24px;
+  display: block;
+  /* Design: size-[24px] */
+}
+
+.active {
+  opacity: 1;
+}
+
+.liked {
+  opacity: 1;
+}
+
+/* ── Play button ──────────────────────────────────────────────── */
+/* Design: bg-[#7c74ee] flex items-center p-[8px] rounded-[100px] */
+
+.playBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #7c74ee;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  padding: 8px;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+  box-sizing: border-box;
+}
+
+.playBtn:hover {
+  background: #6b62e0;
+}
+
+.playBtn:active {
+  transform: scale(0.95);
+}
+
+.playBtn:focus-visible {
+  outline: 2px solid #7c74ee;
+  outline-offset: 3px;
+}
+
+.playIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  /* Design: size-[20px] inside p-[8px] button */
+}
+
+/* ── Time labels ──────────────────────────────────────────────── */
+
+.timeLabel {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: normal;
+  color: #121212;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  /* Design: font-medium text-[16px] text-[#121212] */
+}
+
+/* ── Progress bar ─────────────────────────────────────────────── */
+/* Design uses stacked CSS grid (col-1 row-1 overlap technique) */
+
+.progressWrap {
+  flex: 1 0 0;
+  position: relative;
+  height: 16px;          /* tall hit area */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.progressWrap:hover .progressThumb {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.progressTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #dadada;
+  border-radius: 100px;
+  /* Design: bg-[#dadada] h-[4px] rounded-[100px] */
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  background: #7c74ee;
+  border-radius: 100px;
+  max-width: 100%;
+  pointer-events: none;
+  /* Design: bg-[#7c74ee] h-[4px] rounded-[100px] */
+}
+
+.progressThumb {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #7c74ee;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+}
+
+/* ── Right: aside controls ────────────────────────────────────── */
+/* Design: flex gap-[20px] items-center justify-end shrink-0 */
+
+.aside {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* ── Volume bar ───────────────────────────────────────────────── */
+/* Design: w-[100px] track, w-[70px] fill */
+
+.volumeWrap {
+  position: relative;
+  width: 100px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  /* Design: w-[100px] */
+}
+
+.volumeWrap:hover .volumeThumb {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.volumeTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #c4c4c4;
+  border-radius: 100px;
+  /* Design: bg-[#c4c4c4] h-[4px] rounded-[100px] w-[100px] */
+}
+
+.volumeFill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  background: #7c74ee;
+  border-radius: 100px;
+  max-width: 100%;
+  pointer-events: none;
+  /* Design: bg-[#7c74ee] h-[4px] rounded-[100px] */
+}
+
+.volumeThumb {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #7c74ee;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+/* Tablet: tighten gaps, shrink track label width */
+@media (max-width: 1100px) {
+  .bar        { gap: 20px; padding: 16px 24px; }
+  .trackText  { width: 150px; }
+  .timeLabel  { font-size: 14px; }
+  .aside      { gap: 14px; }
+}
+
+/* Small laptop / large tablet: drop volume slider, shrink further */
+@media (max-width: 900px) {
+  .bar        { gap: 14px; padding: 14px 20px; }
+  .volumeWrap { display: none; }
+  .trackText  { width: 120px; }
+  .timeLabel  { font-size: 13px; }
+  .aside      { gap: 12px; }
+}
+
+/* Phone landscape / small tablet: two-row layout */
+@media (max-width: 680px) {
+  .bar {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 10px 14px 12px;
+  }
+
+  /* Row 1: cover + track info (grows) + aside controls */
+  .trackInfo  { flex: 1 1 auto; min-width: 0; order: 1; }
+  .trackText  { width: auto; min-width: 0; }
+  .aside      { order: 2; gap: 10px; flex-shrink: 0; }
+
+  /* Row 2: transport + progress — full width */
+  .centre {
+    order: 3;
+    width: 100%;
+    padding: 0;
+    flex: 1 1 100%;
+  }
+
+  /* Smaller cover */
+  .coverWrap  { width: 44px; height: 44px; }
+
+  /* Hide lower-priority aside buttons */
+  .aside .iconBtn:nth-child(n+3) { display: none; } /* volume icon + queue */
+
+  .timeLabel  { font-size: 12px; }
+  .controls   { gap: 16px; }
+}
+
+/* Phone portrait: minimal — just play + progress */
+@media (max-width: 420px) {
+  .bar        { padding: 8px 12px 10px; gap: 6px 10px; }
+  .coverWrap  { display: none; }
+  .trackText  { width: auto; }
+  .trackTitle { font-size: 14px; }
+  .trackArtist{ font-size: 12px; }
+
+  /* Shuffle and repeat are lowest priority */
+  .controls .iconBtn:first-child,  /* shuffle */
+  .controls .iconBtn:last-child    /* repeat  */
+  { display: none; }
+
+  .controls   { gap: 12px; }
+  .playBtn    { width: 32px; height: 32px; }
+  .aside      { gap: 8px; }
+  .timeLabel  { font-size: 11px; }
+}

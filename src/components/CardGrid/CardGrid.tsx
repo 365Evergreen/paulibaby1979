@@ -1,11 +1,15 @@
-import styles from './CardGrid.module.css'
+import type { ReactNode } from "react"
+import styles from "./CardGrid.module.css"
 
-export default function CardGrid(){
-    return(
+interface CardGridProps {
+  children: ReactNode
+  columns?: 2 | 3 | 4
+}
 
-        <section className={styles.section}>
-            <h1>Media Library</h1>
-
-        </section>
-    )
+export default function CardGrid({ children, columns = 3 }: CardGridProps) {
+  return (
+    <div className={styles.grid} data-columns={columns}>
+      {children}
+    </div>
+  )
 }

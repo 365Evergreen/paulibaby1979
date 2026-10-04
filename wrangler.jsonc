@@ -19,5 +19,8 @@
       "database_id": "926d776f-9582-4a10-ac41-4cd5e295edd3",
       "remote": true
     }
+  ],
+  "optional": [
+    "node_modules"
   ]
 }

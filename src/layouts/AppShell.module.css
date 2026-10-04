@@ -1,0 +1,38 @@
+/* AppShell.module.css */
+
+/* Global container that clips unwanted horizontal layout shifts */
+.shellContainer {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+  min-height: 10vh;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+
+
+
+/* Fluid main container wrapper */
+.mainContent {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 ;
+}
+
+/* 💻 Tablets and Small Laptops (Desktop mode) */
+@media (min-width: 768px) {
+  .shellContainer {
+    grid-template-columns: 240px 1fr; /* Injects the side navigation bar column track */
+    grid-template-rows: auto 1fr;
+  }
+
+  .mainContent {
+    grid-column: auto; /* Forces content to sit safely to the right of the sidebar */
+    padding:  0 rem;
+    width: 100vw;
+   
+  }
+}

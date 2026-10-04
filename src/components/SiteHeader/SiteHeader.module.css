@@ -1,22 +1,24 @@
-.headerContainer {  
+.headerContainer {
   position: fixed;
-  top: 0; 
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 0.75rem 1.25rem; 
+  padding: 0.75rem 1.25rem;
   display: flex !important;
   flex-direction: row !important;
-  justify-content: space-between !important; /* 👈 Spreads Logo and Button to polar opposite edges */
+  justify-content: space-between !important;
   align-items: center !important;
   box-sizing: border-box;
+  background-color: var(--bg, #F5F2EC);
+  border-bottom: 1px solid var(--border, #C8C4BC);
+  /* overflow must remain visible so megamenu can drop below */
+  overflow: visible;
 }
 
-/* This targets the element when BOTH classes are applied via CSS Modules */
 .headerContainer.scrolled {
-  background-color: #ffffff;
-  position: fixed;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg, #F5F2EC);
+  box-shadow: 0 1px 0 var(--border, #C8C4BC);
 }
 .left {
   display: flex;
@@ -143,18 +145,11 @@ h2 {
 
 /* --- 💻 DESKTOP SCALE MEDIA QUERY BREAKPOINT TRANSITION --- */
 @media (min-width: 768px) {
-  .headerContainer {
-    padding: 0 4rem;
-    height: 70px;
-  }
-
+  .headerContainer { height: 70px; }
   .brandLogo { width: 36px; height: 36px; }
   .brandText { font-size: 1.125rem; }
 
-  /* Permanently deactivate mobile hamburger triggers on desktop layouts */
-  .hamburgerBtn {
-    display: none;
-  }
+  .hamburgerBtn { display: none; }
 
   .siteNav {
     display: flex;
@@ -166,6 +161,14 @@ h2 {
     height: auto;
     background-color: transparent;
     padding: 0;
-    transform: none !important; /* Force overrides dynamic mobile slide positioning translations */
+    transform: none !important;
   }
+}
+
+@media (min-width: 768px) and (max-width: 1099px) {
+  .headerContainer { padding: 0 1.5rem; }
+}
+
+@media (min-width: 1100px) {
+  .headerContainer { padding: 0 4rem; }
 }

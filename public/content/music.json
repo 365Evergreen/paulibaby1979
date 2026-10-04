@@ -1,0 +1,49 @@
+[
+  {
+    "artist": "David Bowie",
+    "album": "The Man who Sold the World",
+    "cover": "1970 - The Man Who Sold The World/Folder.jpg",
+    "songs": [
+      {
+        "01": "1970 - The Man Who Sold The World/01 - The Width Of A Circle.mp3",
+        "02": "1970 - The Man Who Sold The World/02 - All The Madmen.mp3",
+        "03": "1970 - The Man Who Sold The World/03 - Black Country Rock.mp3",
+        "04": "1970 - The Man Who Sold The World/04 - After All.mp3",
+        "05": "1970 - The Man Who Sold The World/05 - Running Gun Blues.mp3",
+        "06": "1970 - The Man Who Sold The World/06 - Saviour Machine.mp3",
+        "07": "1970 - The Man Who Sold The World/07 - She Shook Me Cold.mp3",
+        "08": "1970 - The Man Who Sold The World/08 - The Man Who Sold The World.mp3",
+        "09": "1970 - The Man Who Sold The World/09 - The Supermen.mp3"
+      }
+    ]
+  },
+  {
+    "artist": "Isaac Hayes",
+    "album": "Hot Buttered Soul",
+    "cover": "1969 - Hot Buttered Soul/Folder.jpg",
+    "songs": [
+      {
+        "01": "1969 - Hot Buttered Soul/01 - Walk On By.mp3",
+        "02": "1969 - Hot Buttered Soul/02 - Hyperbolicsyllabicsequedalymistic.mp3",
+        "03": "1969 - Hot Buttered Soul/03 - One Woman.mp3",
+        "04": "1969 - Hot Buttered Soul/04 - By The Time I Get To Phoenix.mp3"
+      }
+    ]
+  },
+  {
+    "artist": "Funkadelic",
+    "album": "Standing on the Verge of Getting in On",
+    "cover": "1974 - Standing On The Verge Of Getting It On/Folder.jpg",
+    "songs": [
+      {
+        "01": "1974 - Standing On The Verge Of Getting It On/01 - Red Hot Mama.mp3",
+        "02": "1974 - Standing On The Verge Of Getting It On/02 - Alice In My Fantasies.mp3",
+        "03": "1974 - Standing On The Verge Of Getting It On/03 - I'll Stay.mp3",
+        "04": "1974 - Standing On The Verge Of Getting It On/04 - Sexy Ways.mp3",
+        "05": "1974 - Standing On The Verge Of Getting It On/05 - Standing On The Verge Of Getting It On.mp3",
+        "06": "1974 - Standing On The Verge Of Getting It On/06 - Jimmy's Got A Little Bit Of Bitch In Him.mp3",
+        "07": "1974 - Standing On The Verge Of Getting It On/07 - Good Thoughts, Bad Thoughts.mp3"
+      }
+    ]
+  }
+]
