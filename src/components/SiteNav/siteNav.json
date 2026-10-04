@@ -1,102 +1,42 @@
-[
+[  {
+    "id": 0,
+    "title": "Home",
+    "href": "/",
+    "hasMegaMenu": false
+  },
   {
     "id": 1,
-    "title": "Media",
-    "href": "/media",
-    "requiresAuth": false,
-    "hasMegaMenu": false
-  },
-  {
-    "id": 2,
-    "title": "Audio",
-    "href": "/audio",
-    "requiresAuth": false,
-    "hasMegaMenu": true,
-    "columns": [
-      {
-        "heading": "Podcast",
-        "links": [
-          { "label": "The Paulibaby Podcast", "href": "/audio/podcast" },
-          { "label": "Episode Archive", "href": "/audio/podcast/archive" },
-          { "label": "Subscribe", "href": "/audio/podcast/subscribe" }
-        ]
-      },
-      {
-        "heading": "Music",
-        "links": [
-          { "label": "Original Tracks", "href": "/audio/music" },
-          { "label": "Playlists", "href": "/audio/playlists" },
-          { "label": "Collaborations", "href": "/audio/collaborations" }
-        ]
-      },
-      {
-        "heading": "Interviews",
-        "links": [
-          { "label": "Notable Conversations", "href": "/audio/interviews" },
-          { "label": "On Other Shows", "href": "/audio/appearances" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 3,
-    "title": "Video",
-    "href": "/video",
-    "requiresAuth": false,
-    "hasMegaMenu": true,
-    "columns": [
-      {
-        "heading": "Short Films",
-        "links": [
-          { "label": "All Films", "href": "/video/films" },
-          { "label": "Latest Upload", "href": "/video/films/latest" }
-        ]
-      },
-      {
-        "heading": "Comedy",
-        "links": [
-          { "label": "Sketches", "href": "/video/comedy/sketches" },
-          { "label": "Stand-up Clips", "href": "/video/comedy/standup" },
-          { "label": "Characters", "href": "/video/comedy/characters" }
-        ]
-      },
-      {
-        "heading": "Vlogs",
-        "links": [
-          { "label": "Behind the Scenes", "href": "/video/vlogs/bts" },
-          { "label": "Tour Diaries", "href": "/video/vlogs/tour" },
-          { "label": "Day in the Life", "href": "/video/vlogs/daily" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "title": "About",
-    "href": "/about",
-    "requiresAuth": false,
-    "hasMegaMenu": false
-  },
-  {
-    "id": 5,
     "title": "Admin",
     "href": "/admin",
-    "requiresAuth": true,
     "hasMegaMenu": true,
     "columns": [
       {
         "heading": "Posts",
         "links": [
-          { "label": "All Posts", "href": "/admin/posts" },
-          { "label": "New Post", "href": "/admin/posts/new" },
-          { "label": "Media Library", "href": "/admin/media-library" }
-        ]
-      },
+          { "label": "All posts", "href": "/blog" },
+          { "label": "Media library", "href": "/admin/media-library" }
+          ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Music",
+    "href": "/music",
+    "hasMegaMenu": false
+  },
+  {
+    "id": 3,
+    "title": "Resources",
+    "href": "/resources",
+    "hasMegaMenu": true,
+    "columns": [
       {
-        "heading": "Settings",
+        "heading": "Learn",
         "links": [
-          { "label": "Site Config", "href": "/admin/config" },
-          { "label": "Users", "href": "/admin/users", "requiresAuth": true }
+          { "label": "Blog", "href": "/blog" },
+          { "label": "Whitepapers", "href": "/whitepapers" },
+          { "label": "Webinars", "href": "/webinars" }
         ]
       }
     ]
