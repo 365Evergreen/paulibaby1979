@@ -21,8 +21,8 @@
   },
   {
     "id": 2,
-    "title": "Music",
-    "href": "/music",
+    "title": "Media player",
+    "href": "/media",
     "hasMegaMenu": false
   },
   {

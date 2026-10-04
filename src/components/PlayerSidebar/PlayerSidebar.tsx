@@ -11,7 +11,7 @@ const ICON_PLAYLIST  = "/assets/79188.svg"
 const ICON_SETTING   = "/assets/17c15.svg"
 const ICON_ACCOUNT   = "/assets/e6fdb.svg"
 const ICON_LOGOUT    = "/assets/17651.svg"
-const ICON_LOGO_V    = "/assets/d6a6e.svg"
+
 
 interface NavItemProps {
   icon: string
@@ -31,12 +31,7 @@ function NavItem({ icon, label, active }: NavItemProps) {
 export default function PlayerSidebar() {
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.logo}>
-        <img src={ICON_LOGO_V} alt="" className={styles.logoMark} />
-        <span className={styles.logoText}>
-          <span className={styles.logoSemi}>Musi</span><span className={styles.logoReg}>verse</span>
-        </span>
-      </div>
+
 
       <nav className={styles.nav}>
         <div className={styles.navSection}>

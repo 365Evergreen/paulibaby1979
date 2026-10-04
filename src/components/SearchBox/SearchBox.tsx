@@ -1,4 +1,6 @@
+// SearchBox.tsx
 import React, { useState, useMemo } from "react";
+import styles from "./SearchBox.module.css"; // 1. Import CSS Module
 
 export interface BlogPost {
   id: string;
@@ -23,19 +25,27 @@ const SearchBox: React.FC<SearchBoxProps> = ({ posts, onSelect }) => {
   }, [query, posts]);
 
   return (
-    <div>
+    <div className={styles.container}> {/* 2. Styled Container */}
       <input
         type="text"
         placeholder="Search..."
+        value={query} // Added controlled value for best practice
         onChange={(e) => setQuery(e.target.value)}
+        className={styles.inputField} // 3. Styled Input
       />
-      <ul>
-        {filteredPosts.map((post) => (
-          <li key={post.id} onClick={() => onSelect?.(post)}>
-            {post.title}
-          </li>
-        ))}
-      </ul>
+      {filteredPosts.length > 0 && ( // Conditional rendering prevents an empty border box
+        <ul className={styles.dropdownList}> {/* 4. Styled List */}
+          {filteredPosts.map((post) => (
+            <li 
+              key={post.id} 
+              onClick={() => onSelect?.(post)}
+              className={styles.listItem} // 5. Styled List Item
+            >
+              {post.title}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
