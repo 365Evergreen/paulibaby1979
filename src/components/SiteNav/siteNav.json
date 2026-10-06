@@ -27,8 +27,8 @@
   },
   {
     "id": 3,
-    "title": "Resources",
-    "href": "/resources",
+    "title": "Media admin",
+    "href": "/admin/media-admin",
     "hasMegaMenu": true,
     "columns": [
       {

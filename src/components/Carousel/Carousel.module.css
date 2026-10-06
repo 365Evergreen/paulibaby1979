@@ -120,10 +120,17 @@
 
 .prevBtn,
 .nextBtn {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  /* Cleaner, proportional button scale */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
   pointer-events: auto;
   /* Makes sure buttons remain clickable */
-  cursor: pointer;
-  /* Add your custom button styles here */
+ 
 }
 
 .readMoreButton {

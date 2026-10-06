@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import styles from './MediaLibraryPage.module.css'
 import { FileHeadphone, FileVideoCamera, Files, Image, Package, LucideIcon } from "lucide-react";
+import MediaAdmin from "../../components/MediaLibrary/MediaAdmin"
 
 type MediaType = "audio" | "document" | "image" | "video" | "other";
 
@@ -471,8 +472,9 @@ export default function AdminMedia() {
             + Add Media
           </button>
         </div>
+      
       </header>
-
+  <MediaAdmin/>
       {message && <div className="admin-message">{message}</div>}
 
       {/* Filter pills */}

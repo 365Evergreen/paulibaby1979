@@ -96,6 +96,7 @@
 
 /* Filter pills */
 .mediaFilters {
+  padding: 1rem 0;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -106,8 +107,8 @@
 .mediaPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.85rem;
+  gap: 1rem;
+  padding: 1rem;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--card-bg);
