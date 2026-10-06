@@ -1,21 +1,25 @@
-[  {
+[
+  {
     "id": 0,
     "title": "Home",
     "href": "/",
+    "requiresAuth": false,
     "hasMegaMenu": false
   },
   {
     "id": 1,
     "title": "Admin",
     "href": "/admin",
+    "requiresAuth": true,
     "hasMegaMenu": true,
     "columns": [
       {
         "heading": "Posts",
         "links": [
-          { "label": "All posts", "href": "/blog" },
-          { "label": "Media library", "href": "/admin/media-library" }
-          ]
+          { "label": "All posts", "href": "/admin" },
+          { "label": "Media library", "href": "/admin/media-library" },
+          { "label": "Media admin", "href": "/admin/media-admin" }
+        ]
       }
     ]
   },
@@ -23,22 +27,7 @@
     "id": 2,
     "title": "Media player",
     "href": "/media",
+    "requiresAuth": false,
     "hasMegaMenu": false
-  },
-  {
-    "id": 3,
-    "title": "Media admin",
-    "href": "/admin/media-admin",
-    "hasMegaMenu": true,
-    "columns": [
-      {
-        "heading": "Learn",
-        "links": [
-          { "label": "Blog", "href": "/blog" },
-          { "label": "Whitepapers", "href": "/whitepapers" },
-          { "label": "Webinars", "href": "/webinars" }
-        ]
-      }
-    ]
   }
 ]

@@ -1,0 +1,27 @@
+[
+  {
+    "title": "The Young Ones",
+    "genre": "comdey",
+    "videos": [
+      {
+        "series01": [
+          {
+            "id": "s01e01",
+            "title": "Demolition",
+            "src": "https://archive.org/download/the-young-ones-s-01-ep-04-bomb/The%20Young%20Ones%20-%20S01EP01%20Demolition.MP4"
+          },
+          {
+            "id": "s01e02",
+            "title": "Oil",
+            "src": "https://archive.org/download/the-young-ones-s-01-ep-04-bomb/The%20Young%20Ones%20-%20S01EP02%20Oil.MP4"
+          },
+          {
+            "id": "s01e03",
+            "title": "Boring",
+            "src": "https://archive.org/download/the-young-ones-s-01-ep-04-bomb/The%20Young%20Ones%20-%20S01EP03%20Boring.MP4"
+          }
+        ]
+      }
+    ]
+  }
+]

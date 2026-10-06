@@ -1,34 +1,36 @@
-import React, { useState } from "react"
-import menuData from "./siteNav.json"
-import styles from "./SiteNav.module.css"
-import { useIsAuthenticated } from "../../hooks/useIsAuthenticated"
+import React, { useState } from "react";
+import menuData from "./siteNav.json";
+import styles from "./SiteNav.module.css";
+import { useIsAuthenticated } from "../../hooks/useIsAuthenticated";
 
 interface SiteNavProps {
-  onItemClick?: () => void
+  onItemClick?: () => void;
 }
 
 const SiteNav: React.FC<SiteNavProps> = ({ onItemClick }) => {
-  const [activeMenuId, setActiveMenuId] = useState<string | number | null>(null)
-  const isAuthenticated = useIsAuthenticated()
+  const [activeMenuId, setActiveMenuId] = useState<string | number | null>(
+    null,
+  );
+  const isAuthenticated = useIsAuthenticated();
   const visibleNav = menuData.filter(
     (item) => !item.requiresAuth || isAuthenticated,
-  )
+  );
 
   // Safely trigger mobile tap vs desktop hover navigation
-  const handleItemClick = (e: React.MouseEvent, item: typeof menuData[0]) => {
+  const handleItemClick = (e: React.MouseEvent, item: (typeof menuData)[0]) => {
     if (item.hasMegaMenu) {
       // On mobile screens or devices where click must act as the panel trigger
       if (window.innerWidth < 768) {
-        e.preventDefault() // Stop immediate redirect so user can see menu options
-        setActiveMenuId(activeMenuId === item.id ? null : item.id)
+        e.preventDefault(); // Stop immediate redirect so user can see menu options
+        setActiveMenuId(activeMenuId === item.id ? null : item.id);
       } else {
         // Desktop can handle native redirect or standard click closures if necessary
-        onItemClick?.()
+        onItemClick?.();
       }
     } else {
-      onItemClick?.()
+      onItemClick?.();
     }
-  }
+  };
 
   return (
     <nav className={styles.navBar} aria-label="Main Navigation">
@@ -99,7 +101,7 @@ const SiteNav: React.FC<SiteNavProps> = ({ onItemClick }) => {
         ))}
       </ul>
     </nav>
-  )
-}
+  );
+};
 
-export default SiteNav
+export default SiteNav;
