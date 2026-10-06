@@ -41,7 +41,6 @@ export default function MultiFileUpload() {
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Shared metadata applied to all files in the batch
   const [sharedMeta, setSharedMeta] = useState({
     playlist: "",
     subject: "",
@@ -51,7 +50,6 @@ export default function MultiFileUpload() {
     description: "",
   });
 
-  // Per-file overrides
   const [fileOverrides, setFileOverrides] = useState<FileMeta>({});
 
   const handleFileSelect = useCallback((selected: FileList | null) => {
@@ -115,7 +113,6 @@ export default function MultiFileUpload() {
     const formData = new FormData();
     files.forEach((file) => formData.append("file", file));
 
-    // Shared metadata
     if (sharedMeta.playlist) formData.append("playlist", sharedMeta.playlist);
     if (sharedMeta.subject) formData.append("subject", sharedMeta.subject);
     if (sharedMeta.presenter) formData.append("presenter", sharedMeta.presenter);
@@ -123,7 +120,6 @@ export default function MultiFileUpload() {
     if (sharedMeta.tags) formData.append("tags", sharedMeta.tags);
     if (sharedMeta.description) formData.append("description", sharedMeta.description);
 
-    // Per-file overrides as JSON
     const overrides: FileMeta = {};
     let hasOverrides = false;
     for (const file of files) {
@@ -296,7 +292,6 @@ export default function MultiFileUpload() {
         .reorder-btns { display: flex; flex-direction: column; gap: 0.15rem; }
       `}</style>
 
-      {/* Drop zone */}
       <div
         className={`upload-dropzone ${dragOver ? "drag-over" : ""}`}
         onClick={() => inputRef.current?.click()}
@@ -316,7 +311,6 @@ export default function MultiFileUpload() {
         />
       </div>
 
-      {/* Shared metadata */}
       {files.length > 0 && (
         <>
           <div className="section-title">Shared metadata (applies to all files)</div>
@@ -377,7 +371,6 @@ export default function MultiFileUpload() {
             </label>
           </div>
 
-          {/* File list */}
           <div className="section-title">
             Files ({files.length}) — click a field to set per-file overrides
           </div>
@@ -397,7 +390,6 @@ export default function MultiFileUpload() {
                       {file.name}
                     </div>
                     <div className="file-meta-text">{formatSize(file.size)}</div>
-                    {/* Per-file override fields */}
                     <div className="override-row">
                       <input
                         type="text"
@@ -419,7 +411,6 @@ export default function MultiFileUpload() {
             })}
           </div>
 
-          {/* Upload button */}
           <div className="upload-actions">
             <button className="btn btn-ghost" onClick={() => { setFiles([]); setFileOverrides({}); }}>
               Clear all
@@ -431,13 +422,9 @@ export default function MultiFileUpload() {
         </>
       )}
 
-      {/* Progress */}
       {progress && <div className="progress-msg">{progress}</div>}
-
-      {/* Error */}
       {error && <div className="error-msg">⚠ {error}</div>}
 
-      {/* Success result */}
       {result && (
         <div className="result-card">
           <h3>✅ Uploaded {result.files.length} file{result.files.length > 1 ? "s" : ""}</h3>

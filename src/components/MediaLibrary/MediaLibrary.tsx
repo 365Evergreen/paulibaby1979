@@ -1,10 +1,22 @@
-import  { useState, useEffect, useCallback } from 'react';
-import './MediaLibrary.module.css';
-import { MediaItem } from './MediaLibrary.types';
+import { useState, useEffect, useCallback } from "react";
 
-
+interface MediaItem {
+  id: number | null;
+  r2_key: string;
+  filename: string;
+  content_type: string;
+  media_type: string;
+  size_bytes: number;
+  url: string;
+  playlist: string;
+  subject: string;
+  presenter: string;
+  group_id: string;
+  created_at: string;
+}
 
 const API_BASE = import.meta.env.VITE_API_BASE || "";
+
 export default function MediaLibrary() {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +73,6 @@ export default function MediaLibrary() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // Group items by group_id for display
   const grouped: { [groupId: string]: MediaItem[] } = {};
   const ungrouped: MediaItem[] = [];
   for (const item of items) {
@@ -149,7 +160,6 @@ export default function MediaLibrary() {
         .empty { text-align: center; padding: 2rem; color: #94a3b8; }
       `}</style>
 
-      {/* Filter bar */}
       <div className="filter-bar">
         <label>
           Playlist
@@ -199,10 +209,8 @@ export default function MediaLibrary() {
       </div>
 
       {loading && <div className="loading">Loading media...</div>}
-
       {!loading && items.length === 0 && <div className="empty">No media found.</div>}
 
-      {/* Grouped items */}
       {!loading && Object.entries(grouped).map(([groupId, groupItems]) => (
         <div key={groupId} className="group-card">
           <div className="group-header">
@@ -233,7 +241,6 @@ export default function MediaLibrary() {
         </div>
       ))}
 
-      {/* Ungrouped items */}
       {!loading && ungrouped.length > 0 && (
         <div className="group-card">
           <div className="group-header">

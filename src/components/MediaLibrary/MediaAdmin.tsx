@@ -14,7 +14,7 @@ export default function MediaAdmin() {
             padding: "0.6rem 1.5rem",
             border: "none",
             background: tab === "upload" ? "#6366f1" : "transparent",
-            color: tab === "upload" ? "white" : "475569",
+            color: tab === "upload" ? "white" : "#475569",
             fontWeight: 600,
             cursor: "pointer",
             borderRadius: "8px 8px 0 0",
