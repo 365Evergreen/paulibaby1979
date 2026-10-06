@@ -45,5 +45,22 @@
         "07": "1974 - Standing On The Verge Of Getting It On/07 - Good Thoughts, Bad Thoughts.mp3"
       }
     ]
+  },
+  {
+    "artist": "Bob Dylan",
+    "album": "February 17, 1965 (Les Crane Show, WABC-TV Studios, New York City, New York)",
+    "cover": "",
+    "songs": [
+      {
+        "id": "01",
+        "title": "It's All Over Now, Baby Blue",
+        "src": "https://archive.org/download/170-desolation-row-live-at-the-hollywood-bowl-los-angeles-california-september-3-1965/001%20-%20It%27s%20All%20Over%20Now%2C%20Baby%20Blue%20%28Live%20on%20the%20Les%20Crane%20Show%2C%20WABC-TV%20Studios%2C%20New%20York%20City%2C%20New%20York%20-%20February%2017%2C%201965%29.mp3"
+      },
+      {
+        "id": "02",
+        "title": "It's Alright, Ma (I'm Only Bleeding)",
+        "src": "https://archive.org/download/170-desolation-row-live-at-the-hollywood-bowl-los-angeles-california-september-3-1965/002%20-%20%20It%27s%20Alright%2C%20Ma%20%28I%27m%20Only%20Bleeding%29%20%28Live%20on%20the%20Les%20Crane%20Show%2C%20WABC-TV%20Studios%2C%20New%20York%20City%2C%20New%20York%20-%20February%2017%2C%201965%29.mp3"
+      }
+    ]
   }
 ]

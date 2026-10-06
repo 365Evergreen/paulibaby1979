@@ -1,0 +1,23 @@
+.mediaShell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.mainContent {
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.contentContainer {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}

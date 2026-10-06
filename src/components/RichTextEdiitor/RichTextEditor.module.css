@@ -79,7 +79,7 @@ div[data-type="column"]:focus-within {
   gap: 0.25rem;
   padding: 0.5rem;
   border-bottom: 1px solid var(--border);
-  background: #f9f9f9;
+  
   position: sticky;
   top: 56px;
   z-index: 500;
@@ -142,7 +142,6 @@ div[data-type="column"]:focus-within {
   float: none !important;
   /* Stops items from layout-breaking drifting */
   transform: none !important;
-  background: white;
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.35rem 0.6rem;
@@ -154,13 +153,13 @@ div[data-type="column"]:focus-within {
 }
 
 .tiptapButton:hover {
-  background: #f0f0f0;
+  
   border-color: #ccc;
 }
 
 .tiptapButton.active {
   background: var(--accent);
-  color: white;
+  
   border-color: var(--accent);
 }
 

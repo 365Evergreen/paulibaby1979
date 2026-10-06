@@ -5,6 +5,14 @@ import styles from "./LatestPosts.module.css"
 const INITIAL = 5    // 2 lead + 3 secondary visible initially
 const PAGE_SIZE = 10
 
+/** Helper to truncate text to 150 characters and append an ellipsis */
+function truncateText(text: string | undefined, maxLength = 250): string {
+  if (!text) return ""
+  if (text.length <= maxLength) return text
+  return text.substring(0, maxLength) + "..."
+}
+
+
 /** "DD MM YYYY" format matching the design's meta line */
 function formatLong(raw: string): string {
   const d = new Date(raw.replace(" ", "T"))
@@ -41,6 +49,9 @@ function LeadCard({ post }: { post: Post }) {
         <p className={styles.title} data-node-id="4:383">
           <a href={`/blog/${post.slug}`} className={styles.titleLink}>{post.title}</a>
         </p>
+       <p className={styles.postExcerpt}> {truncateText(post.excerpt, 200)}</p>
+
+        
         <p className={styles.metaLine} data-node-id="4:384">
           {typeLabel} | {formatLong(post.created_at)}
         </p>

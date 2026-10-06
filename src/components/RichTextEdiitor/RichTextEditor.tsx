@@ -27,6 +27,7 @@ import { Callout } from "../tiptap/CalloutExtension/Callout";
 import { FileHandler } from "@tiptap/extension-file-handler";
 import { BlockHoverOverlay } from "../BlockHoverOverlay";
 import { GlobalBlockModifiers } from "./GlobalModifiers";
+
 import styles from './RichTextEditor.module.css'
 
 interface RichTextEditorProps {
@@ -115,6 +116,7 @@ export default function RichTextEditor({
       AccordionContent,
       AccordionHeader,
       Callout,
+    
     ],
 
     content: value ?? "",

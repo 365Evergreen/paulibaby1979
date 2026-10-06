@@ -39,7 +39,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ className = "" }) => {
       <div className={styles.left}>
         <Link to="/" className={styles.brand} onClick={closeMenu}>
           <img
-            src="./paulibaby.png"
+            src="https://blog.paulibaby.com/paulibaby.png"
             alt="Paulibaby logo"
             className={styles.brandLogo}
           />

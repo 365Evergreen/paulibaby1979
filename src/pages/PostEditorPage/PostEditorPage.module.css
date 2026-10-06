@@ -141,24 +141,11 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.3);
-  z-index: 200;
+  z-index: 1000;
   animation: fadeIn 0.2s ease;
 }
 
-.drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 400px;
-  max-width: 90vw;
-  height: 100vh;
-  background: white;
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
-  animation: slideIn 0.25s ease;
-}
+
 
 .drawerHeader {
   display: flex;
@@ -440,7 +427,7 @@
   max-width: 90vw;
   height: 100vh;
   background: #ffffff;
-  z-index: 201;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
